@@ -69,3 +69,7 @@ run dev mode
 `npm run dev`
 
 open your browser and visit: `http://localhost:8080/`
+
+## Thank You
+
+Huge thank you to [David Clark](https://github.com/davidtheclark) and all of his ARIA work. Most of the code in here is heavily inspired by what he has done.
