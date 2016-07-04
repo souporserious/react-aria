@@ -1,0 +1,27 @@
+{
+  "name": "react-aria",
+  "version": "0.1.0",
+  "homepage": "https://github.com/souporserious/react-aria",
+  "authors": [
+    "Travis Arnold <ftntravis@gmail.com>"
+  ],
+  "description": "Utilities to help create React ARIA components.",
+  "main": ["./dist/react-aria.js", "./dist/react-aria.min.js"],
+  "keywords": [
+    "react",
+    "component",
+    "react-component",
+    "ui",
+    "motion",
+    "transition",
+    "animation"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
