@@ -16,8 +16,7 @@ class AriaPopover extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div',
-    trapFocus: false
+    tag: 'div'
   }
 
   componentDidMount() {

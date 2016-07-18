@@ -1,7 +1,10 @@
 import React, { Component, PropTypes, Children, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import { AriaManager, AriaToggle, AriaPopover, AriaItem } from '../src/react-aria'
+import a11y from 'react-a11y'
 import Transition from 'react-motion-ui-pack'
+import { AriaManager, AriaToggle, AriaPopover, AriaItem } from '../src/react-aria'
+
+// a11y(React)
 
 // Components
 // - Modal
@@ -26,18 +29,19 @@ class Dropdown extends Component {
       <AriaManager onItemSelection={this._handleSelection}>
         { isOpen =>
           <div>
-            <AriaToggle>
+            <AriaToggle id="dropdown">
               {this.state.selection || 'Select A Menu Item'}
             </AriaToggle>
-            <Transition>
-              { isOpen &&
-                <AriaPopover key="popover" role="menu">
-                  <AriaItem>Apples</AriaItem>
-                  <AriaItem>Pears</AriaItem>
-                  <AriaItem>Oranges</AriaItem>
-                </AriaPopover>
-              }
-            </Transition>
+            { isOpen &&
+              <AriaPopover
+                role="menu"
+                aria-labelledby="dropdown"
+              >
+                <AriaItem>Apples</AriaItem>
+                <AriaItem>Pears</AriaItem>
+                <AriaItem>Oranges</AriaItem>
+              </AriaPopover>
+            }
           </div>
         }
       </AriaManager>
@@ -54,16 +58,18 @@ class Modal extends Component {
             <AriaToggle>
               Toggle Modal
             </AriaToggle>
-            { isOpen &&
-              <div>
-                Clicking here will close since it's outside
-                <AriaPopover>
-                  <a href="#">One</a>
-                  <a href="#">Two</a>
-                  <a href="#">Three</a>
-                </AriaPopover>
-              </div>
-            }
+            <Transition>
+              { isOpen &&
+                <div key="popover">
+                  Clicking here will close since it's outside
+                  <AriaPopover>
+                    <a href="#">One</a>
+                    <a href="#">Two</a>
+                    <a href="#">Three</a>
+                  </AriaPopover>
+                </div>
+              }
+            </Transition>
           </div>
         }
       </AriaManager>

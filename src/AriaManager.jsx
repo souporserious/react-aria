@@ -20,6 +20,7 @@ const KEYS = {
 
 const checkedProps = {
   tag:                  PropTypes.string,
+  trapFocus:            PropTypes.bool,
   children:             PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
   keybindings: PropTypes.shape({
     next:  PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
@@ -30,10 +31,11 @@ const checkedProps = {
   wrap:                 PropTypes.bool,
   stringSearch:         PropTypes.bool,
   stringSearchDelay:    PropTypes.number,
+  closeOnOutsideClick:  PropTypes.bool,
+  closeOnItemSelection: PropTypes.bool,
   onPopoverOpen:        PropTypes.func,
   onPopoverClose:       PropTypes.func,
   onItemSelection:      PropTypes.func,
-  closeOnItemSelection: PropTypes.bool
 }
 
 class AriaManager extends Component {
