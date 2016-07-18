@@ -17,7 +17,7 @@ class Toggle extends Component {
   }
 
   componentDidMount() {
-    this.context.ariaManager.setToggle(findDOMNode(this))
+    this.context.ariaManager.setToggleNode(findDOMNode(this))
   }
 
   render() {
@@ -35,3 +35,8 @@ class Toggle extends Component {
 }
 
 export default Toggle
+
+// toggle: ['haspopup']
+// items: {
+//   toggle: ['haspopup', 'expanded', 'disabled']
+// }

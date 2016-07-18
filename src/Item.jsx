@@ -7,7 +7,7 @@ const checkedProps = {
   children: PropTypes.node.isRequired
 }
 
-class MenuItem extends Component {
+class Item extends Component {
   static contextTypes = {
     ariaManager: PropTypes.object.isRequired
   }
@@ -40,4 +40,4 @@ class MenuItem extends Component {
   }
 }
 
-export default MenuItem
+export default Item

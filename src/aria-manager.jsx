@@ -5,17 +5,33 @@ import specialAssign from './special-assign'
 
 const isTarget = (node, target) => (node === target || node.contains(target))
 
+// inspo:
+// http://yuilibrary.com/yui/docs/node-focusmanager/node-focusmanager-button.html
+
+const KEYS = {
+  tab:        9,
+  escape:     27,
+  enter:      13,
+  space:      32,
+  end:        35,
+  home:       36,
+  arrowLeft:  37,
+  arrowUp:    38,
+  arrowRight: 39,
+  arrowDown:  40,
+}
+
 const checkedProps = {
-  tag:               PropTypes.string,
-  children:          PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
-  stringSearch:      PropTypes.bool,
-  forwardArrows:     PropTypes.arrayOf(PropTypes.string),
-  backArrows:        PropTypes.arrayOf(PropTypes.string),
-  wrap:              PropTypes.bool,
-  stringSearch:      PropTypes.bool,
-  stringSearchDelay: PropTypes.number,
-  onSelection:       PropTypes.func.isRequired,
-  closeOnSelection:  PropTypes.bool
+  tag:                  PropTypes.string,
+  children:             PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
+  stringSearch:         PropTypes.bool,
+  forwardArrows:        PropTypes.arrayOf(PropTypes.string),
+  backArrows:           PropTypes.arrayOf(PropTypes.string),
+  wrap:                 PropTypes.bool,
+  stringSearch:         PropTypes.bool,
+  stringSearchDelay:    PropTypes.number,
+  onItemSelection:      PropTypes.func.isRequired,
+  closeOnItemSelection: PropTypes.bool
 }
 
 class AriaManager extends Component {
@@ -26,15 +42,23 @@ class AriaManager extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag:               'div',
-    stringSearch:      true,
-    forwardArrows:     ['right', 'down'],
-    backArrows:        ['left', 'up'],
-    wrap:              true,
-    stringSearch:      true,
-    stringSearchDelay: 600,
-    onSelection:       () => null,
-    closeOnSelection:  true
+    type:         'modal',
+    trapFocus:    false,
+    tag:          'div',
+    stringSearch: true,
+    keybindings:  {
+      next:  [{ keyCode: KEYS.arrowDown }, { keyCode: KEYS.arrowRight }],
+      prev:  [{ keyCode: KEYS.arrowUp }, { keyCode: KEYS.arrowLeft }],
+      first: { keyCode: KEYS.home },
+      last:  { keyCode: KEYS.end }
+    },
+    wrap:                 true,
+    stringSearch:         true,
+    stringSearchDelay:    600,
+    onItemSelection:      () => null,
+    onPopoverOpen:        () => null,
+    onPopoverClose:       () => null,
+    closeOnItemSelection: true
   }
 
   state = {
@@ -43,23 +67,29 @@ class AriaManager extends Component {
 
   _focusGroup = createFocusGroup(this.props)
   _toggle     = null
-  _menu       = null
+  _popover    = null
   _items      = []
 
   getChildContext() {
     return {
       ariaManager: {
-        isOpen:      this.state.isOpen,
-        onSelection: this._onSelection,
-        setToggle:   this._setToggle,
-        setMenu:     this._setMenu,
-        addItem:     this._addItem,
-        removeItem:  this._removeItem,
-        clearItems:  this._clearItems,
-        focusItem:   this._focusItem,
-        openMenu:    this._openMenu,
-        closeMenu:   this._closeMenu,
-        toggleMenu:  this._toggleMenu
+        type:           this.props.type,
+        trapFocus:      this.props.trapFocus,
+        initialFocus:   this.props.initialFocus,
+
+        isOpen:         this.state.isOpen,
+
+        onItemSelection: this._onItemSelection,
+
+        setToggleNode:  this._setToggleNode,
+        setPopoverNode: this._setPopoverNode,
+        addItem:        this._addItem,
+        removeItem:     this._removeItem,
+        clearItems:     this._clearItems,
+        focusItem:      this._focusItem,
+        openPopover:    this._openPopover,
+        closePopover:   this._closePopover,
+        togglePopover:  this._togglePopover
       }
     }
   }
@@ -70,9 +100,9 @@ class AriaManager extends Component {
 
   componentWillUnmount() {
     this._focusGroup.deactivate()
-    this._toggle = null
-    this._menu   = null
-    this._items  = []
+    this._toggle  = null
+    this._popover = null
+    this._items   = []
 
     EventsHandler.remove(this)
   }
@@ -82,66 +112,66 @@ class AriaManager extends Component {
     const toggleDisabled = this._toggle.getAttribute('disabled')
 
     if (isTarget(this._toggle, target) && toggleDisabled === null) {
-      this._toggleMenu()
+      this._togglePopover()
     }
-    else if (this._menu && !isTarget(this._menu, target)) {
-      this._closeMenu(false)
+    else if (this._popover && !isTarget(this._popover, target)) {
+      this._closePopover(false)
     }
     else {
       for (let i = this._items.length; i--;) {
         const item = this._items[i]
         if (item.node === target) {
-          this._onSelection(item, e)
+          this._onItemSelection(item, e)
         }
       }
     }
   }
 
   _onKeyDown(e) {
-    const { key, target } = e
+    const { keyCode, target } = e
 
     if (this.state.isOpen) {
-      if (key === 'Tab') {
-        this._closeMenu(false)
+      if (!this.props.trapFocus && keyCode === KEYS.tab) {
+        this._closePopover(false)
       }
-      else if (key === 'Escape') {
+      else if (keyCode === KEYS.escape) {
         e.preventDefault()
-        this._closeMenu()
+        this._closePopover()
       }
-      else if (['Enter', ' '].indexOf(key) > -1) {
+      else if ([KEYS.enter, KEYS.space].indexOf(keyCode) > -1) {
         for (let i = this._items.length; i--;) {
           const item = this._items[i]
           if (item.node === target) {
             e.preventDefault()
-            this._onSelection(item, e)
+            this._onItemSelection(item, e)
           }
         }
       }
     }
-    else if (['ArrowUp', 'ArrowDown', 'Enter', ' '].indexOf(key) > -1) {
+    else if ([KEYS.arrowUp, KEYS.arrowDown, KEYS.enter, KEYS.space].indexOf(keyCode) > -1) {
       if (isTarget(this._toggle, target)) {
         e.preventDefault()
-        this._openMenu()
+        this._openPopover()
       }
     }
   }
 
-  _onSelection(item, e) {
+  _onItemSelection(item, e) {
     const value = item.value || item.node.innerHTML
 
-    if (this.props.closeOnSelection) {
-      this._closeMenu()
+    if (this.props.closeOnItemSelection) {
+      this._closePopover()
     }
 
-    this.props.onSelection(value, e)
+    this.props.onItemSelection(value, e)
   }
 
-  _setToggle = (node) => {
+  _setToggleNode = (node) => {
     this._toggle = node
   }
 
-  _setMenu = (node) => {
-    this._menu = node
+  _setPopoverNode = (node) => {
+    this._popover = node
   }
 
   _addItem = (item) => {
@@ -165,35 +195,39 @@ class AriaManager extends Component {
     this._focusGroup.focusNodeAtIndex(index)
   }
 
-  _openMenu = (focusMenu = true) => {
+  _openPopover = (focusPopover = true) => {
     if (this.state.isOpen) return;
 
     this.setState({ isOpen: true })
 
     this._focusGroup.activate()
 
-    if (focusMenu) {
+    this.props.onPopoverOpen()
+
+    if (focusPopover) {
       this._focusItem(0)
     }
   }
 
-  _closeMenu = (focusToggle = true) => {
+  _closePopover = (focusToggle = true) => {
     if (!this.state.isOpen) return;
 
     this.setState({ isOpen: false })
 
     this._focusGroup.deactivate()
 
+    this.props.onPopoverClose()
+
     if (focusToggle) {
       this._toggle.focus()
     }
   }
 
-  _toggleMenu = () => {
+  _togglePopover = () => {
     if (!this.state.isOpen) {
-      this._openMenu()
+      this._openPopover()
     } else {
-      this._closeMenu()
+      this._closePopover()
     }
   }
 
