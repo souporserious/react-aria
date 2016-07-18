@@ -55,10 +55,11 @@ class AriaManager extends Component {
     wrap:                 true,
     stringSearch:         true,
     stringSearchDelay:    600,
+    closeOnOutsideClick:  true,
+    closeOnItemSelection: true,
     onPopoverOpen:        () => null,
     onPopoverClose:       () => null,
     onItemSelection:      () => null,
-    closeOnItemSelection: true
   }
 
   constructor(props) {
@@ -112,7 +113,8 @@ class AriaManager extends Component {
     if (isTarget(this._toggle, target) && toggleDisabled === null) {
       this._togglePopover()
     }
-    else if (this._popover && !isTarget(this._popover, target)) {
+    else if (this.props.closeOnOutsideClick &&
+      this._popover && !isTarget(this._popover, target)) {
       this._closePopover(false)
     }
     else {
