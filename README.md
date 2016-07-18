@@ -14,7 +14,7 @@ Utilities
 ### Example
 
 ```js
-import { AriaManager, Toggle, Menu, MenuItem } from 'react-aria'
+import { AriaManager, AriaToggle, AriaPopover, AriaItem } from 'react-aria'
 
 class Dropdown extends Component {
   state = {
@@ -27,20 +27,18 @@ class Dropdown extends Component {
 
   render() {
     return (
-      <AriaManager
-        onSelection={this._handleSelection}
-      >
+      <AriaManager onItemSelection={this._handleSelection}>
         { isOpen =>
           <div>
-            <Toggle>
-              {this.state.selection || 'Toggle'}
-            </Toggle>
+            <AriaToggle>
+              {this.state.selection || 'Select A Dropdown Item'}
+            </AriaToggle>
             { isOpen &&
-              <Menu key="menu">
-                <MenuItem>Apples</MenuItem>
-                <MenuItem>Pears</MenuItem>
-                <MenuItem>Oranges</MenuItem>
-              </Menu>
+              <AriaPopover role="menu">
+                <AriaItem>Apples</AriaItem>
+                <AriaItem>Pears</AriaItem>
+                <AriaItem>Oranges</AriaItem>
+              </AriaPopover>
             }
           </div>
         }
