@@ -8,15 +8,12 @@ const checkedProps = {
   children: PropTypes.node.isRequired
 }
 
-class Popover extends Component {
+class AriaPopover extends Component {
   static contextTypes = {
     ariaManager: PropTypes.object.isRequired
   }
 
-  static propTypes = {
-    tag: PropTypes.string,
-    trapFocus: PropTypes.bool
-  }
+  static propTypes = checkedProps
 
   static defaultProps = {
     tag: 'div',
@@ -24,7 +21,7 @@ class Popover extends Component {
   }
 
   componentDidMount() {
-    const { trapFocus, initialFocus, closePopover } = this.context.ariaManager
+    const { trapFocus, initialFocus, onClickOutside } = this.context.ariaManager
 
     this._setPopoverNode()
 
@@ -43,12 +40,6 @@ class Popover extends Component {
     }
   }
 
-  // componentWillRecieveProps(nextProps) {
-  //   if (this.props.isOpen !== nextProps.isOpen) {
-  //     this.context.ariaManager.setPopoverState()
-  //   }
-  // }
-
   componentDidUpdate(lastProps, lastState, lastContext) {
     if (this.context.ariaManager.isOpen !== lastContext.ariaManager.isOpen) {
       this._setPopoverNode()
@@ -61,12 +52,10 @@ class Popover extends Component {
 
   render() {
     const { tag, children } = this.props
-    const props = specialAssign({
-      role: 'menu'
-    }, this.props, checkedProps)
+    const props = specialAssign({}, this.props, checkedProps)
 
     return createElement(tag, props, children)
   }
 }
 
-export default Popover
+export default AriaPopover

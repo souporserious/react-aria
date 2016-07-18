@@ -1,36 +1,16 @@
 import React, { Component, PropTypes, Children, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import { AriaManager, Toggle, Menu, Popover, Item } from '../src/react-aria'
+import { AriaManager, AriaToggle, AriaPopover, AriaItem } from '../src/react-aria'
 import Transition from 'react-motion-ui-pack'
 
-// API
-// applyAriaComponent(Component, 'Modal')
-
-// Focus Trap
+// Components
 // - Modal
-
-// Focus Group
 // - Dropdown https://www.w3.org/WAI/GL/wiki/Using_ARIA_menus#Success_Criteria_2.1.1_Keyboard
 // - Select
 // - ComboBox
 // - Tabs
 // - Popover
 // - Tooltip
-
-// get props from AriaManager on whether it's open or not, etc..
-// write set of rules that a component can subscribe to
-// like how both a modal and a popover can be in open and closed states.
-// how focus needs to return to the original elment in both cases.
-
-// AriaManager('Modal')
-// <AriaManager type="modal">
-
-// type = {
-//   modal: ['openClose', 'clickToClose'],
-//   popover: ['openClose'],
-//   combobox: ['openClose', 'items'],
-//   menu: ['openClose', 'items']
-// }
 
 class Dropdown extends Component {
   state = {
@@ -46,16 +26,18 @@ class Dropdown extends Component {
       <AriaManager onItemSelection={this._handleSelection}>
         { isOpen =>
           <div>
-            <Toggle>
+            <AriaToggle>
               {this.state.selection || 'Select A Menu Item'}
-            </Toggle>
-            { isOpen &&
-              <Popover role="menu">
-                <Item>Apples</Item>
-                <Item>Pears</Item>
-                <Item>Oranges</Item>
-              </Popover>
-            }
+            </AriaToggle>
+            <Transition>
+              { isOpen &&
+                <AriaPopover key="popover" role="menu">
+                  <AriaItem>Apples</AriaItem>
+                  <AriaItem>Pears</AriaItem>
+                  <AriaItem>Oranges</AriaItem>
+                </AriaPopover>
+              }
+            </Transition>
           </div>
         }
       </AriaManager>
@@ -69,17 +51,17 @@ class Modal extends Component {
       <AriaManager trapFocus>
         { isOpen =>
           <div>
-            <Toggle>
+            <AriaToggle>
               Toggle Modal
-            </Toggle>
+            </AriaToggle>
             { isOpen &&
               <div>
                 Clicking here will close since it's outside
-                <Popover>
+                <AriaPopover>
                   <a href="#">One</a>
                   <a href="#">Two</a>
                   <a href="#">Three</a>
-                </Popover>
+                </AriaPopover>
               </div>
             }
           </div>
@@ -89,22 +71,31 @@ class Modal extends Component {
   }
 }
 
-class Popout extends Component {
+class Popover extends Component {
+  state = {
+    isOpen: false
+  }
+
   render() {
+    const { isOpen } = this.state
     return (
-      <AriaManager>
-        { isOpen =>
+      <AriaManager
+        onPopoverOpen={() => this.setState({ isOpen: true })}
+        onPopoverClose={() => this.setState({ isOpen: false })}
+      >
+        <div>
+          <AriaToggle>
+            Toggle Popover
+          </AriaToggle>
+          { isOpen &&
+            <AriaPopover>
+              Some cool popover content.
+            </AriaPopover>
+          }
           <div>
-            <Toggle>
-              Toggle Popout
-            </Toggle>
-            { isOpen &&
-              <Popover>
-                Some cool popout content.
-              </Popover>
-            }
+            Popover is {isOpen ? 'Open' : 'Closed'}
           </div>
-        }
+        </div>
       </AriaManager>
     )
   }
@@ -116,7 +107,7 @@ class App extends Component {
       <div>
         <Dropdown/>
         <Modal/>
-        <Popout/>
+        <Popover/>
       </div>
     )
   }

@@ -7,10 +7,12 @@ const checkedProps = {
   children: PropTypes.node.isRequired
 }
 
-class Toggle extends Component {
+class AriaToggle extends Component {
   static contextTypes = {
     ariaManager: PropTypes.object.isRequired
   }
+
+  static propTypes = checkedProps
 
   static defaultProps = {
     tag: 'button'
@@ -34,9 +36,4 @@ class Toggle extends Component {
   }
 }
 
-export default Toggle
-
-// toggle: ['haspopup']
-// items: {
-//   toggle: ['haspopup', 'expanded', 'disabled']
-// }
+export default AriaToggle

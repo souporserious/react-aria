@@ -5,9 +5,6 @@ import specialAssign from './special-assign'
 
 const isTarget = (node, target) => (node === target || node.contains(target))
 
-// inspo:
-// http://yuilibrary.com/yui/docs/node-focusmanager/node-focusmanager-button.html
-
 const KEYS = {
   tab:        9,
   escape:     27,
@@ -24,13 +21,18 @@ const KEYS = {
 const checkedProps = {
   tag:                  PropTypes.string,
   children:             PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
-  stringSearch:         PropTypes.bool,
-  forwardArrows:        PropTypes.arrayOf(PropTypes.string),
-  backArrows:           PropTypes.arrayOf(PropTypes.string),
+  keybindings: PropTypes.shape({
+    next:  PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    prev:  PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    first: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    last:  PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  }),
   wrap:                 PropTypes.bool,
   stringSearch:         PropTypes.bool,
   stringSearchDelay:    PropTypes.number,
-  onItemSelection:      PropTypes.func.isRequired,
+  onPopoverOpen:        PropTypes.func,
+  onPopoverClose:       PropTypes.func,
+  onItemSelection:      PropTypes.func,
   closeOnItemSelection: PropTypes.bool
 }
 
@@ -42,11 +44,9 @@ class AriaManager extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    type:         'modal',
-    trapFocus:    false,
-    tag:          'div',
-    stringSearch: true,
-    keybindings:  {
+    tag:                  'div',
+    trapFocus:            false,
+    keybindings: {
       next:  [{ keyCode: KEYS.arrowDown }, { keyCode: KEYS.arrowRight }],
       prev:  [{ keyCode: KEYS.arrowUp }, { keyCode: KEYS.arrowLeft }],
       first: { keyCode: KEYS.home },
@@ -55,41 +55,39 @@ class AriaManager extends Component {
     wrap:                 true,
     stringSearch:         true,
     stringSearchDelay:    600,
-    onItemSelection:      () => null,
     onPopoverOpen:        () => null,
     onPopoverClose:       () => null,
+    onItemSelection:      () => null,
     closeOnItemSelection: true
   }
 
-  state = {
-    isOpen: false
+  constructor(props) {
+    super(props)
+    this.state = {
+      isOpen: false
+    }
+    this._focusGroup = createFocusGroup(props)
+    this._toggle     = null
+    this._popover    = null
+    this._items      = []
   }
-
-  _focusGroup = createFocusGroup(this.props)
-  _toggle     = null
-  _popover    = null
-  _items      = []
 
   getChildContext() {
     return {
       ariaManager: {
-        type:           this.props.type,
-        trapFocus:      this.props.trapFocus,
-        initialFocus:   this.props.initialFocus,
-
-        isOpen:         this.state.isOpen,
-
+        trapFocus:       this.props.trapFocus,
+        initialFocus:    this.props.initialFocus,
+        isOpen:          this.state.isOpen,
         onItemSelection: this._onItemSelection,
-
-        setToggleNode:  this._setToggleNode,
-        setPopoverNode: this._setPopoverNode,
-        addItem:        this._addItem,
-        removeItem:     this._removeItem,
-        clearItems:     this._clearItems,
-        focusItem:      this._focusItem,
-        openPopover:    this._openPopover,
-        closePopover:   this._closePopover,
-        togglePopover:  this._togglePopover
+        setToggleNode:   this._setToggleNode,
+        setPopoverNode:  this._setPopoverNode,
+        addItem:         this._addItem,
+        removeItem:      this._removeItem,
+        clearItems:      this._clearItems,
+        focusItem:       this._focusItem,
+        openPopover:     this._openPopover,
+        closePopover:    this._closePopover,
+        togglePopover:   this._togglePopover
       }
     }
   }
@@ -200,12 +198,15 @@ class AriaManager extends Component {
 
     this.setState({ isOpen: true })
 
-    this._focusGroup.activate()
-
     this.props.onPopoverOpen()
 
+    this._focusGroup.activate()
+
     if (focusPopover) {
-      this._focusItem(0)
+      // setTimeout allows animated popovers to still focus
+      setTimeout(() => {
+        this._focusItem(0)
+      }, 60)
     }
   }
 
@@ -214,9 +215,9 @@ class AriaManager extends Component {
 
     this.setState({ isOpen: false })
 
-    this._focusGroup.deactivate()
-
     this.props.onPopoverClose()
+
+    this._focusGroup.deactivate()
 
     if (focusToggle) {
       this._toggle.focus()
@@ -234,9 +235,11 @@ class AriaManager extends Component {
   render() {
     const { tag, children } = this.props
     const props = specialAssign({}, this.props, checkedProps)
+
     if (typeof children === 'function') {
       return children(this.state.isOpen)
     }
+
     return createElement(tag, props, children)
   }
 }

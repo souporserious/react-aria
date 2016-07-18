@@ -7,10 +7,12 @@ const checkedProps = {
   children: PropTypes.node.isRequired
 }
 
-class Item extends Component {
+class AriaItem extends Component {
   static contextTypes = {
     ariaManager: PropTypes.object.isRequired
   }
+
+  static propTypes = checkedProps
 
   static defaultProps = {
     tag: 'div'
@@ -40,4 +42,4 @@ class Item extends Component {
   }
 }
 
-export default Item
+export default AriaItem
