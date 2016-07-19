@@ -88,10 +88,11 @@ class Popover extends Component {
       <AriaManager
         onPopoverOpen={() => this.setState({ isOpen: true })}
         onPopoverClose={() => this.setState({ isOpen: false })}
+        openPopoverOn="hover"
       >
         <div>
           <AriaToggle>
-            Toggle Popover
+            Toggle Popover <span>👻</span>
           </AriaToggle>
           { isOpen &&
             <AriaPopover>

@@ -31,6 +31,7 @@ const checkedProps = {
   wrap:                 PropTypes.bool,
   stringSearch:         PropTypes.bool,
   stringSearchDelay:    PropTypes.number,
+  openPopoverOn:        PropTypes.oneOf(['tap', 'hover']),
   closeOnOutsideClick:  PropTypes.bool,
   closeOnItemSelection: PropTypes.bool,
   onPopoverOpen:        PropTypes.func,
@@ -57,6 +58,7 @@ class AriaManager extends Component {
     wrap:                 true,
     stringSearch:         true,
     stringSearchDelay:    600,
+    openPopoverOn:        'tap',
     closeOnOutsideClick:  true,
     closeOnItemSelection: true,
     onPopoverOpen:        () => null,
@@ -96,7 +98,7 @@ class AriaManager extends Component {
   }
 
   componentWillMount() {
-    EventsHandler.add(this)
+    EventsHandler.add(this, this.props.openPopoverOn)
   }
 
   componentWillUnmount() {
@@ -109,14 +111,30 @@ class AriaManager extends Component {
   }
 
   _onTap(e) {
+    if (this.props.openPopoverOn === 'tap') {
+      this._handleTapOrHover(e)
+    }
+  }
+
+  _onHover(e) {
+    if (this.props.openPopoverOn === 'hover') {
+      this._handleTapOrHover(e)
+    }
+  }
+
+  _handleTapOrHover(e) {
+    const { openPopoverOn, closeOnOutsideClick } = this.props
     const { target } = e
     const toggleDisabled = this._toggle.getAttribute('disabled')
 
     if (isTarget(this._toggle, target) && toggleDisabled === null) {
-      this._togglePopover()
+      if (openPopoverOn === 'tap') {
+        this._togglePopover()
+      } else {
+        this._openPopover()
+      }
     }
-    else if (this.props.closeOnOutsideClick &&
-      this._popover && !isTarget(this._popover, target)) {
+    else if (closeOnOutsideClick && this._popover && !isTarget(this._popover, target)) {
       this._closePopover(false)
     }
     else {

@@ -4,7 +4,7 @@ import specialAssign from './special-assign'
 
 const checkedProps = {
   tag:      PropTypes.string,
-  children: PropTypes.node.isRequired
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
 class AriaItem extends Component {
@@ -37,6 +37,10 @@ class AriaItem extends Component {
       role: 'menuitem',
       tabIndex: -1
     }, this.props, checkedProps)
+
+    if (typeof children === 'function') {
+      return children(props)
+    }
 
     return createElement(tag, props, children)
   }

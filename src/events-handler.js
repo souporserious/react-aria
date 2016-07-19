@@ -31,6 +31,10 @@ export default {
       this._documentEvent.bind(this, '_onTap')
     )
     document.addEventListener(
+      'mouseover',
+      this._documentEvent.bind(this, '_onHover')
+    )
+    document.addEventListener(
       'keydown',
       this._documentEvent.bind(this, '_onKeyDown')
     )
@@ -38,6 +42,7 @@ export default {
 
   _detachListeners: function () {
     this._tapListener.remove()
+    document.removeEventListener('mouseover', this._documentEvent)
     document.removeEventListener('keydown', this._documentEvent)
   },
 

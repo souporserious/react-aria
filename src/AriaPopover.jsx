@@ -5,7 +5,7 @@ import specialAssign from './special-assign'
 
 const checkedProps = {
   tag:      PropTypes.string,
-  children: PropTypes.node.isRequired
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
 class AriaPopover extends Component {
@@ -52,6 +52,10 @@ class AriaPopover extends Component {
   render() {
     const { tag, children } = this.props
     const props = specialAssign({}, this.props, checkedProps)
+
+    if (typeof children === 'function') {
+      return children(props)
+    }
 
     return createElement(tag, props, children)
   }

@@ -4,7 +4,7 @@ import specialAssign from './special-assign'
 
 const checkedProps = {
   tag:      PropTypes.string,
-  children: PropTypes.node.isRequired
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
 class AriaToggle extends Component {
@@ -31,6 +31,10 @@ class AriaToggle extends Component {
       'aria-expanded': this.context.ariaManager.isOpen,
       'aria-disabled': disabled,
     }, this.props, checkedProps)
+
+    if (typeof children === 'function') {
+      return children(props)
+    }
 
     return createElement(tag, props, children)
   }
