@@ -25,7 +25,10 @@ var config = {
   },
   externals: {
     'react': 'React',
-    'react-dom': 'ReactDOM'
+    'react-dom': 'ReactDOM',
+    'teeny-tap': 'createTapListener',
+    'focus-trap': 'focusTrap',
+    'focus-group': 'createFocusGroup'
   },
 };
 

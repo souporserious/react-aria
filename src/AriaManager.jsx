@@ -129,9 +129,9 @@ class AriaManager extends Component {
 
     if (isTarget(this._toggle, target) && toggleDisabled === null) {
       if (openPopoverOn === 'tap') {
-        this._togglePopover()
+        this._togglePopover(false)
       } else {
-        this._openPopover()
+        this._openPopover(false)
       }
     }
     else if (closeOnOutsideClick && this._popover && !isTarget(this._popover, target)) {
@@ -246,11 +246,11 @@ class AriaManager extends Component {
     }
   }
 
-  _togglePopover = () => {
+  _togglePopover = (focus) => {
     if (!this.state.isOpen) {
-      this._openPopover()
+      this._openPopover(focus)
     } else {
-      this._closePopover()
+      this._closePopover(focus)
     }
   }
 
