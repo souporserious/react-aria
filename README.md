@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/react-aria.svg)](https://badge.fury.io/js/react-aria)
 [![Dependency Status](https://david-dm.org/souporserious/react-aria.svg)](https://david-dm.org/souporserious/react-aria)
 
-Utilities
+Utilities to help compose ARIA compliant components.
 
 ## Usage
 
