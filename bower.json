@@ -1,6 +1,6 @@
 {
   "name": "react-aria",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/souporserious/react-aria",
   "authors": [
     "Travis Arnold <ftntravis@gmail.com>"
@@ -9,12 +9,17 @@
   "main": ["./dist/react-aria.js", "./dist/react-aria.min.js"],
   "keywords": [
     "react",
-    "component",
+    "reactjs",
     "react-component",
-    "ui",
-    "motion",
-    "transition",
-    "animation"
+    "aria",
+    "accessibility",
+    "accessible",
+    "dialog",
+    "dropdown",
+    "modal",
+    "menu",
+    "popover",
+    "widget"
   ],
   "license": "ISC",
   "ignore": [

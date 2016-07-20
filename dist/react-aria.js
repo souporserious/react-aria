@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("React"), require("ReactDOM"));
+		module.exports = factory(require("React"), require("createFocusGroup"), require("createTapListener"), require("ReactDOM"), require("focusTrap"));
 	else if(typeof define === 'function' && define.amd)
-		define(["React", "ReactDOM"], factory);
+		define(["React", "createFocusGroup", "createTapListener", "ReactDOM", "focusTrap"], factory);
 	else if(typeof exports === 'object')
-		exports["ReactARIA"] = factory(require("React"), require("ReactDOM"));
+		exports["ReactARIA"] = factory(require("React"), require("createFocusGroup"), require("createTapListener"), require("ReactDOM"), require("focusTrap"));
 	else
-		root["ReactARIA"] = factory(root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_8__) {
+		root["ReactARIA"] = factory(root["React"], root["createFocusGroup"], root["createTapListener"], root["ReactDOM"], root["focusTrap"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_8__, __WEBPACK_EXTERNAL_MODULE_10__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -62,29 +62,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _ariaManager = __webpack_require__(1);
+	var _AriaManager2 = __webpack_require__(1);
 
-	var _ariaManager2 = _interopRequireDefault(_ariaManager);
+	var _AriaManager3 = _interopRequireDefault(_AriaManager2);
 
-	exports.AriaManager = _ariaManager2['default'];
+	exports.AriaManager = _AriaManager3['default'];
 
-	var _toggle = __webpack_require__(7);
+	var _AriaToggle2 = __webpack_require__(7);
 
-	var _toggle2 = _interopRequireDefault(_toggle);
+	var _AriaToggle3 = _interopRequireDefault(_AriaToggle2);
 
-	exports.Toggle = _toggle2['default'];
+	exports.AriaToggle = _AriaToggle3['default'];
 
-	var _menu = __webpack_require__(9);
+	var _AriaPopover2 = __webpack_require__(9);
 
-	var _menu2 = _interopRequireDefault(_menu);
+	var _AriaPopover3 = _interopRequireDefault(_AriaPopover2);
 
-	exports.Menu = _menu2['default'];
+	exports.AriaPopover = _AriaPopover3['default'];
 
-	var _menuItem = __webpack_require__(10);
+	var _AriaItem2 = __webpack_require__(11);
 
-	var _menuItem2 = _interopRequireDefault(_menuItem);
+	var _AriaItem3 = _interopRequireDefault(_AriaItem2);
 
-	exports.MenuItem = _menuItem2['default'];
+	exports.AriaItem = _AriaItem3['default'];
 
 /***/ },
 /* 1 */
@@ -126,43 +126,96 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return node === target || node.contains(target);
 	};
 
+	var KEYS = {
+	  tab: 9,
+	  escape: 27,
+	  enter: 13,
+	  space: 32,
+	  end: 35,
+	  home: 36,
+	  arrowLeft: 37,
+	  arrowUp: 38,
+	  arrowRight: 39,
+	  arrowDown: 40
+	};
+
 	var checkedProps = {
 	  tag: _react.PropTypes.string,
+	  trapFocus: _react.PropTypes.bool,
 	  children: _react.PropTypes.oneOfType([_react.PropTypes.func, _react.PropTypes.node]).isRequired,
-	  stringSearch: _react.PropTypes.bool,
-	  forwardArrows: _react.PropTypes.arrayOf(_react.PropTypes.string),
-	  backArrows: _react.PropTypes.arrayOf(_react.PropTypes.string),
+	  keybindings: _react.PropTypes.shape({
+	    next: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.array]),
+	    prev: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.array]),
+	    first: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.array]),
+	    last: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.array])
+	  }),
 	  wrap: _react.PropTypes.bool,
 	  stringSearch: _react.PropTypes.bool,
 	  stringSearchDelay: _react.PropTypes.number,
-	  onSelection: _react.PropTypes.func.isRequired,
-	  closeOnSelection: _react.PropTypes.bool
+	  openPopoverOn: _react.PropTypes.oneOf(['tap', 'hover']),
+	  closeOnOutsideClick: _react.PropTypes.bool,
+	  closeOnItemSelection: _react.PropTypes.bool,
+	  onPopoverOpen: _react.PropTypes.func,
+	  onPopoverClose: _react.PropTypes.func,
+	  onItemSelection: _react.PropTypes.func
 	};
 
 	var AriaManager = (function (_Component) {
 	  _inherits(AriaManager, _Component);
 
-	  function AriaManager() {
+	  _createClass(AriaManager, null, [{
+	    key: 'childContextTypes',
+	    value: {
+	      ariaManager: _react.PropTypes.object.isRequired
+	    },
+	    enumerable: true
+	  }, {
+	    key: 'propTypes',
+	    value: checkedProps,
+	    enumerable: true
+	  }, {
+	    key: 'defaultProps',
+	    value: {
+	      tag: 'div',
+	      trapFocus: false,
+	      keybindings: {
+	        next: [{ keyCode: KEYS.arrowDown }, { keyCode: KEYS.arrowRight }],
+	        prev: [{ keyCode: KEYS.arrowUp }, { keyCode: KEYS.arrowLeft }],
+	        first: { keyCode: KEYS.home },
+	        last: { keyCode: KEYS.end }
+	      },
+	      wrap: true,
+	      stringSearch: true,
+	      stringSearchDelay: 600,
+	      openPopoverOn: 'tap',
+	      closeOnOutsideClick: true,
+	      closeOnItemSelection: true,
+	      onPopoverOpen: function onPopoverOpen() {
+	        return null;
+	      },
+	      onPopoverClose: function onPopoverClose() {
+	        return null;
+	      },
+	      onItemSelection: function onItemSelection() {
+	        return null;
+	      }
+	    },
+	    enumerable: true
+	  }]);
+
+	  function AriaManager(props) {
 	    var _this = this;
 
 	    _classCallCheck(this, AriaManager);
 
-	    _get(Object.getPrototypeOf(AriaManager.prototype), 'constructor', this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(AriaManager.prototype), 'constructor', this).call(this, props);
 
-	    this.state = {
-	      isOpen: false
-	    };
-	    this._focusGroup = (0, _focusGroup2['default'])(this.props);
-	    this._toggle = null;
-	    this._menu = null;
-	    this._items = [];
-
-	    this._setToggle = function (node) {
+	    this._setToggleNode = function (node) {
 	      _this._toggle = node;
 	    };
 
-	    this._setMenu = function (node) {
-	      _this._menu = node;
+	    this._setPopoverNode = function (node) {
+	      _this._popover = node;
 	    };
 
 	    this._addItem = function (item) {
@@ -186,26 +239,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _this._focusGroup.focusNodeAtIndex(index);
 	    };
 
-	    this._openMenu = function () {
-	      var focusMenu = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+	    this._openPopover = function () {
+	      var focusPopover = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
 	      if (_this.state.isOpen) return;
 
 	      _this.setState({ isOpen: true });
 
+	      _this.props.onPopoverOpen();
+
 	      _this._focusGroup.activate();
 
-	      if (focusMenu) {
-	        _this._focusItem(0);
+	      if (focusPopover) {
+	        // setTimeout allows animated popovers to still focus
+	        setTimeout(function () {
+	          _this._focusItem(0);
+	        }, 60);
 	      }
 	    };
 
-	    this._closeMenu = function () {
+	    this._closePopover = function () {
 	      var focusToggle = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
 	      if (!_this.state.isOpen) return;
 
 	      _this.setState({ isOpen: false });
+
+	      _this.props.onPopoverClose();
 
 	      _this._focusGroup.deactivate();
 
@@ -214,13 +274,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    };
 
-	    this._toggleMenu = function () {
+	    this._togglePopover = function (focus) {
 	      if (!_this.state.isOpen) {
-	        _this._openMenu();
+	        _this._openPopover(focus);
 	      } else {
-	        _this._closeMenu();
+	        _this._closePopover(focus);
 	      }
 	    };
+
+	    this.state = {
+	      isOpen: false
+	    };
+	    this._focusGroup = (0, _focusGroup2['default'])(props);
+	    this._toggle = null;
+	    this._popover = null;
+	    this._items = [];
 	  }
 
 	  _createClass(AriaManager, [{
@@ -228,31 +296,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getChildContext() {
 	      return {
 	        ariaManager: {
+	          trapFocus: this.props.trapFocus,
+	          initialFocus: this.props.initialFocus,
 	          isOpen: this.state.isOpen,
-	          onSelection: this._onSelection,
-	          setToggle: this._setToggle,
-	          setMenu: this._setMenu,
+	          onItemSelection: this._onItemSelection,
+	          setToggleNode: this._setToggleNode,
+	          setPopoverNode: this._setPopoverNode,
 	          addItem: this._addItem,
 	          removeItem: this._removeItem,
 	          clearItems: this._clearItems,
 	          focusItem: this._focusItem,
-	          openMenu: this._openMenu,
-	          closeMenu: this._closeMenu,
-	          toggleMenu: this._toggleMenu
+	          openPopover: this._openPopover,
+	          closePopover: this._closePopover,
+	          togglePopover: this._togglePopover
 	        }
 	      };
 	    }
 	  }, {
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      _eventsHandler2['default'].add(this);
+	      _eventsHandler2['default'].add(this, this.props.openPopoverOn);
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      this._focusGroup.deactivate();
 	      this._toggle = null;
-	      this._menu = null;
+	      this._popover = null;
 	      this._items = [];
 
 	      _eventsHandler2['default'].remove(this);
@@ -260,19 +330,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_onTap',
 	    value: function _onTap(e) {
+	      if (this.props.openPopoverOn === 'tap') {
+	        this._handleTapOrHover(e);
+	      }
+	    }
+	  }, {
+	    key: '_onHover',
+	    value: function _onHover(e) {
+	      if (this.props.openPopoverOn === 'hover') {
+	        this._handleTapOrHover(e);
+	      }
+	    }
+	  }, {
+	    key: '_handleTapOrHover',
+	    value: function _handleTapOrHover(e) {
+	      var _props = this.props;
+	      var openPopoverOn = _props.openPopoverOn;
+	      var closeOnOutsideClick = _props.closeOnOutsideClick;
 	      var target = e.target;
 
 	      var toggleDisabled = this._toggle.getAttribute('disabled');
 
 	      if (isTarget(this._toggle, target) && toggleDisabled === null) {
-	        this._toggleMenu();
-	      } else if (this._menu && !isTarget(this._menu, target)) {
-	        this._closeMenu(false);
+	        if (openPopoverOn === 'tap') {
+	          this._togglePopover(false);
+	        } else {
+	          this._openPopover(false);
+	        }
+	      } else if (closeOnOutsideClick && this._popover && !isTarget(this._popover, target)) {
+	        this._closePopover(false);
 	      } else {
 	        for (var i = this._items.length; i--;) {
 	          var item = this._items[i];
 	          if (item.node === target) {
-	            this._onSelection(item, e);
+	            this._onItemSelection(item, e);
 	          }
 	        }
 	      }
@@ -280,81 +371,57 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_onKeyDown',
 	    value: function _onKeyDown(e) {
-	      var key = e.key;
+	      var keyCode = e.keyCode;
 	      var target = e.target;
 
 	      if (this.state.isOpen) {
-	        if (key === 'Tab') {
-	          this._closeMenu(false);
-	        } else if (key === 'Escape') {
+	        if (!this.props.trapFocus && keyCode === KEYS.tab) {
+	          this._closePopover(false);
+	        } else if (keyCode === KEYS.escape) {
 	          e.preventDefault();
-	          this._closeMenu();
-	        } else if (['Enter', ' '].indexOf(key) > -1) {
+	          this._closePopover();
+	        } else if ([KEYS.enter, KEYS.space].indexOf(keyCode) > -1) {
 	          for (var i = this._items.length; i--;) {
 	            var item = this._items[i];
 	            if (item.node === target) {
 	              e.preventDefault();
-	              this._onSelection(item, e);
+	              this._onItemSelection(item, e);
 	            }
 	          }
 	        }
-	      } else if (['ArrowUp', 'ArrowDown', 'Enter', ' '].indexOf(key) > -1) {
+	      } else if ([KEYS.arrowUp, KEYS.arrowDown, KEYS.enter, KEYS.space].indexOf(keyCode) > -1) {
 	        if (isTarget(this._toggle, target)) {
 	          e.preventDefault();
-	          this._openMenu();
+	          this._openPopover();
 	        }
 	      }
 	    }
 	  }, {
-	    key: '_onSelection',
-	    value: function _onSelection(item, e) {
+	    key: '_onItemSelection',
+	    value: function _onItemSelection(item, e) {
 	      var value = item.value || item.node.innerHTML;
 
-	      if (this.props.closeOnSelection) {
-	        this._closeMenu();
+	      if (this.props.closeOnItemSelection) {
+	        this._closePopover();
 	      }
 
-	      this.props.onSelection(value, e);
+	      this.props.onItemSelection(value, e);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var tag = _props.tag;
-	      var children = _props.children;
+	      var _props2 = this.props;
+	      var tag = _props2.tag;
+	      var children = _props2.children;
 
 	      var props = (0, _specialAssign2['default'])({}, this.props, checkedProps);
+
 	      if (typeof children === 'function') {
 	        return children(this.state.isOpen);
 	      }
+
 	      return (0, _react.createElement)(tag, props, children);
 	    }
-	  }], [{
-	    key: 'childContextTypes',
-	    value: {
-	      ariaManager: _react.PropTypes.object.isRequired
-	    },
-	    enumerable: true
-	  }, {
-	    key: 'propTypes',
-	    value: checkedProps,
-	    enumerable: true
-	  }, {
-	    key: 'defaultProps',
-	    value: {
-	      tag: 'div',
-	      stringSearch: true,
-	      forwardArrows: ['right', 'down'],
-	      backArrows: ['left', 'up'],
-	      wrap: true,
-	      stringSearch: true,
-	      stringSearchDelay: 600,
-	      onSelection: function onSelection() {
-	        return null;
-	      },
-	      closeOnSelection: true
-	    },
-	    enumerable: true
 	  }]);
 
 	  return AriaManager;
@@ -373,241 +440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 3 */
 /***/ function(module, exports) {
 
-	'use strict';
-
-	function FocusGroup(options) {
-	  options = options || {};
-	  this._settings = {
-	    forwardArrows: options.forwardArrows || ['down'],
-	    backArrows: options.backArrows || ['up'],
-	    wrap: options.wrap,
-	    stringSearch: options.stringSearch,
-	    stringSearchDelay: 800
-	  };
-	  this._searchString = '';
-	  this._members = [];
-	  if (options.members) this.setMembers(options.members);
-	  this._boundHandleKeydownEvent = this._handleKeydownEvent.bind(this);
-	}
-
-	FocusGroup.prototype.activate = function () {
-	  // Use capture in case other libraries might grab it first -- i.e. React
-	  document.addEventListener('keydown', this._boundHandleKeydownEvent, true);
-	  return this;
-	};
-
-	FocusGroup.prototype.deactivate = function () {
-	  document.removeEventListener('keydown', this._boundHandleKeydownEvent, true);
-	  this._clearSearchStringRefreshTimer();
-	  return this;
-	};
-
-	FocusGroup.prototype._handleKeydownEvent = function (event) {
-	  // Only respond to keyboard events when
-	  // focus is already within the focus-group
-	  var activeElementIndex = this._getActiveElementIndex();
-	  if (activeElementIndex === -1) return;
-
-	  var arrow = getEventArrowKey(event);
-
-	  if (!arrow) {
-	    this._handleNonArrowKey(event);
-	    return;
-	  }
-
-	  if (this._settings.forwardArrows.indexOf(arrow) !== -1) {
-	    event.preventDefault();
-	    this.moveFocusForward();
-	    return;
-	  }
-
-	  if (this._settings.backArrows.indexOf(arrow) !== -1) {
-	    event.preventDefault();
-	    this.moveFocusBack();
-	    return;
-	  }
-	};
-
-	FocusGroup.prototype.moveFocusForward = function () {
-	  var activeElementIndex = this._getActiveElementIndex();
-	  var targetIndex;
-	  if (activeElementIndex < this._members.length - 1) {
-	    targetIndex = activeElementIndex + 1;
-	  } else if (this._settings.wrap) {
-	    targetIndex = 0;
-	  } else {
-	    targetIndex = activeElementIndex;
-	  }
-	  this.focusNodeAtIndex(targetIndex);
-	  return targetIndex;
-	};
-
-	FocusGroup.prototype.moveFocusBack = function () {
-	  var activeElementIndex = this._getActiveElementIndex();
-	  var targetIndex;
-	  if (activeElementIndex > 0) {
-	    targetIndex = activeElementIndex - 1;
-	  } else if (this._settings.wrap) {
-	    targetIndex = this._members.length - 1;
-	  } else {
-	    targetIndex = activeElementIndex;
-	  }
-	  this.focusNodeAtIndex(targetIndex);
-	  return targetIndex;
-	};
-
-	FocusGroup.prototype._handleNonArrowKey = function (event) {
-	  if (!this._settings.stringSearch) return;
-
-	  // While a string search is underway, ignore spaces
-	  // and prevent the default space-key behavior
-	  if (this._searchString !== '' && (event.key === ' ' || event.keyCode === 32)) {
-	    event.preventDefault();
-	    return -1;
-	  }
-
-	  // Only respond to letter keys
-	  if (!isLetterKeyCode(event.keyCode)) return -1;
-
-	  // If the letter key is part of a key combo,
-	  // let it do whatever it was going to do
-	  if (event.ctrlKey || event.metaKey || event.altKey) return -1;
-
-	  event.preventDefault();
-
-	  this._addToSearchString(String.fromCharCode(event.keyCode));
-	  this._runStringSearch();
-	};
-
-	FocusGroup.prototype._clearSearchString = function () {
-	  this._searchString = '';
-	};
-
-	FocusGroup.prototype._addToSearchString = function (letter) {
-	  // Always store the lowercase version of the letter
-	  this._searchString += letter.toLowerCase();
-	};
-
-	FocusGroup.prototype._startSearchStringRefreshTimer = function () {
-	  var self = this;
-	  this._clearSearchStringRefreshTimer();
-	  this._stringSearchTimer = setTimeout(function () {
-	    self._clearSearchString();
-	  }, this._settings.stringSearchDelay);
-	};
-
-	FocusGroup.prototype._clearSearchStringRefreshTimer = function () {
-	  clearTimeout(this._stringSearchTimer);
-	};
-
-	FocusGroup.prototype._runStringSearch = function () {
-	  this._startSearchStringRefreshTimer();
-	  this.moveFocusByString(this._searchString);
-	};
-
-	FocusGroup.prototype.moveFocusByString = function (str) {
-	  var member;
-	  for (var i = 0, l = this._members.length; i < l; i++) {
-	    member = this._members[i];
-	    if (!member.text) continue;
-
-	    if (member.text.indexOf(str) === 0) {
-	      return focusNode(member.node);
-	    }
-	  }
-	};
-
-	FocusGroup.prototype._findIndexOfNode = function (searchNode) {
-	  for (var i = 0, l = this._members.length; i < l; i++) {
-	    if (this._members[i].node === searchNode) {
-	      return i;
-	    }
-	  }
-	  return -1;
-	};
-
-	FocusGroup.prototype._getActiveElementIndex = function () {
-	  return this._findIndexOfNode(document.activeElement);
-	};
-
-	FocusGroup.prototype.focusNodeAtIndex = function (index) {
-	  var member = this._members[index];
-	  if (member) focusNode(member.node);
-	  return this;
-	};
-
-	FocusGroup.prototype.addMember = function (member, index) {
-	  var node = member.node || member;
-	  var nodeText = member.text || node.getAttribute('data-focus-group-text') || node.textContent || '';
-
-	  this._checkNode(node);
-
-	  var cleanedNodeText = nodeText.replace(/[\W_]/g, '').toLowerCase();
-	  var member = {
-	    node: node,
-	    text: cleanedNodeText
-	  };
-
-	  if (index !== null && index !== undefined) {
-	    this._members.splice(index, 0, member);
-	  } else {
-	    this._members.push(member);
-	  }
-	  return this;
-	};
-
-	FocusGroup.prototype.removeMember = function (member) {
-	  var removalIndex = typeof member === 'number' ? member : this._findIndexOfNode(member);
-	  if (removalIndex === -1) return;
-	  this._members.splice(removalIndex, 1);
-	  return this;
-	};
-
-	FocusGroup.prototype.clearMembers = function () {
-	  this._members = [];
-	  return this;
-	};
-
-	FocusGroup.prototype.setMembers = function (nextMembers) {
-	  this.clearMembers();
-	  for (var i = 0, l = nextMembers.length; i < l; i++) {
-	    this.addMember(nextMembers[i]);
-	  }
-	  return this;
-	};
-
-	FocusGroup.prototype.getMembers = function () {
-	  return this._members;
-	};
-
-	FocusGroup.prototype._checkNode = function (node) {
-	  if (!node.nodeType || node.nodeType !== window.Node.ELEMENT_NODE) {
-	    throw new Error('focus-group: only DOM nodes allowed');
-	  }
-	  return node;
-	};
-
-	function getEventArrowKey(event) {
-	  if (event.key === 'ArrowUp' || event.keyCode === 38) return 'up';
-	  if (event.key === 'ArrowDown' || event.keyCode === 40) return 'down';
-	  if (event.key === 'ArrowLeft' || event.keyCode === 37) return 'left';
-	  if (event.key === 'ArrowRight' || event.keyCode === 39) return 'right';
-	  return null;
-	}
-
-	function isLetterKeyCode(keyCode) {
-	  return keyCode >= 65 && keyCode <= 90;
-	}
-
-	function focusNode(node) {
-	  if (!node || !node.focus) return;
-	  node.focus();
-	  if (node.tagName.toLowerCase() === 'input') node.select();
-	}
-
-	module.exports = function createFocusGroup(options) {
-	  return new FocusGroup(options);
-	};
+	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
 /***/ },
 /* 4 */
@@ -652,11 +485,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  _attachListeners: function _attachListeners() {
 	    this._tapListener = (0, _teenyTap2['default'])(document.documentElement, this._documentEvent.bind(this, '_onTap'));
+	    document.addEventListener('mouseover', this._documentEvent.bind(this, '_onHover'));
 	    document.addEventListener('keydown', this._documentEvent.bind(this, '_onKeyDown'));
 	  },
 
 	  _detachListeners: function _detachListeners() {
 	    this._tapListener.remove();
+	    document.removeEventListener('mouseover', this._documentEvent);
 	    document.removeEventListener('keydown', this._documentEvent);
 	  },
 
@@ -672,81 +507,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ function(module, exports) {
 
-	'use strict';
-
-	module.exports = function createTapListener(el, callback, useCapture) {
-	  var startX = 0;
-	  var startY = 0;
-	  var touchStarted = false;
-	  var touchMoved = false;
-	  // Assume that if a touchstart event initiates, the user is
-	  // using touch and click events should be ignored.
-	  // If this isn't done, touch-clicks will fire the callback
-	  // twice: once on touchend, once on the subsequent "click".
-	  var usingTouch = false;
-
-	  el.addEventListener('click', handleClick, useCapture);
-	  el.addEventListener('touchstart', handleTouchstart, useCapture);
-
-	  function handleClick(e) {
-	    if (usingTouch) return;
-	    callback(e);
-	  }
-
-	  function handleTouchstart(e) {
-	    usingTouch = true;
-
-	    if (touchStarted) return;
-	    touchStarted = true;
-
-	    el.addEventListener('touchmove', handleTouchmove, useCapture);
-	    el.addEventListener('touchend', handleTouchend, useCapture);
-	    el.addEventListener('touchcancel', handleTouchcancel, useCapture);
-
-	    touchMoved = false;
-	    startX = e.touches[0].clientX;
-	    startY = e.touches[0].clientY;
-	  }
-
-	  function handleTouchmove(e) {
-	    if (touchMoved) return;
-
-	    if (Math.abs(e.touches[0].clientX - startX) <= 10 && Math.abs(e.touches[0].clientY - startY) <= 10) return;
-
-	    touchMoved = true;
-	  }
-
-	  function handleTouchend(e) {
-	    touchStarted = false;
-	    removeSecondaryTouchListeners();
-	    if (!touchMoved) {
-	      callback(e);
-	    }
-	  }
-
-	  function handleTouchcancel() {
-	    touchStarted = false;
-	    touchMoved = false;
-	    startX = 0;
-	    startY = 0;
-	  }
-
-	  function removeSecondaryTouchListeners() {
-	    el.removeEventListener('touchmove', handleTouchmove, useCapture);
-	    el.removeEventListener('touchend', handleTouchend, useCapture);
-	    el.removeEventListener('touchcancel', handleTouchcancel, useCapture);
-	  }
-
-	  function removeTapListener() {
-	    el.removeEventListener('click', handleClick, useCapture);
-	    el.removeEventListener('touchstart', handleTouchstart, useCapture);
-	    removeSecondaryTouchListeners();
-	  }
-
-	  return {
-	    remove: removeTapListener
-	  };
-	};
+	module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
 
 /***/ },
 /* 6 */
@@ -803,22 +564,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var checkedProps = {
 	  tag: _react.PropTypes.string,
-	  children: _react.PropTypes.node.isRequired
+	  children: _react.PropTypes.oneOfType([_react.PropTypes.func, _react.PropTypes.node]).isRequired
 	};
 
-	var Toggle = (function (_Component) {
-	  _inherits(Toggle, _Component);
+	var AriaToggle = (function (_Component) {
+	  _inherits(AriaToggle, _Component);
 
-	  function Toggle() {
-	    _classCallCheck(this, Toggle);
+	  function AriaToggle() {
+	    _classCallCheck(this, AriaToggle);
 
-	    _get(Object.getPrototypeOf(Toggle.prototype), 'constructor', this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(AriaToggle.prototype), 'constructor', this).apply(this, arguments);
 	  }
 
-	  _createClass(Toggle, [{
+	  _createClass(AriaToggle, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      this.context.ariaManager.setToggle((0, _reactDom.findDOMNode)(this));
+	      this.context.ariaManager.setToggleNode((0, _reactDom.findDOMNode)(this));
 	    }
 	  }, {
 	    key: 'render',
@@ -836,6 +597,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'aria-disabled': disabled
 	      }, this.props, checkedProps);
 
+	      if (typeof children === 'function') {
+	        return children(props);
+	      }
+
 	      return (0, _react.createElement)(tag, props, children);
 	    }
 	  }], [{
@@ -845,6 +610,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    enumerable: true
 	  }, {
+	    key: 'propTypes',
+	    value: checkedProps,
+	    enumerable: true
+	  }, {
 	    key: 'defaultProps',
 	    value: {
 	      tag: 'button'
@@ -852,10 +621,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    enumerable: true
 	  }]);
 
-	  return Toggle;
+	  return AriaToggle;
 	})(_react.Component);
 
-	exports['default'] = Toggle;
+	exports['default'] = AriaToggle;
 	module.exports = exports['default'];
 
 /***/ },
@@ -892,40 +661,64 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
+	var _focusTrap = __webpack_require__(10);
+
+	var _focusTrap2 = _interopRequireDefault(_focusTrap);
+
 	var _specialAssign = __webpack_require__(6);
 
 	var _specialAssign2 = _interopRequireDefault(_specialAssign);
 
 	var checkedProps = {
 	  tag: _react.PropTypes.string,
-	  children: _react.PropTypes.node.isRequired
+	  children: _react.PropTypes.oneOfType([_react.PropTypes.func, _react.PropTypes.node]).isRequired
 	};
 
-	var Menu = (function (_Component) {
-	  _inherits(Menu, _Component);
+	var AriaPopover = (function (_Component) {
+	  _inherits(AriaPopover, _Component);
 
-	  function Menu() {
-	    _classCallCheck(this, Menu);
+	  function AriaPopover() {
+	    _classCallCheck(this, AriaPopover);
 
-	    _get(Object.getPrototypeOf(Menu.prototype), 'constructor', this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(AriaPopover.prototype), 'constructor', this).apply(this, arguments);
 	  }
 
-	  _createClass(Menu, [{
+	  _createClass(AriaPopover, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      this._setMenuNode();
+	      var _context$ariaManager = this.context.ariaManager;
+	      var trapFocus = _context$ariaManager.trapFocus;
+	      var initialFocus = _context$ariaManager.initialFocus;
+	      var onClickOutside = _context$ariaManager.onClickOutside;
+
+	      this._setPopoverNode();
+
+	      if (trapFocus) {
+	        this._focusTrap = (0, _focusTrap2['default'])((0, _reactDom.findDOMNode)(this), {
+	          initialFocus: initialFocus,
+	          escapeDeactivates: false,
+	          clickOutsideDeactivates: true
+	        }).activate();
+	      }
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      if (this.context.ariaManager.trapFocus) {
+	        this._focusTrap.deactivate();
+	      }
 	    }
 	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate(lastProps, lastState, lastContext) {
 	      if (this.context.ariaManager.isOpen !== lastContext.ariaManager.isOpen) {
-	        this._setMenuNode();
+	        this._setPopoverNode();
 	      }
 	    }
 	  }, {
-	    key: '_setMenuNode',
-	    value: function _setMenuNode() {
-	      this.context.ariaManager.setMenu((0, _reactDom.findDOMNode)(this));
+	    key: '_setPopoverNode',
+	    value: function _setPopoverNode() {
+	      this.context.ariaManager.setPopoverNode((0, _reactDom.findDOMNode)(this));
 	    }
 	  }, {
 	    key: 'render',
@@ -934,9 +727,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var tag = _props.tag;
 	      var children = _props.children;
 
-	      var props = (0, _specialAssign2['default'])({
-	        role: 'menu'
-	      }, this.props, checkedProps);
+	      var props = (0, _specialAssign2['default'])({}, this.props, checkedProps);
+
+	      if (typeof children === 'function') {
+	        return children(props);
+	      }
 
 	      return (0, _react.createElement)(tag, props, children);
 	    }
@@ -947,6 +742,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    enumerable: true
 	  }, {
+	    key: 'propTypes',
+	    value: checkedProps,
+	    enumerable: true
+	  }, {
 	    key: 'defaultProps',
 	    value: {
 	      tag: 'div'
@@ -954,14 +753,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    enumerable: true
 	  }]);
 
-	  return Menu;
+	  return AriaPopover;
 	})(_react.Component);
 
-	exports['default'] = Menu;
+	exports['default'] = AriaPopover;
 	module.exports = exports['default'];
 
 /***/ },
 /* 10 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -994,19 +799,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var checkedProps = {
 	  tag: _react.PropTypes.string,
-	  children: _react.PropTypes.node.isRequired
+	  children: _react.PropTypes.oneOfType([_react.PropTypes.func, _react.PropTypes.node]).isRequired
 	};
 
-	var MenuItem = (function (_Component) {
-	  _inherits(MenuItem, _Component);
+	var AriaItem = (function (_Component) {
+	  _inherits(AriaItem, _Component);
 
-	  function MenuItem() {
-	    _classCallCheck(this, MenuItem);
+	  function AriaItem() {
+	    _classCallCheck(this, AriaItem);
 
-	    _get(Object.getPrototypeOf(MenuItem.prototype), 'constructor', this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(AriaItem.prototype), 'constructor', this).apply(this, arguments);
 	  }
 
-	  _createClass(MenuItem, [{
+	  _createClass(AriaItem, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this._node = (0, _reactDom.findDOMNode)(this);
@@ -1033,6 +838,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        tabIndex: -1
 	      }, this.props, checkedProps);
 
+	      if (typeof children === 'function') {
+	        return children(props);
+	      }
+
 	      return (0, _react.createElement)(tag, props, children);
 	    }
 	  }], [{
@@ -1042,6 +851,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    enumerable: true
 	  }, {
+	    key: 'propTypes',
+	    value: checkedProps,
+	    enumerable: true
+	  }, {
 	    key: 'defaultProps',
 	    value: {
 	      tag: 'div'
@@ -1049,10 +862,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    enumerable: true
 	  }]);
 
-	  return MenuItem;
+	  return AriaItem;
 	})(_react.Component);
 
-	exports['default'] = MenuItem;
+	exports['default'] = AriaItem;
 	module.exports = exports['default'];
 
 /***/ }

@@ -1,6 +1,6 @@
 {
   "name": "react-aria",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Utilities to help create React ARIA components.",
   "main": "lib/react-aria.js",
   "scripts": {
@@ -18,12 +18,17 @@
   },
   "keywords": [
     "react",
-    "component",
+    "reactjs",
     "react-component",
-    "ui",
-    "motion",
-    "transition",
-    "animation"
+    "aria",
+    "accessibility",
+    "accessible",
+    "dialog",
+    "dropdown",
+    "modal",
+    "menu",
+    "popover",
+    "widget"
   ],
   "author": "Travis Arnold <travis@souporserious.com> (http://souporserious.com)",
   "license": "MIT",
