@@ -1,5 +1,6 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import createFocusGroup from 'focus-group'
+import noScroll from 'no-scroll'
 import EventsHandler from './events-handler'
 import specialAssign from './special-assign'
 
@@ -20,8 +21,9 @@ const checkedProps = {
   type:                 PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert', 'tabs', 'accordion']).isRequired,
   tag:                  PropTypes.string,
   trapFocus:            PropTypes.bool,
+  freezeScroll:         PropTypes.bool,
   activeTabId:          PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  //defaultTabId:          PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  //defaultTabId:       PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   children:             PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
   keybindings: PropTypes.shape({
     next:  PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
@@ -52,6 +54,7 @@ class AriaManager extends Component {
   static defaultProps = {
     tag:                  'div',
     trapFocus:            false,
+    freezeScroll:         false,
     keybindings: {
       next:  [{ keyCode: KEYS.arrowDown }, { keyCode: KEYS.arrowRight }],
       prev:  [{ keyCode: KEYS.arrowUp }, { keyCode: KEYS.arrowLeft }],
@@ -231,11 +234,17 @@ class AriaManager extends Component {
   }
 
   _openPopover = (focusFirstMember = true) => {
+    const { freezeScroll, onPopoverOpen } = this.props
+
     if (this.state.isPopoverOpen) return;
 
     this.setState({ isPopoverOpen: true })
 
-    this.props.onPopoverOpen()
+    if (freezeScroll) {
+      noScroll.on()
+    }
+
+    onPopoverOpen()
 
     if (focusFirstMember) {
       setTimeout(() => {
@@ -245,11 +254,17 @@ class AriaManager extends Component {
   }
 
   _closePopover = (focusToggle = true) => {
+    const { freezeScroll, onPopoverClose } = this.props
+
     if (!this.state.isPopoverOpen) return;
 
     this.setState({ isPopoverOpen: false })
 
-    this.props.onPopoverClose()
+    if (freezeScroll) {
+      noScroll.off()
+    }
+
+    onPopoverClose()
 
     if (focusToggle) {
       setTimeout(() => {

@@ -65,6 +65,7 @@ class Modal extends Component {
       <AriaManager
         type="modal"
         trapFocus
+        freezeScroll
       >
         { isOpen =>
           <div>

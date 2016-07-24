@@ -23,11 +23,14 @@
     "aria",
     "accessibility",
     "accessible",
+    "accordion",
     "dialog",
     "dropdown",
     "modal",
     "menu",
     "popover",
+    "tabs",
+    "tab-panel",
     "widget"
   ],
   "author": "Travis Arnold <travis@souporserious.com> (http://souporserious.com)",
@@ -43,6 +46,7 @@
   "dependencies": {
     "focus-group": "^0.3.0",
     "focus-trap": "^2.0.1",
+    "no-scroll": "^1.1.2",
     "teeny-tap": "^0.2.0"
   },
   "devDependencies": {
