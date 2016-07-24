@@ -8,8 +8,6 @@ const isTarget = (node, target) => (node === target || node.contains(target))
 const KEYS = {
   tab:        9,
   escape:     27,
-  enter:      13,
-  space:      32,
   end:        35,
   home:       36,
   arrowLeft:  37,
@@ -19,8 +17,11 @@ const KEYS = {
 }
 
 const checkedProps = {
+  type:                 PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert', 'tabs', 'accordion']).isRequired,
   tag:                  PropTypes.string,
   trapFocus:            PropTypes.bool,
+  activeTabId:          PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  //defaultTabId:          PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   children:             PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
   keybindings: PropTypes.shape({
     next:  PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
@@ -31,9 +32,11 @@ const checkedProps = {
   wrap:                 PropTypes.bool,
   stringSearch:         PropTypes.bool,
   stringSearchDelay:    PropTypes.number,
+  collapsible:          PropTypes.bool,
   openPopoverOn:        PropTypes.oneOf(['tap', 'hover']),
   closeOnOutsideClick:  PropTypes.bool,
   closeOnItemSelection: PropTypes.bool,
+  accordion:            PropTypes.bool,
   onPopoverOpen:        PropTypes.func,
   onPopoverClose:       PropTypes.func,
   onItemSelection:      PropTypes.func,
@@ -58,6 +61,7 @@ class AriaManager extends Component {
     wrap:                 true,
     stringSearch:         true,
     stringSearchDelay:    600,
+    collapsible:          false,
     openPopoverOn:        'tap',
     closeOnOutsideClick:  true,
     closeOnItemSelection: true,
@@ -69,26 +73,33 @@ class AriaManager extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpen: false
+      isPopoverOpen: false
     }
     this._focusGroup = createFocusGroup(props)
     this._toggle     = null
     this._popover    = null
-    this._items      = []
+    this._members    = []
+
+    this._activeTabId = null
+    this._panels = []
+    this._uuid = 'RA' + Math.abs(~~(Math.random() * new Date()))
   }
 
   getChildContext() {
     return {
       ariaManager: {
+        uuid:            this._uuid,
+        type:            this.props.type,
         trapFocus:       this.props.trapFocus,
         initialFocus:    this.props.initialFocus,
-        isOpen:          this.state.isOpen,
+        isPopoverOpen:   this.state.isPopoverOpen,
         onItemSelection: this._onItemSelection,
         setToggleNode:   this._setToggleNode,
         setPopoverNode:  this._setPopoverNode,
-        addItem:         this._addItem,
-        removeItem:      this._removeItem,
-        clearItems:      this._clearItems,
+        addMember:       this._addMember,
+        addPanel:        this._addPanel,
+        removeMember:    this._removeMember,
+        activateTab:     this._activateTab,
         focusItem:       this._focusItem,
         openPopover:     this._openPopover,
         closePopover:    this._closePopover,
@@ -98,15 +109,12 @@ class AriaManager extends Component {
   }
 
   componentWillMount() {
-    EventsHandler.add(this, this.props.openPopoverOn)
+    this._focusGroup.activate()
+    EventsHandler.add(this)
   }
 
   componentWillUnmount() {
     this._focusGroup.deactivate()
-    this._toggle  = null
-    this._popover = null
-    this._items   = []
-
     EventsHandler.remove(this)
   }
 
@@ -125,58 +133,49 @@ class AriaManager extends Component {
   _handleTapOrHover(e) {
     const { openPopoverOn, closeOnOutsideClick } = this.props
     const { target } = e
-    const toggleDisabled = this._toggle.getAttribute('disabled')
 
-    if (isTarget(this._toggle, target) && toggleDisabled === null) {
-      if (openPopoverOn === 'tap') {
-        this._togglePopover(false)
-      } else {
-        this._openPopover(false)
+    if (this._toggle) {
+      const toggleDisabled = this._toggle.getAttribute('disabled')
+
+      if (isTarget(this._toggle, target) && toggleDisabled === null) {
+        if (openPopoverOn === 'tap') {
+          this._togglePopover(false)
+        } else {
+          this._openPopover(false)
+        }
+        return
+      }
+      else if (closeOnOutsideClick && this._popover && !isTarget(this._popover, target)) {
+        this._closePopover(false)
+        return
       }
     }
-    else if (closeOnOutsideClick && this._popover && !isTarget(this._popover, target)) {
-      this._closePopover(false)
-    }
-    else {
-      for (let i = this._items.length; i--;) {
-        const item = this._items[i]
-        if (item.node === target) {
-          this._onItemSelection(item, e)
+
+    for (let i = this._members.length; i--;) {
+      const member = this._members[i]
+      if (member.node === target) {
+        if (member.type === 'item') {
+          this._onItemSelection(member, e)
+        } else {
+          this._activateTab(member.id)
         }
+        return
       }
     }
   }
 
-  _onKeyDown(e) {
-    const { keyCode, target } = e
-
-    if (this.state.isOpen) {
+  _onKeyDown({ keyCode }) {
+    if (this.state.isPopoverOpen) {
       if (!this.props.trapFocus && keyCode === KEYS.tab) {
         this._closePopover(false)
       }
       else if (keyCode === KEYS.escape) {
-        e.preventDefault()
         this._closePopover()
-      }
-      else if ([KEYS.enter, KEYS.space].indexOf(keyCode) > -1) {
-        for (let i = this._items.length; i--;) {
-          const item = this._items[i]
-          if (item.node === target) {
-            e.preventDefault()
-            this._onItemSelection(item, e)
-          }
-        }
-      }
-    }
-    else if ([KEYS.arrowUp, KEYS.arrowDown, KEYS.enter, KEYS.space].indexOf(keyCode) > -1) {
-      if (isTarget(this._toggle, target)) {
-        e.preventDefault()
-        this._openPopover()
       }
     }
   }
 
-  _onItemSelection(item, e) {
+  _onItemSelection = (item, e) => {
     const value = item.value || item.node.innerHTML
 
     if (this.props.closeOnItemSelection) {
@@ -194,38 +193,51 @@ class AriaManager extends Component {
     this._popover = node
   }
 
-  _addItem = (item) => {
-    this._items.push(item)
-    this._focusGroup.addMember(item)
-  }
+  _addMember = (member) => {
+    const { activeTabId } = this.props
+    const { id, index, node, text } = member
 
-  _removeItem = (item) => {
-    const pos = this._items.indexOf(item)
-    if (pos > -1) {
-      this._items.splice(pos, 1)
+    if (index === undefined) {
+      this._members.push(member)
+    } else {
+      this._members.splice(index, 0, member)
     }
-    this._focusGroup.removeMember(item)
+
+    this._focusGroup.addMember({
+      node,
+      text: text || node.innerHTML
+    })
+
+    if (member.type === 'tab') {
+      if (activeTabId === id) {
+        this._activateTab(activeTabId, true)
+      } else {
+        this._handleFirstTabSelection(id)
+      }
+    }
   }
 
-  _clearItems = () => {
-    this._focusGroup.clearMembers()
+  _removeMember = (member) => {
+    const pos = this._members.indexOf(member)
+
+    if (pos > -1) {
+      this._members.splice(member, 1)
+      this._focusGroup.removeMember(member.node)
+    }
   }
 
   _focusItem = (index) => {
     this._focusGroup.focusNodeAtIndex(index)
   }
 
-  _openPopover = (focusPopover = true) => {
-    if (this.state.isOpen) return;
+  _openPopover = (focusFirstMember = true) => {
+    if (this.state.isPopoverOpen) return;
 
-    this.setState({ isOpen: true })
+    this.setState({ isPopoverOpen: true })
 
     this.props.onPopoverOpen()
 
-    this._focusGroup.activate()
-
-    if (focusPopover) {
-      // setTimeout allows animated popovers to still focus
+    if (focusFirstMember) {
       setTimeout(() => {
         this._focusItem(0)
       }, 60)
@@ -233,24 +245,88 @@ class AriaManager extends Component {
   }
 
   _closePopover = (focusToggle = true) => {
-    if (!this.state.isOpen) return;
+    if (!this.state.isPopoverOpen) return;
 
-    this.setState({ isOpen: false })
+    this.setState({ isPopoverOpen: false })
 
     this.props.onPopoverClose()
 
-    this._focusGroup.deactivate()
-
     if (focusToggle) {
-      this._toggle.focus()
+      setTimeout(() => {
+        this._toggle.focus()
+      }, 60)
     }
   }
 
   _togglePopover = (focus) => {
-    if (!this.state.isOpen) {
+    if (!this.state.isPopoverOpen) {
       this._openPopover(focus)
     } else {
       this._closePopover(focus)
+    }
+  }
+
+  _addPanel = (panel) => {
+    const { activeTabId } = this.props
+    const { controlledBy } = panel
+
+    this._panels.push(panel)
+
+    if (activeTabId === controlledBy) {
+      this._activateTab(activeTabId, true)
+    } else {
+      this._handleFirstTabSelection(panel.controlledBy)
+    }
+  }
+
+  _focusTab = (id) => {
+    const tabToFocus = this._members.filter(tab => tab.id === id)
+    if (tabToFocus) {
+      tabToFocus.node.focus()
+    }
+  }
+
+  _activateTab = (id, forceActivate) => {
+    const { type } = this.props
+
+    if (type === 'tabs') {
+      if (id === this._activeTabId && !forceActivate) {
+        return
+      } else {
+        this._activeTabId = id
+      }
+    }
+
+    if (this.props.onChange) {
+      this.props.onChange(id)
+      return
+    }
+
+    for (let i = this._members.length; i--;) {
+      const tab = this._members[i]
+      if (type === 'accordion') {
+        if (tab.id === id) {
+          tab.toggleActiveState()
+        }
+      } else {
+        tab.setActiveState(id === tab.id)
+      }
+    }
+    for (let i = this._panels.length; i--;) {
+      const panel = this._panels[i]
+      if (type === 'accordion') {
+        if (panel.controlledBy === id) {
+          panel.toggleActiveState()
+        }
+      } else {
+        panel.setActiveState(id === panel.controlledBy)
+      }
+    }
+  }
+
+  _handleFirstTabSelection(id) {
+    if (this.props.type === 'tabs' && !this._activeTabId || id === this._activeTabId) {
+      this._activateTab(id, true)
     }
   }
 
@@ -259,7 +335,7 @@ class AriaManager extends Component {
     const props = specialAssign({}, this.props, checkedProps)
 
     if (typeof children === 'function') {
-      return children(this.state.isOpen)
+      return children(this.state.isPopoverOpen)
     }
 
     return createElement(tag, props, children)

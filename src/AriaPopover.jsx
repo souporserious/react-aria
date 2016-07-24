@@ -40,7 +40,7 @@ class AriaPopover extends Component {
   }
 
   componentDidUpdate(lastProps, lastState, lastContext) {
-    if (this.context.ariaManager.isOpen !== lastContext.ariaManager.isOpen) {
+    if (this.context.ariaManager.isPopoverOpen !== lastContext.ariaManager.isPopoverOpen) {
       this._setPopoverNode()
     }
   }
@@ -50,8 +50,28 @@ class AriaPopover extends Component {
   }
 
   render() {
+    const { type, uuid, isPopoverOpen } = this.context.ariaManager
     const { tag, children } = this.props
-    const props = specialAssign({}, this.props, checkedProps)
+    const componentProps = {
+      'aria-hidden': !isPopoverOpen
+    }
+
+    if (type === 'menu') {
+      componentProps['role'] = 'menu'
+    } else if (type === 'modal') {
+      componentProps['role'] = 'dialog'
+    } else if (type === 'alert') {
+      componentProps['role'] = 'alertdialog'
+    } else if (type === 'tooltip') {
+      componentProps['id'] = uuid
+      componentProps['role'] = 'tooltip'
+    }
+
+    if (type === 'popover' || type === 'menu') {
+      componentProps['aria-labelledby'] = uuid
+    }
+
+    const props = specialAssign(componentProps, this.props, checkedProps)
 
     if (typeof children === 'function') {
       return children(props)

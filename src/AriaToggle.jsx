@@ -22,15 +22,40 @@ class AriaToggle extends Component {
     this.context.ariaManager.setToggleNode(findDOMNode(this))
   }
 
+  _handleKeyDown = (e) => {
+    if (['ArrowUp', 'ArrowDown', ' ', 'Enter'].indexOf(e.key) > -1) {
+      if (!this.context.ariaManager.isPopoverOpen) {
+        this.context.ariaManager.openPopover()
+      } else {
+        this.context.ariaManager.focusItem(0)
+      }
+    }
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e)
+    }
+  }
+
   render() {
+    const { type, uuid, isPopoverOpen } = this.context.ariaManager
     const { tag, disabled, children } = this.props
-    const props = specialAssign({
+    const componentProps = {
       role: 'button',
-      tabIndex: (disabled) ? '' : '0',
+      tabIndex: (disabled) ? '' : 0,
       'aria-haspopup': true,
-      'aria-expanded': this.context.ariaManager.isOpen,
+      'aria-expanded': isPopoverOpen,
       'aria-disabled': disabled,
-    }, this.props, checkedProps)
+      onKeyDown: this._handleKeyDown
+    }
+
+    if (type === 'popover' || type === 'menu') {
+      componentProps['id'] = uuid
+    }
+
+    if (type === 'tooltip') {
+      componentProps['aria-describedby'] = uuid
+    }
+
+    const props = specialAssign(componentProps, this.props, checkedProps)
 
     if (typeof children === 'function') {
       return children(props)

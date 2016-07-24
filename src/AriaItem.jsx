@@ -19,23 +19,33 @@ class AriaItem extends Component {
   }
 
   componentDidMount() {
-    this._node = findDOMNode(this)
-
-    this.context.ariaManager.addItem({
-      node: this._node,
+    this._member = {
+      type: 'item',
+      node: findDOMNode(this),
       text: this.props.text
-    })
+    }
+    this.context.ariaManager.addMember(this._member)
   }
 
   componentWillUnmount() {
-    this.context.ariaManager.removeItem(this._node)
+    this.context.ariaManager.removeMember(this._member)
+  }
+
+  _handleKeyDown = (e) => {
+    if ([' ', 'Enter'].indexOf(e.key) > -1) {
+      this.context.ariaManager.onItemSelection(this._member, e)
+    }
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e)
+    }
   }
 
   render() {
     const { tag, children } = this.props
     const props = specialAssign({
       role: 'menuitem',
-      tabIndex: -1
+      tabIndex: -1,
+      onKeyDown: this._handleKeyDown
     }, this.props, checkedProps)
 
     if (typeof children === 'function') {
