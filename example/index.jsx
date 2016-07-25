@@ -108,7 +108,7 @@ class Popover extends Component {
       >
         <div>
           <h3>Popover</h3>
-          <AriaToggle>
+          <AriaToggle className="popover-toggle">
             Toggle Popover <span>👻</span>
           </AriaToggle>
           { isOpen &&
@@ -129,13 +129,13 @@ class Accordion extends Component {
   state = {
     tabs: [{
       tab: 'one',
-      panel: <div>Some cool content for tab panel one.</div>
+      panel: <div>Some cool content for accordion one.</div>
     }, {
       tab: 'two',
-      panel: <div>Some cool content for tab panel two.</div>
+      panel: <div>Some cool content for accordion two.</div>
     }, {
       tab: 'three',
-      panel: <div>Some cool content for tab panel three with a <a href="http://google.com" target="_blank">link</a>.</div>
+      panel: <div>Some cool content for accordion three.</div>
     }]
   }
 

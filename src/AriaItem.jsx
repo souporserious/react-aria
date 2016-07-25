@@ -32,11 +32,13 @@ class AriaItem extends Component {
   }
 
   _handleKeyDown = (e) => {
+    const { onKeyDown } = this.props
+
     if ([' ', 'Enter'].indexOf(e.key) > -1) {
       this.context.ariaManager.onItemSelection(this._member, e)
     }
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(e)
+    if (onKeyDown) {
+      onKeyDown(e)
     }
   }
 

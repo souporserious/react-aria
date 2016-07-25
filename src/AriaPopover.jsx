@@ -67,7 +67,7 @@ class AriaPopover extends Component {
       componentProps['role'] = 'tooltip'
     }
 
-    if (type === 'popover' || type === 'menu') {
+    if (type === 'popover') {
       componentProps['aria-labelledby'] = uuid
     }
 

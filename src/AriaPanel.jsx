@@ -53,16 +53,22 @@ class AriaPanel extends Component {
   render() {
     const { tag, controlledBy, disabled, children } = this.props
     const isActive = (this.props.isActive !== undefined) ? this.props.isActive : this.state.isActive
-    const props = specialAssign({
+    const componentProps = {
       id: `${controlledBy}-panel`,
       role: 'tabpanel',
       'aria-hidden': !isActive,
       'aria-labelledby': controlledBy,
       onKeyDown: this._handleKeyDown,
-      style: {
-        display: isActive ? '' : 'none'
+    }
+
+    if (!isActive) {
+      componentProps['style'] = {
+        display: 'none',
+        ...this.props.style
       }
-    }, this.props, checkedProps)
+    }
+
+    const props = specialAssign(componentProps, this.props, checkedProps)
 
     if (typeof children === 'function') {
       return children(props, isActive)

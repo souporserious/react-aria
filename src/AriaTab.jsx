@@ -9,18 +9,6 @@ const checkedProps = {
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
-// write a function that allows you to bind native functionality to
-// props like onChange and stuff like that, I shouldn't need to write
-// this example over and over again:
-// _handleFocus = (e) => {
-//   // code
-//   if (this.props.onKeyDown) {
-//     this.props.onKeyDown(e)
-//   }
-// }
-//
-// Ideally it should autobind the function as well as provide an original tie into the props[event]
-
 class AriaTab extends Component {
   static contextTypes = {
     ariaManager: PropTypes.object.isRequired
@@ -96,10 +84,7 @@ class AriaTab extends Component {
       'aria-controls': `${id}-panel`,
       'aria-disabled': disabled,
       onKeyDown: this._handleKeyDown,
-      onFocus: this._handleFocus,
-      style: {
-        color: isActive ? 'red' : ''
-      }
+      onFocus: this._handleFocus
     }
 
     if (type === 'accordion') {
@@ -109,7 +94,7 @@ class AriaTab extends Component {
     const props = specialAssign(componentProps, this.props, checkedProps)
 
     if (typeof children === 'function') {
-      return children(props)
+      return children(props, isActive)
     }
 
     return createElement(tag, props, children)

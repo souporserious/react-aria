@@ -23,7 +23,8 @@ class AriaToggle extends Component {
   }
 
   _handleKeyDown = (e) => {
-    if (['ArrowUp', 'ArrowDown', ' ', 'Enter'].indexOf(e.key) > -1) {
+    if (['ArrowUp', 'ArrowDown', ' '].indexOf(e.key) > -1 ||
+        (this.props.tag !== 'button' && e.key === 'Enter')) {
       if (!this.context.ariaManager.isPopoverOpen) {
         this.context.ariaManager.openPopover()
       } else {
@@ -47,7 +48,7 @@ class AriaToggle extends Component {
       onKeyDown: this._handleKeyDown
     }
 
-    if (type === 'popover' || type === 'menu') {
+    if (type === 'popover') {
       componentProps['id'] = uuid
     }
 
