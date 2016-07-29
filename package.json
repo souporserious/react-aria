@@ -1,6 +1,6 @@
 {
   "name": "react-aria",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Utilities to help create React ARIA components.",
   "main": "lib/react-aria.js",
   "scripts": {
@@ -59,9 +59,13 @@
     "lodash": "^3.10.0",
     "node-libs-browser": "^0.5.2",
     "node-sass": "^3.2.0",
-    "react": "15.2.1",
+    "react": "^15.2.1",
     "react-a11y": "^0.3.3",
+    "react-collapse": "^2.3.1",
+    "react-displace": "^2.1.3",
     "react-dom": "15.2.1",
+    "react-height": "^2.1.1",
+    "react-measure": "^0.4.1",
     "react-motion": "^0.4.4",
     "react-motion-ui-pack": "^0.9.0",
     "sass-loader": "^1.0.2",
