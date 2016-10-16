@@ -16,7 +16,7 @@ var externals = {
     amd: 'react-dom'
   },
   'focus-group': {
-    root: 'focusGroup',
+    root: 'createFocusGroup',
     commonjs2: 'focus-group',
     commonjs: 'focus-group',
     amd: 'focus-group'

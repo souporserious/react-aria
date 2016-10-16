@@ -47,13 +47,9 @@
     "react-dom": "0.14.x || ^15.0.0"
   },
   "dependencies": {
-    "chokidar": "^1.6.1",
     "focus-group": "^0.3.0",
     "focus-trap": "^2.0.1",
     "no-scroll": "^2.0.0",
-    "react-collapse": "^2.3.3",
-    "react-height": "^2.1.1",
-    "react-motion-ui-pack": "^0.10.2",
     "teeny-tap": "^0.2.0"
   },
   "devDependencies": {
@@ -63,6 +59,7 @@
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
+    "chokidar": "^1.6.1",
     "css-loader": "^0.25.0",
     "http-server": "^0.9.0",
     "node-libs-browser": "^1.0.0",
@@ -70,8 +67,11 @@
     "postcss-loader": "^0.13.0",
     "react": "15.3.2",
     "react-a11y": "^0.3.3",
+    "react-collapse": "^2.3.3",
     "react-dom": "15.3.2",
+    "react-height": "^2.1.1",
     "react-motion": "^0.4.2",
+    "react-motion-ui-pack": "^0.10.2",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.2",
