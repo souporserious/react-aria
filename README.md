@@ -9,7 +9,10 @@ Utilities to help compose ARIA compliant components.
 
 `npm install react-aria --save`
 
-`bower install react-aria --save`
+```html
+<script src="https://unpkg.com/react-aria/dist/react-aria.js"></script>
+(UMD library exposed as `ReactARIA`)
+```
 
 ### Example
 
