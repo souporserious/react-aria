@@ -4,7 +4,7 @@ import focusTrap from 'focus-trap'
 import specialAssign from './special-assign'
 
 const checkedProps = {
-  tag:      PropTypes.string,
+  tag: PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 

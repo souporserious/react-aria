@@ -104,9 +104,9 @@ class AriaManager extends Component {
         removeMember:    this._removeMember,
         activateTab:     this._activateTab,
         focusItem:       this._focusItem,
-        openPopover:     this._openPopover,
-        closePopover:    this._closePopover,
-        togglePopover:   this._togglePopover
+        openPopover:     this.openPopover,
+        closePopover:    this.closePopover,
+        togglePopover:   this.togglePopover
       }
     }
   }
@@ -142,14 +142,14 @@ class AriaManager extends Component {
 
       if (isTarget(this._toggle, target) && toggleDisabled === null) {
         if (openPopoverOn === 'tap') {
-          this._togglePopover(false)
+          this.togglePopover(false)
         } else {
-          this._openPopover(false)
+          this.openPopover(false)
         }
         return
       }
       else if (closeOnOutsideClick && this._popover && !isTarget(this._popover, target)) {
-        this._closePopover(false)
+        this.closePopover(false)
         return
       }
     }
@@ -170,10 +170,10 @@ class AriaManager extends Component {
   _onKeyDown({ keyCode }) {
     if (this.state.isPopoverOpen) {
       if (!this.props.trapFocus && keyCode === KEYS.tab) {
-        this._closePopover(false)
+        this.closePopover(false)
       }
       else if (keyCode === KEYS.escape) {
-        this._closePopover()
+        this.closePopover()
       }
     }
   }
@@ -182,7 +182,7 @@ class AriaManager extends Component {
     const value = item.value || item.node.innerHTML
 
     if (this.props.closeOnItemSelection) {
-      this._closePopover()
+      this.closePopover()
     }
 
     this.props.onItemSelection(value, e)
@@ -233,7 +233,7 @@ class AriaManager extends Component {
     this._focusGroup.focusNodeAtIndex(index)
   }
 
-  _openPopover = (focusFirstMember = true) => {
+  openPopover = (focusFirstMember = true) => {
     const { freezeScroll, onPopoverOpen } = this.props
 
     if (this.state.isPopoverOpen) return;
@@ -253,7 +253,7 @@ class AriaManager extends Component {
     }
   }
 
-  _closePopover = (focusToggle = true) => {
+  closePopover = (focusToggle = true) => {
     const { freezeScroll, onPopoverClose } = this.props
 
     if (!this.state.isPopoverOpen) return;
@@ -273,11 +273,11 @@ class AriaManager extends Component {
     }
   }
 
-  _togglePopover = (focus) => {
+  togglePopover = (focus) => {
     if (!this.state.isPopoverOpen) {
-      this._openPopover(focus)
+      this.openPopover(focus)
     } else {
-      this._closePopover(focus)
+      this.closePopover(focus)
     }
   }
 

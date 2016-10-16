@@ -6,7 +6,10 @@
     "Travis Arnold <ftntravis@gmail.com>"
   ],
   "description": "Utilities to help create React ARIA components.",
-  "main": ["./dist/react-aria.js", "./dist/react-aria.min.js"],
+  "main": [
+    "./dist/react-aria.js",
+    "./dist/react-aria.min.js"
+  ],
   "keywords": [
     "react",
     "reactjs",
