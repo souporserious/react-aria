@@ -23,7 +23,6 @@ const checkedProps = {
   trapFocus:            PropTypes.bool,
   freezeScroll:         PropTypes.bool,
   activeTabId:          PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  //defaultTabId:       PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   children:             PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
   keybindings: PropTypes.shape({
     next:  PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
@@ -75,17 +74,18 @@ class AriaManager extends Component {
 
   constructor(props) {
     super(props)
+
     this.state = {
       isPopoverOpen: false
     }
-    this._focusGroup = createFocusGroup(props)
-    this._toggle     = null
-    this._popover    = null
-    this._members    = []
 
-    this._activeTabId = null
-    this._panels = []
-    this._uuid = 'RA' + Math.abs(~~(Math.random() * new Date()))
+    this._focusGroup  = createFocusGroup(props)
+    this._toggle      = null
+    this._popover     = null
+    this._members     = []
+    this._panels      = []
+    this._activeTabId = props.activeTabId
+    this._uuid        = 'RA' + Math.abs(~~(Math.random() * new Date()))
   }
 
   getChildContext() {
@@ -213,7 +213,7 @@ class AriaManager extends Component {
 
     if (member.type === 'tab') {
       if (activeTabId === id) {
-        this._activateTab(activeTabId, true)
+        this._activateTab(activeTabId, true, false)
       } else {
         this._handleFirstTabSelection(id)
       }
@@ -288,7 +288,7 @@ class AriaManager extends Component {
     this._panels.push(panel)
 
     if (activeTabId === controlledBy) {
-      this._activateTab(activeTabId, true)
+      this._activateTab(activeTabId, true, false)
     } else {
       this._handleFirstTabSelection(panel.controlledBy)
     }
@@ -301,8 +301,8 @@ class AriaManager extends Component {
     }
   }
 
-  _activateTab = (id, forceActivate) => {
-    const { type } = this.props
+  _activateTab = (id, forceActivate, shouldChange = true) => {
+    const { type, onChange } = this.props
 
     if (type === 'tabs') {
       if (id === this._activeTabId && !forceActivate) {
@@ -312,8 +312,12 @@ class AriaManager extends Component {
       }
     }
 
-    if (this.props.onChange) {
-      this.props.onChange(id)
+    // shouldChange makes sure we don't fire callbacks when we don't need to
+    if (shouldChange && typeof onChange === 'function') {
+      onChange(id)
+
+      // if onChange is being used we don't need to go any farther since the
+      // user is now controlling state
       return
     }
 
@@ -341,7 +345,7 @@ class AriaManager extends Component {
 
   _handleFirstTabSelection(id) {
     if (this.props.type === 'tabs' && !this._activeTabId || id === this._activeTabId) {
-      this._activateTab(id, true)
+      this._activateTab(id, true, false)
     }
   }
 
