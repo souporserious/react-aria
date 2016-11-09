@@ -1,6 +1,6 @@
 {
   "name": "react-aria",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Utilities to help create React ARIA components.",
   "main": "lib/react-aria.js",
   "files": [
@@ -47,7 +47,7 @@
     "react-dom": "0.14.x || ^15.0.0"
   },
   "dependencies": {
-    "focus-group": "^0.3.0",
+    "focus-group": "^0.3.1",
     "focus-trap": "^2.0.1",
     "no-scroll": "^2.0.0",
     "teeny-tap": "^0.2.0"
@@ -72,6 +72,7 @@
     "react-height": "^2.1.1",
     "react-motion": "^0.4.2",
     "react-motion-ui-pack": "^0.10.2",
+    "react-travel": "^1.1.2",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.2",

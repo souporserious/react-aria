@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.3.1
+Update `focus-group` dependency to 0.3.1
+
 ### 0.3.0
 Added `AriaTabList`, `AriaTab`, and `AriaPanel` components
 
