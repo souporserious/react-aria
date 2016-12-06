@@ -3,9 +3,11 @@
 [![npm version](https://badge.fury.io/js/react-aria.svg)](https://badge.fury.io/js/react-aria)
 [![Dependency Status](https://david-dm.org/souporserious/react-aria.svg)](https://david-dm.org/souporserious/react-aria)
 
-Utilities to help compose ARIA compliant components.
+Utility components to help compose React ARIA components.
 
 ## Usage
+
+`yarn add react-aria`
 
 `npm install react-aria --save`
 
@@ -17,7 +19,7 @@ Utilities to help compose ARIA compliant components.
 ### Example
 
 ```js
-import { AriaManager, AriaToggle, AriaPopover, AriaItem } from 'react-aria'
+import { Manager, Toggle, Popover, Item } from 'react-aria'
 
 class Dropdown extends Component {
   state = {
@@ -30,22 +32,22 @@ class Dropdown extends Component {
 
   render() {
     return (
-      <AriaManager onItemSelection={this._handleSelection}>
+      <Manager onItemSelection={this._handleSelection}>
         { isOpen =>
           <div>
-            <AriaToggle>
+            <Toggle>
               {this.state.selection || 'Select A Dropdown Item'}
-            </AriaToggle>
+            </Toggle>
             { isOpen &&
-              <AriaPopover role="menu">
-                <AriaItem>Apples</AriaItem>
-                <AriaItem>Pears</AriaItem>
-                <AriaItem>Oranges</AriaItem>
-              </AriaPopover>
+              <Popover role="menu">
+                <Item>Apples</Item>
+                <Item>Pears</Item>
+                <Item>Oranges</Item>
+              </Popover>
             }
           </div>
         }
-      </AriaManager>
+      </Manager>
     )
   }
 }
