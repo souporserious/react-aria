@@ -1,13 +1,13 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import specialAssign from './special-assign'
+import specialAssign from '../special-assign'
 
 const checkedProps = {
   tag:      PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
-class AriaToggle extends Component {
+class Toggle extends Component {
   static contextTypes = {
     ariaManager: PropTypes.object.isRequired
   }
@@ -66,4 +66,4 @@ class AriaToggle extends Component {
   }
 }
 
-export default AriaToggle
+export default Toggle

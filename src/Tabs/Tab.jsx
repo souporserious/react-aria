@@ -1,15 +1,15 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import specialAssign from './special-assign'
+import specialAssign from '../special-assign'
 
 const checkedProps = {
-  tag:      PropTypes.string,
-  id:       PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  tag: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   isActive: PropTypes.bool,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
-class AriaTab extends Component {
+class Tab extends Component {
   static contextTypes = {
     ariaManager: PropTypes.object.isRequired
   }
@@ -101,4 +101,4 @@ class AriaTab extends Component {
   }
 }
 
-export default AriaTab
+export default Tab

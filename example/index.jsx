@@ -3,7 +3,7 @@ import ReactDOM, { findDOMNode } from 'react-dom'
 import a11y from 'react-a11y'
 import Portal from 'react-travel'
 import Transition from 'react-motion-ui-pack'
-import { AriaManager, AriaToggle, AriaPopover, AriaItem, AriaTabList, AriaTab, AriaPanel } from '../src/react-aria'
+import { Manager, Toggle, Popover, Item, TabList, Tab, TabPanel } from '../src/react-aria'
 
 // a11y(React)
 
@@ -38,26 +38,26 @@ class Dropdown extends Component {
 
   render() {
     return (
-      <AriaManager
+      <Manager
         type="menu"
         onItemSelection={this._handleSelection}
       >
         { isOpen =>
           <div>
             <h3>Dropdown</h3>
-            <AriaToggle>
+            <Toggle>
               {this.state.selection || 'Select A Menu Item'}
-            </AriaToggle>
+            </Toggle>
             { isOpen &&
-              <AriaPopover>
-                <AriaItem>Apples</AriaItem>
-                <AriaItem>Pears</AriaItem>
-                <AriaItem>Oranges</AriaItem>
-              </AriaPopover>
+              <Popover>
+                <Item>Apples</Item>
+                <Item>Pears</Item>
+                <Item>Oranges</Item>
+              </Popover>
             }
           </div>
         }
-      </AriaManager>
+      </Manager>
     )
   }
 }
@@ -65,7 +65,7 @@ class Dropdown extends Component {
 class Modal extends Component {
   render() {
     return (
-      <AriaManager
+      <Manager
         type="modal"
         trapFocus
         freezeScroll
@@ -73,29 +73,29 @@ class Modal extends Component {
         { isOpen =>
           <div>
             <h3>Modal</h3>
-            <AriaToggle>
+            <Toggle>
               Toggle Modal
-            </AriaToggle>
+            </Toggle>
             <Transition>
               { isOpen &&
                 <div key="popover">
                   Clicking here will close since it's outside
-                  <AriaPopover>
+                  <Popover>
                     <a href="#">One</a>
                     <a href="#">Two</a>
                     <a href="#">Three</a>
-                  </AriaPopover>
+                  </Popover>
                 </div>
               }
             </Transition>
           </div>
         }
-      </AriaManager>
+      </Manager>
     )
   }
 }
 
-class Popover extends Component {
+class PopoverComponent extends Component {
   state = {
     isOpen: false
   }
@@ -103,7 +103,7 @@ class Popover extends Component {
   render() {
     const { isOpen } = this.state
     return (
-      <AriaManager
+      <Manager
         type="popover"
         onPopoverOpen={() => this.setState({ isOpen: true })}
         onPopoverClose={() => this.setState({ isOpen: false })}
@@ -111,19 +111,19 @@ class Popover extends Component {
       >
         <div>
           <h3>Popover</h3>
-          <AriaToggle className="popover-toggle">
+          <Toggle className="popover-toggle">
             Toggle Popover <span>👻</span>
-          </AriaToggle>
+          </Toggle>
           { isOpen &&
-            <AriaPopover>
+            <Popover>
               Some cool popover content.
-            </AriaPopover>
+            </Popover>
           }
           <div>
             Popover is {isOpen ? 'Open' : 'Closed'}
           </div>
         </div>
-      </AriaManager>
+      </Manager>
     )
   }
 }
@@ -153,39 +153,39 @@ class Tabs extends Component {
   render() {
     const { tabs, activeId } = this.state
     return (
-      <AriaManager
+      <Manager
         type="tabs"
         activeTabId={activeId}
         onChange={this._handleChange}
       >
         <div className="tab-set">
           <h3>Tabs (Stateless)</h3>
-          <AriaTabList className="tab-list">
+          <TabList className="tab-list">
             {tabs.map(({ id, title }) =>
-              <AriaTab
+              <Tab
                 key={id}
                 id={id}
                 isActive={id === activeId}
                 className={`tab-list-item ${id === activeId ? 'is-active' : ''}`}
               >
                 {title}
-              </AriaTab>
+              </Tab>
             )}
-          </AriaTabList>
+          </TabList>
           <div className="tab-panels">
             {tabs.map(({ id, panel }) =>
-              <AriaPanel
+              <TabPanel
                 key={id}
                 controlledBy={id}
                 isActive={id === activeId}
                 className="tab-panel"
               >
                 {panel}
-              </AriaPanel>
+              </TabPanel>
             )}
           </div>
         </div>
-      </AriaManager>
+      </Manager>
     )
   }
 }
@@ -207,23 +207,23 @@ class Accordion extends Component {
   render() {
     const { tabs } = this.state
     return (
-      <AriaManager type="accordion">
+      <Manager type="accordion">
         <div>
           <h3>Accordion (Stateful)</h3>
-          <AriaTabList>
+          <TabList>
             {tabs.map(({ tab, panel }) =>
               <div key={tab}>
-                <AriaTab id={tab}>
+                <Tab id={tab}>
                   {tab}
-                </AriaTab>
-                <AriaPanel controlledBy={tab}>
+                </Tab>
+                <TabPanel controlledBy={tab}>
                   {panel}
-                </AriaPanel>
+                </TabPanel>
               </div>
             )}
-          </AriaTabList>
+          </TabList>
         </div>
-      </AriaManager>
+      </Manager>
     )
   }
 }
@@ -234,7 +234,7 @@ class App extends Component {
       <div>
         <Dropdown/>
         <Modal/>
-        <Popover/>
+        <PopoverComponent/>
         <Tabs/>
         <Accordion/>
       </div>

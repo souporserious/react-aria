@@ -1,14 +1,14 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import focusTrap from 'focus-trap'
-import specialAssign from './special-assign'
+import specialAssign from '../special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
-class AriaPopover extends Component {
+class Popover extends Component {
   static contextTypes = {
     ariaManager: PropTypes.object.isRequired
   }
@@ -81,4 +81,4 @@ class AriaPopover extends Component {
   }
 }
 
-export default AriaPopover
+export default Popover

@@ -1,12 +1,12 @@
 import React, { Component, PropTypes, createElement } from 'react'
-import specialAssign from './special-assign'
+import specialAssign from '../special-assign'
 
 const checkedProps = {
   tag:      PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
-class AriaTabList extends Component {
+class TabList extends Component {
   static contextTypes = {
     ariaManager: PropTypes.object.isRequired
   }
@@ -38,4 +38,4 @@ class AriaTabList extends Component {
   }
 }
 
-export default AriaTabList
+export default TabList

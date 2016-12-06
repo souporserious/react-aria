@@ -43,7 +43,7 @@ const checkedProps = {
   onItemSelection:      PropTypes.func,
 }
 
-class AriaManager extends Component {
+class Manager extends Component {
   static childContextTypes = {
     ariaManager: PropTypes.object.isRequired
   }
@@ -361,4 +361,4 @@ class AriaManager extends Component {
   }
 }
 
-export default AriaManager
+export default Manager
