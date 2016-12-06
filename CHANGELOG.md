@@ -1,4 +1,9 @@
 ## CHANGELOG
+### 0.5.0
+Removed `Aria` prefix from each component name
+
+Added the ability to include `node_modules/react-aria/Menu` and `node_modules/react-aria/Tabs` if you don't need the kitchen sink
+
 ### 0.4.0
 Trying to fix yarn add
 
