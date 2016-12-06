@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.4.0
+Trying to fix yarn add
+
 ### 0.3.2
 Yarn publish fix
 
