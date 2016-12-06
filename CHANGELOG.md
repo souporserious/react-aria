@@ -1,4 +1,9 @@
 ## CHANGELOG
+### 0.3.2
+Yarn publish fix
+
+Remove bower
+
 ### 0.3.1
 Update `focus-group` dependency to 0.3.1
 
