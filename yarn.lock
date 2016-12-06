@@ -31,6 +31,10 @@ amdefine@>=0.0.4:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.0.tgz#fd17474700cb5cc9c2b709f0be9d23ce3c198c33"
 
+animation-bus@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/animation-bus/-/animation-bus-0.2.0.tgz#43854c2c9463fb82c664eff0e19b9733081150fa"
+
 ansi-regex@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.0.0.tgz#c5061b6e0ef8a81775e50f5d66151bf6bf371107"
@@ -399,6 +403,10 @@ babel-messages@^6.8.0:
   resolved "https://registry.yarnpkg.com/babel-messages/-/babel-messages-6.8.0.tgz#bf504736ca967e6d65ef0adb5a2a5f947c8e0eb9"
   dependencies:
     babel-runtime "^6.0.0"
+
+babel-plugin-add-module-exports@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-add-module-exports/-/babel-plugin-add-module-exports-0.2.1.tgz#9ae9a1f4a8dc67f0cdec4f4aeda1e43a5ff65e25"
 
 babel-plugin-check-es2015-constants@^6.3.13:
   version "6.8.0"
@@ -1842,7 +1850,7 @@ focus-group@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/focus-group/-/focus-group-0.3.1.tgz#e0f32ed86b0dabdd6ffcebdf898ecb32e47fedce"
 
-focus-trap@^2.0.1:
+focus-trap@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-2.1.0.tgz#00e20dea96be9346897208860bd19136da87516a"
   dependencies:
@@ -1965,6 +1973,13 @@ getpass@^0.1.1:
   resolved "https://registry.yarnpkg.com/getpass/-/getpass-0.1.6.tgz#283ffd9fc1256840875311c1b60e8c40187110e6"
   dependencies:
     assert-plus "^1.0.0"
+
+git-directory-deploy@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/git-directory-deploy/-/git-directory-deploy-1.5.1.tgz#c4fad8c270d678d5f309fbddeac1eda60cad7fd2"
+  dependencies:
+    lodash "^4.14.2"
+    minimist "^1.1.0"
 
 glob-base@^0.3.0:
   version "0.3.0"
@@ -2540,6 +2555,10 @@ lodash@^4.0.0, lodash@^4.14.0, lodash@^4.16.2, lodash@^4.2.0:
   version "4.16.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.16.4.tgz#01ce306b9bad1319f2a5528674f88297aeb70127"
 
+lodash@^4.14.2:
+  version "4.17.2"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
+
 lodash@~4.9.0:
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.9.0.tgz#4c20d742f03ce85dc700e0dd7ab9bcab85e6fc14"
@@ -2686,6 +2705,10 @@ minimist@~0.0.1:
 minimist@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
+
+minivents@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/minivents/-/minivents-2.0.2.tgz#6ef3c0a28b0ae0341f72527bd90b9cda7151e921"
 
 mkdirp@^0.5.0, mkdirp@^0.5.1, "mkdirp@>=0.5 0", mkdirp@~0.5.0, mkdirp@~0.5.1, mkdirp@0.5.x:
   version "0.5.1"
@@ -3477,10 +3500,6 @@ react-addons-shallow-compare@^0.14.1:
   version "0.14.8"
   resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-0.14.8.tgz#1f26533d78cadabf4639756ec0dae5ab45427a74"
 
-react-collapse:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/react-collapse/-/react-collapse-2.3.3.tgz#68c70f1fceeaf375e3599b95710cc51e5dd339a3"
-
 react-dom@^0.14.1:
   version "0.14.8"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-0.14.8.tgz#0f1c547514263f771bd31814a739e5306575069e"
@@ -3489,9 +3508,16 @@ react-dom@15.3.2:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.3.2.tgz#c46b0aa5380d7b838e7a59c4a7beff2ed315531f"
 
-react-height:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/react-height/-/react-height-2.1.1.tgz#14c27a8e3a7e43a17dd128c8f3ee00f03b0001c2"
+react-hot-api@^0.4.5:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/react-hot-api/-/react-hot-api-0.4.7.tgz#a7e22a56d252e11abd9366b61264cf4492c58171"
+
+react-hot-loader@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-1.3.1.tgz#c95647ae78b73dfceff6ec71ffcb04182ff6daf9"
+  dependencies:
+    react-hot-api "^0.4.5"
+    source-map "^0.4.4"
 
 react-motion-ui-pack:
   version "0.10.2"
@@ -3514,6 +3540,16 @@ react-travel@^1.1.2:
     react "^0.14.1"
     react-addons-shallow-compare "^0.14.1"
     react-dom "^0.14.1"
+
+react-view-pager@^0.5.0-prerelease.7:
+  version "0.5.0-prerelease.7"
+  resolved "https://registry.yarnpkg.com/react-view-pager/-/react-view-pager-0.5.0-prerelease.7.tgz#ec156706f71ac4f3534cd94d71eecb1e14d91ad3"
+  dependencies:
+    animation-bus "^0.2.0"
+    get-prefix "^1.0.0"
+    minivents "^2.0.2"
+    react-motion "^0.4.5"
+    resize-observer-polyfill "^1.2.1"
 
 react@^0.14.1:
   version "0.14.8"
@@ -3715,6 +3751,10 @@ requires-port@1.0.x, requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
+resize-observer-polyfill@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.2.1.tgz#55a4ff3e4f212a76470835fb7590dbb62a3e6542"
+
 right-align@^0.1.1:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/right-align/-/right-align-0.1.3.tgz#61339b722fe6a3515689210d24e14c96148613ef"
@@ -3886,7 +3926,7 @@ source-map-support@^0.4.2:
   dependencies:
     source-map "^0.5.3"
 
-source-map@^0.4.2, source-map@~0.4.1:
+source-map@^0.4.2, source-map@^0.4.4, source-map@~0.4.1:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.4.4.tgz#eba4f5da9c0dc999de68032d8b4f76173652036b"
   dependencies:
