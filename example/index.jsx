@@ -97,31 +97,36 @@ class Modal extends Component {
 
 class PopoverComponent extends Component {
   state = {
-    isOpen: false
+    isFocused: false,
+    searchValue: ''
   }
 
   render() {
-    const { isOpen } = this.state
+    const { isFocused, searchValue } = this.state
+    const isOpen = isFocused && searchValue.length > 0
     return (
       <Manager
         type="popover"
+        isOpen={isOpen}
         onPopoverOpen={() => this.setState({ isOpen: true })}
         onPopoverClose={() => this.setState({ isOpen: false })}
-        openPopoverOn="hover"
+        openPopoverOn="tap"
       >
         <div>
-          <h3>Popover</h3>
-          <Toggle className="popover-toggle">
-            Toggle Popover <span>👻</span>
-          </Toggle>
+          <h3>Input Popover</h3>
+          <Toggle
+            tag="input"
+            type="search"
+            className="popover-toggle"
+            onFocus={() => this.setState({ isFocused: true })}
+            onBlur={() => this.setState({ isFocused: false })}
+            onChange={e => this.setState({ searchValue: e.target.value })}
+          />
           { isOpen &&
             <Popover>
               Some cool popover content.
             </Popover>
           }
-          <div>
-            Popover is {isOpen ? 'Open' : 'Closed'}
-          </div>
         </div>
       </Manager>
     )

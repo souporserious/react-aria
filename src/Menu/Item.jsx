@@ -24,6 +24,11 @@ class Item extends Component {
       node: findDOMNode(this),
       text: this.props.text
     }
+
+    if (this.props.value) {
+      this._member.value = this.props.value
+    }
+
     this.context.ariaManager.addMember(this._member)
   }
 

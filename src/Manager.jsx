@@ -20,6 +20,7 @@ const KEYS = {
 const checkedProps = {
   type:                 PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert', 'tabs', 'accordion']).isRequired,
   tag:                  PropTypes.string,
+  isOpen:               PropTypes.bool,
   trapFocus:            PropTypes.bool,
   freezeScroll:         PropTypes.bool,
   activeTabId:          PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -52,6 +53,7 @@ class Manager extends Component {
 
   static defaultProps = {
     tag:                  'div',
+    isOpen:               false,
     trapFocus:            false,
     freezeScroll:         false,
     keybindings: {
@@ -76,7 +78,7 @@ class Manager extends Component {
     super(props)
 
     this.state = {
-      isPopoverOpen: false
+      isPopoverOpen: props.isOpen
     }
 
     this._focusGroup  = createFocusGroup(props)
@@ -116,6 +118,12 @@ class Manager extends Component {
     EventsHandler.add(this)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.isOpen !== nextProps.isOpen) {
+      this.setState({ isPopoverOpen: nextProps.isOpen })
+    }
+  }
+
   componentWillUnmount() {
     this._focusGroup.deactivate()
     EventsHandler.remove(this)
@@ -137,7 +145,7 @@ class Manager extends Component {
     const { openPopoverOn, closeOnOutsideClick } = this.props
     const { target } = e
 
-    if (this._toggle) {
+    if (this._toggle && this._toggle.tagName !== 'INPUT') {
       const toggleDisabled = this._toggle.getAttribute('disabled')
 
       if (isTarget(this._toggle, target) && toggleDisabled === null) {

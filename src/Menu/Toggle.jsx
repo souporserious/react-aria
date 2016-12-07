@@ -3,8 +3,7 @@ import ReactDOM, { findDOMNode } from 'react-dom'
 import specialAssign from '../special-assign'
 
 const checkedProps = {
-  tag:      PropTypes.string,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
+  tag: PropTypes.string
 }
 
 class Toggle extends Component {

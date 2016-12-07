@@ -1,4 +1,11 @@
 ## CHANGELOG
+### 0.5.1
+Fixed `Item` component to accept and use `value` prop
+
+Added `isOpen` prop to `Manager` so user can control `Popover` open/close state
+
+Ignore `input` when listening for taps
+
 ### 0.5.0
 Removed `Aria` prefix from each component name
 
