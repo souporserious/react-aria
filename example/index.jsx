@@ -13,7 +13,7 @@ import { Manager, Toggle, Popover, Item, TabList, Tab, TabPanel } from '../src/r
 // http://ianmcburnie.github.io/mindpatterns/
 // http://jqueryui.com/widget/
 
-// Components
+// Components that could be built
 // - Popover
 // - Modal
 // - Dropdown https://www.w3.org/WAI/GL/wiki/Using_ARIA_menus#Success_Criteria_2.1.1_Keyboard
