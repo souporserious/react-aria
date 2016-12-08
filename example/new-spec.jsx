@@ -4,27 +4,39 @@ import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
 ////////////////////////////////////////////
 // MODAL
 ///////////////////////////////////////////
-<Manager>
-  <Toggle>
-    Toggle Modal
-  </Toggle>
-  <Popover
-    type="modal"
-    trapFocus={true||false} // keeps focus contained within popover
-    freezeScroll={true||false} // prevents window from being able to scroll
-    closeOnOutsideClick
-  >
-    Modal Content
-    <Button type="button">Cancel</Button> // these are special buttons that will dismiss the popover after being clicked
-    <Button type="submit">Save</Button>
-  </Popover>
-</Manager>
+<Popovers.Manager
+  trapFocus={true||false} // keeps focus contained within popover
+  freezeScroll={true||false} // prevents window from being able to scroll
+  closeOnOutsideClick
+>
+ { isOpen =>
+    <div>
+      <Popovers.Toggle
+        className={classNames(
+          'popover-toggle',
+          isOpen && 'is-active',
+        )}
+      >
+        Toggle Modal
+      </Popovers.Toggle>
+      <Transition>
+        { isOpen &&
+          <Popovers.Modal>
+            Modal Content
+            <button type="button">Cancel</button>
+            <button type="submit">Save</button>
+          </Popovers.Modal>
+        }
+      </Transition>
+    </div>
+  }
+</Popovers.Manager>
 
 
 ////////////////////////////////////////////
 // TOOLTIP
 ///////////////////////////////////////////
-<Manager>
+<AriaWrapper>
   <Toggle on={'tap'||'hover'}>
     I could be an input or even an icon that toggles the tooltip.
   </Toggle>
@@ -34,7 +46,7 @@ import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
   >
     This is some helper information that pops up on hover.
   </Popover>
-</Manager>
+</AriaWrapper>
 
 
 ////////////////////////////////////////////
@@ -79,6 +91,8 @@ import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
     onChange={this._handleChange}
   />
   <Popover
+    ref={c => this._popover = c}
+    component={c => <Transition>{c}</Transition>} // specify transition in a component render function?
     isOpen={this.state.isOpen}
     onOpen={this._handleOpen}
     onClose={this._handleClose}
@@ -86,8 +100,40 @@ import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
     <Item onSelect={() => action1()}>Item 1</Item>
     <Item onSelect={() => action2()}>Item 2</Item>
     <Item onSelect={() => action3()}>Item 3</Item>
-    <Button>Open Something</Button>
+    <button onClick={() => this._popover.close()}>
+      Open Something
+    </button>
   </Popover>
+</Manager>
+
+
+////////////////////////////////////////////
+// INPUT POPOVER
+///////////////////////////////////////////
+<Manager
+  isOpen={this.state.isOpen}
+  onOpen={this._handleOpen}
+  onClose={this._handleClose}
+>
+  { isOpen =>
+    <div>
+      <Input
+        onChange={this._handleChange}
+      />
+      <Transition> // or compose more naturally?
+        { isOpen &&
+          <Popover ref={c => this._popover = c}>
+            <Item onSelect={() => action1()}>Item 1</Item>
+            <Item onSelect={() => action2()}>Item 2</Item>
+            <Item onSelect={() => action3()}>Item 3</Item>
+            <button onClick={() => this._popover.close()}>
+              Open Something
+            </button>
+          </Popover>
+        }
+      </Transition>
+    </div>
+  }
 </Manager>
 
 
