@@ -4,7 +4,7 @@ import { Popovers: { Manager, Toggle, Popover, Item } } = 'react-aria'
 ////////////////////////////////////////////
 // MODAL
 ///////////////////////////////////////////
-<Manger>
+<Manager>
   <Toggle>
     Toggle Modal
   </Toggle>
@@ -18,13 +18,13 @@ import { Popovers: { Manager, Toggle, Popover, Item } } = 'react-aria'
     <Button type="button">Cancel</Button> // these are special buttons that will dismiss the popover after being clicked
     <Button type="submit">Save</Button>
   </Popover>
-</Manger>
+</Manager>
 
 
 ////////////////////////////////////////////
 // TOOLTIP
 ///////////////////////////////////////////
-<Manger>
+<Manager>
   <Toggle on={'tap'||'hover'}>
     I could be an input or even an icon that toggles the tooltip.
   </Toggle>
@@ -34,13 +34,13 @@ import { Popovers: { Manager, Toggle, Popover, Item } } = 'react-aria'
   >
     This is some helper information that pops up on hover.
   </Popover>
-</Manger>
+</Manager>
 
 
 ////////////////////////////////////////////
 // ALERT
 ///////////////////////////////////////////
-<Manger>
+<Manager>
   <Popover
     type="alert"
     isOpen={this.state.hasError}
@@ -49,13 +49,13 @@ import { Popovers: { Manager, Toggle, Popover, Item } } = 'react-aria'
     <Button type="button">Cancel</Button>
     <Button type="submit">Save</Button>
   </Popover>
-</Manger>
+</Manager>
 
 
 ////////////////////////////////////////////
 // MENU
 ///////////////////////////////////////////
-<Manger>
+<Manager>
   <Toggle>
     Menu Toggle
   </Toggle>
@@ -68,13 +68,13 @@ import { Popovers: { Manager, Toggle, Popover, Item } } = 'react-aria'
     <Item value="2">Menu Item 2</Item>
     <Item value="3">Menu Item 3</Item>
   </Popover>
-</Manger>
+</Manager>
 
 
 ////////////////////////////////////////////
 // POPOVER
 ///////////////////////////////////////////
-<Manger>
+<Manager>
   <Toggle
     tag="input"
     onChange={this._handleChange}
@@ -90,7 +90,7 @@ import { Popovers: { Manager, Toggle, Popover, Item } } = 'react-aria'
     <Item value={() => action3()}>Item 3</Item>
     <Button>Open Something</Button>
   </Popover>
-</Manger>
+</Manager>
 
 
 import { Tabs: { Manager, TabList, Tab, TabPanel } } from 'react-aria'
