@@ -1,5 +1,5 @@
 // NEW REACT ARIA SPEC
-import { Popovers: { Manager, Toggle, Popover, Item } } = 'react-aria'
+import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
 
 ////////////////////////////////////////////
 // MODAL
@@ -72,11 +72,10 @@ import { Popovers: { Manager, Toggle, Popover, Item } } = 'react-aria'
 
 
 ////////////////////////////////////////////
-// POPOVER
+// INPUT POPOVER
 ///////////////////////////////////////////
 <Manager>
-  <Toggle
-    tag="input"
+  <Input
     onChange={this._handleChange}
   />
   <Popover
@@ -96,10 +95,13 @@ import { Tabs: { Manager, TabList, Tab, TabPanel } } from 'react-aria'
 
 ////////////////////////////////////////////
 // TABS
+// Might be better to split these components up into tabs and accordion since they differ so much
 ///////////////////////////////////////////
 <Manager
   type="tabs||accordion"
   activeTabId={this.state.activeTabId}
+  // activeTabs={{1: true, 0: true}} // maybe allow this for accordion
+  defaultActiveTabId="2" // set the default tab if youre not controlling state
   multiselect={true||false}
   letterNavigation // allow users to navigate to a tab by letters
   onChange={id => this.setState({ activeTabId: id })}
