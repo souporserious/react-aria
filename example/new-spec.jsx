@@ -81,13 +81,12 @@ import { Popovers: { Manager, Toggle, Popover, Item } } = 'react-aria'
   />
   <Popover
     isOpen={this.state.isOpen}
-    onItemSelection={cb => cb()}
     onOpen={this._handleOpen}
     onClose={this._handleClose}
   >
-    <Item value={() => action1()}>Item 1</Item>
-    <Item value={() => action2()}>Item 2</Item>
-    <Item value={() => action3()}>Item 3</Item>
+    <Item onSelect={() => action1()}>Item 1</Item>
+    <Item onSelect={() => action2()}>Item 2</Item>
+    <Item onSelect={() => action3()}>Item 3</Item>
     <Button>Open Something</Button>
   </Popover>
 </Manager>
