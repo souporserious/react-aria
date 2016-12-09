@@ -5,8 +5,9 @@ import { registerToggle, unregisterToggle, togglePopover, openPopover, closePopo
 
 const checkedProps = {
   tag: PropTypes.string,
-  on: PropTypes.array,
-  isOpen: PropTypes.bool.isRequired
+  controls: PropTypes.any.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  on: PropTypes.array
 }
 
 class Toggle extends Component {

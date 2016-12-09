@@ -191,6 +191,10 @@ aws4@^1.2.1:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.5.0.tgz#0a29ffb79c31c9e712eeb087e8e7a64b4a56d755"
 
+axe-core@~2.0.5:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-2.0.7.tgz#b13a0d5ddd7962a284f7fcb9e0457bff370176aa"
+
 babel-cli@^6.16.0:
   version "6.16.0"
   resolved "https://registry.yarnpkg.com/babel-cli/-/babel-cli-6.16.0.tgz#4e0d1cf40442ef78330f7fef88eb3a0a1b16bd37"
@@ -3499,6 +3503,12 @@ react-a11y@^0.3.3:
 react-addons-shallow-compare@^0.14.1:
   version "0.14.8"
   resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-0.14.8.tgz#1f26533d78cadabf4639756ec0dae5ab45427a74"
+
+react-axe:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-axe/-/react-axe-2.1.0.tgz#d360c91830741821cff0823ec1e128f3a4eb8198"
+  dependencies:
+    axe-core "~2.0.5"
 
 react-dom@^0.14.1:
   version "0.14.8"

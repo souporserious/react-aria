@@ -1,10 +1,12 @@
 import React, { Component, PropTypes, Children, createElement } from 'react'
-import ReactDOM, { findDOMNode } from 'react-dom'
+import ReactDOM from 'react-dom'
+import axe from 'react-axe'
 import a11y from 'react-a11y'
 import Portal from 'react-travel'
 import Transition from 'react-motion-ui-pack'
-import { Manager, Toggle, Popover, Item, TabList, Tab, TabPanel } from '../src/react-aria'
+import { Overlays, Accordion, Manager, Toggle, Popover, Item, TabList, Tab, TabPanel } from '../src/react-aria'
 
+// axe(React)
 // a11y(React)
 
 // Inspiration
@@ -195,7 +197,7 @@ class Tabs extends Component {
   }
 }
 
-class Accordion extends Component {
+class AccordionComponent extends Component {
   state = {
     tabs: [{
       tab: 'one',
@@ -212,23 +214,67 @@ class Accordion extends Component {
   render() {
     const { tabs } = this.state
     return (
-      <Manager type="accordion">
+      <Accordion.Tabs type="accordion">
         <div>
           <h3>Accordion (Stateful)</h3>
-          <TabList>
+          <Accordion.TabList>
             {tabs.map(({ tab, panel }) =>
               <div key={tab}>
-                <Tab id={tab}>
+                <Accordion.Tab id={tab}>
                   {tab}
-                </Tab>
-                <TabPanel controlledBy={tab}>
+                </Accordion.Tab>
+                <Accordion.TabPanel controlledBy={tab}>
                   {panel}
-                </TabPanel>
+                </Accordion.TabPanel>
               </div>
             )}
-          </TabList>
+          </Accordion.TabList>
         </div>
-      </Manager>
+      </Accordion.Tabs>
+    )
+  }
+}
+
+class DropdownTwo extends Component {
+  state = {
+    isOpen: false
+  }
+
+  render() {
+    const { isOpen } = this.state
+    return (
+      <div>
+        <Overlays.Toggle
+          type="popover"
+          controls="popover"
+          isOpen={isOpen}
+        >
+          Toggle
+        </Overlays.Toggle>
+        <Overlays.Overlay
+          type="popover"
+          id="popover"
+          isOpen={isOpen}
+          onOpen={() => this.setState({ isOpen: true })}
+          onClose={() => this.setState({ isOpen: false })}
+          onOutsideClick={() => this.setState({ isOpen: false })}
+          onItemSelection={(member, e) => {
+            console.log(member, e)
+            this.setState({ isOpen: false })
+          }}
+        >
+          { props => isOpen &&
+            <div
+              {...props}
+            >
+              <div>Popover!</div>
+              <Overlays.Item>Item 1</Overlays.Item>
+              <Overlays.Item>Item 2</Overlays.Item>
+              <Overlays.Item>Item 3</Overlays.Item>
+            </div>
+          }
+        </Overlays.Overlay>
+      </div>
     )
   }
 }
@@ -237,11 +283,26 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Dropdown/>
+        <DropdownTwo/>
+        {/*<Overlays.Manager>
+          { isOpen =>
+            <div>
+              <Overlays.Toggle>
+                Toggle
+              </Overlays.Toggle>
+              { isOpen &&
+                <Overlays.Popover style={{ padding: 12, background: '#ccc' }}>
+                  Popover!
+                </Overlays.Popover>
+              }
+            </div>
+          }
+        </Overlays.Manager>*/}
+        {/*<Dropdown/>
         <Modal/>
-        <PopoverComponent/>
+        <PopoverComponent/>*/}
         <Tabs/>
-        <Accordion/>
+        {/*<AccordionComponent/>*/}
       </div>
     )
   }

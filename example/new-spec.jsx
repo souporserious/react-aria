@@ -7,9 +7,10 @@ import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
 <Popovers.Manager
   trapFocus={true||false} // keeps focus contained within popover
   freezeScroll={true||false} // prevents window from being able to scroll
-  closeOnOutsideClick
+  // closeOnOutsideTap
+  // onOutsideTap
 >
- { isOpen =>
+ { (isOpen, requestClose) =>
     <div>
       <Popovers.Toggle
         className={classNames(
@@ -23,8 +24,18 @@ import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
         { isOpen &&
           <Popovers.Modal>
             Modal Content
-            <button type="button">Cancel</button>
-            <button type="submit">Save</button>
+            <button
+              type="button"
+              onClick={requestClose}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              onClick={requestClose}
+            >
+              Save
+            </button>
           </Popovers.Modal>
         }
       </Transition>
@@ -36,17 +47,50 @@ import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
 ////////////////////////////////////////////
 // TOOLTIP
 ///////////////////////////////////////////
-<AriaWrapper>
-  <Toggle on={'tap'||'hover'}>
-    I could be an input or even an icon that toggles the tooltip.
+const { Manager, Toggle, Tooltip } = Overlays
+<Manager
+  isOpen={true||false} // user should be able to control open state of every popover
+>
+  { isOpen =>
+    <div>
+      <Toggle on={['tap'||'hover'||'focus']}> // array of values
+        I could be an input or even an icon that toggles the tooltip.
+      </Toggle>
+      <Tooltip>
+        <Transition>
+          { isOpen &&
+            <div>
+              This is some helper information that pops up on hover.
+            </div>
+          }
+        </Transition>
+      </Tooltip>
+    </div>
+  }
+</Manager>
+
+////////////////////////////////////////////
+// TOOLTIP ALT
+///////////////////////////////////////////
+const { Manager, Toggle, Tooltip } = Overlays
+<Manager>
+  <Toggle>
+    { (props, isOpen) =>
+      <div {...props}>Trigger</div>
+    }
   </Toggle>
-  <Popover
-    type="tooltip"
-    isOpen={true||false} // user should be able to control open state of every popover
-  >
-    This is some helper information that pops up on hover.
-  </Popover>
-</AriaWrapper>
+  <Tooltip>
+    { (props, isOpen) =>
+      <Transition>
+        { isOpen &&
+          <div {...props}>
+            This is some helper information that pops up on hover.
+          </div>
+        }
+      </Transition>
+    }
+  </Tooltip>
+</Manager>
 
 
 ////////////////////////////////////////////
@@ -142,12 +186,13 @@ import { Tabs: { Manager, TabList, Tab, TabPanel } } from 'react-aria'
 ////////////////////////////////////////////
 // TABS
 // Might be better to split these components up into tabs and accordion since they differ so much
+// but, it is nice to be able to switch functionality so easy, thinking a responsive scenario
 ///////////////////////////////////////////
-<Manager
+<Tabs||Accordion
   type="tabs||accordion"
   activeTabId={this.state.activeTabId}
-  // activeTabs={{1: true, 0: true}} // maybe allow this for accordion
   defaultActiveTabId="2" // set the default tab if youre not controlling state
+  // activeTabs={{1: true, 0: true}} // maybe allow this for accordion
   multiselect={true||false}
   letterNavigation // allow users to navigate to a tab by letters
   onChange={id => this.setState({ activeTabId: id })}
@@ -168,4 +213,6 @@ import { Tabs: { Manager, TabList, Tab, TabPanel } } from 'react-aria'
 ///////////////////////////////////////////
 openPopover(popoverId)
 closePopover(popoverId)
+togglePopover(popoverId)
+
 changeTab(tabId)

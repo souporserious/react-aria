@@ -1,4 +1,5 @@
 export Manager from './Manager'
 export * as Overlays from './Overlays'
+export * as Accordion from './Accordion'
 export * from './Menu'
 export * from './Tabs'
