@@ -32,6 +32,108 @@ import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
 </Overlay.Manager>
 
 
+// building our own ARIA tooltip
+class Tooltip extends Component {
+  state = { isOpen: false }
+  uuid = 'TOOLTIP' + Math.abs(~~(Math.random() * new Date()))
+  open = () => this.setState({ isOpen: true })
+  close = () => this.setState({ isOpen: false })
+
+  render() {
+    return (
+      <div>
+        <Toggle
+          controls={this.uuid}
+          toggleOn="hover"
+          onToggle={this.open}
+        >
+          { props => cloneElement(firstChild, props)}
+        </Toggle>
+        <Overlay
+          id={this.uuid}
+          type="tooltip"
+          onRequestClose={this.close}
+        >
+          { props =>
+            <TransitionMotion>
+              { this.state.isOpen &&
+                <Portal>
+                  {cloneElement(secondChild, props)}
+                </Portal>
+              }
+            </TransitionMotion>
+          }
+        </Overlay>
+      <div>
+    )
+  }
+}
+
+// <Overlay.Toggle on="hover">
+//   <InfoIcon/>
+// </Overlay.Toggle>
+// <Overlay.Manager>
+//   <Overlay.Tooltip>
+//     Some Popover Content
+//   </Overlay.Tooltip>
+// </Overlay.Manager>
+
+// <Overlay.Toggle on="hover" controls="tooltip">
+//   <InfoIcon/>
+// </Overlay.Toggle>
+// <Overlay.Tooltip id="tooltip">
+//   I'm a tooltip!
+// </Overlay.Tooltip>
+
+// <Toggle on="hover" controls="tooltip">
+//   <InfoIcon/>
+// </Toggle>
+// <Overlay type="tooltip" id="tooltip">
+// { props =>
+//   <TransitionMotion>
+//     { isOpen &&
+//       <div {...props}>I'm a tooltip</div>
+//     }
+//   </TransitionMotion>
+// }
+// </Overlay>
+
+// <Toggle controls="tip" on="hover">
+//   <InfoIcon/>
+// </Toggle>
+// <Overlay id="tip" type="tooltip">
+// { (props, isOpen) =>
+//   <TransitionMotion>
+//     { isOpen &&
+//       <div {...props}>I'm a tooltip</div>
+//     }
+//   </TransitionMotion>
+// }
+// </Overlay>
+
+// <Toggle controls="tip" on="hover">
+//   <InfoIcon/>
+// </Toggle>
+// <Overlay id="tip" type="tooltip">
+//   { props => this.state.isOpen &&
+//     <div {...props}>I'm a tooltip</div>
+//   }
+// </Overlay>
+
+// <Toggle controls="tip" on="hover">
+//   <InfoIcon/>
+// </Toggle>
+// <Overlay id="tip" type="tooltip">
+//   { props =>
+//     <TransitionMotion>
+//       { this.state.isOpen &&
+//         <div {...props}>I'm a tooltip</div>
+//       }
+//     </TransitionMotion>
+//   }
+// </Overlay>
+
+
 ////////////////////////////////////////////
 // MODAL
 ///////////////////////////////////////////
