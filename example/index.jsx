@@ -4,7 +4,7 @@ import axe from 'react-axe'
 import a11y from 'react-a11y'
 import Portal from 'react-travel'
 import Transition from 'react-motion-ui-pack'
-import { Overlays, Accordion, Manager, Toggle, Popover, Item, TabList, Tab, TabPanel } from '../src/react-aria'
+import { Overlays, Manager, Toggle, Popover, Item, TabList, Tab, TabPanel } from '../src/react-aria'
 
 // axe(React)
 // a11y(React)
@@ -197,7 +197,7 @@ class Tabs extends Component {
   }
 }
 
-class AccordionComponent extends Component {
+class Accordion extends Component {
   state = {
     tabs: [{
       tab: 'one',
@@ -214,28 +214,28 @@ class AccordionComponent extends Component {
   render() {
     const { tabs } = this.state
     return (
-      <Accordion.Tabs type="accordion">
+      <Manager type="accordion">
         <div>
           <h3>Accordion (Stateful)</h3>
-          <Accordion.TabList>
+          <TabList>
             {tabs.map(({ tab, panel }) =>
               <div key={tab}>
-                <Accordion.Tab id={tab}>
+                <Tab id={tab}>
                   {tab}
-                </Accordion.Tab>
-                <Accordion.TabPanel controlledBy={tab}>
+                </Tab>
+                <TabPanel controlledBy={tab}>
                   {panel}
-                </Accordion.TabPanel>
+                </TabPanel>
               </div>
             )}
-          </Accordion.TabList>
+          </TabList>
         </div>
-      </Accordion.Tabs>
+      </Manager>
     )
   }
 }
 
-class DropdownTwo extends Component {
+class OverlayComponent extends Component {
   state = {
     isOpen: false
   }
@@ -283,7 +283,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <DropdownTwo/>
+        <OverlayComponent/>
         {/*<Overlays.Manager>
           { isOpen =>
             <div>
@@ -300,9 +300,9 @@ class App extends Component {
         </Overlays.Manager>*/}
         {/*<Dropdown/>
         <Modal/>
-        <PopoverComponent/>*/}
+        <PopoverComponent/>
         <Tabs/>
-        {/*<AccordionComponent/>*/}
+        <Accordion/>*/}
       </div>
     )
   }

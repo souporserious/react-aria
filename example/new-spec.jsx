@@ -1,6 +1,37 @@
 // NEW REACT ARIA SPEC
 import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
 
+
+////////////////////////////////////////////
+// POPOVER (LATEST)
+///////////////////////////////////////////
+<Overlay.Toggle controls="my-popover">
+  Toggle Popover (Receives focus after modal closes, keyboard accessible, etc..)
+</Overlay.Toggle>
+<Overlay.Manager
+  id="my-popover"
+  trapFocus={false} // traps focus within the popover, mainly useful for compliant ARIA modals
+  freezeScroll={false} // prevents the main document scrollbar from being able to scroll while popover is open
+  onRequestClose={() => this.setState({ isOpen: false })}
+  onOutsideClick={() => this.setState({ isOpen: false })}
+  onItemSelection={(item, e) => {
+    console.log('item selected:', item)
+    this.setState({ isOpen: false })
+  }}
+>
+  <TransitionMotion> // allows composition of other components
+    { this.state.isOpen &&
+      <Overlay.Popover> // this can be other provided components <Overlay.Modal>, <Overlay.Menu>, etc.
+        <div>Popover!</div>
+        <Overlay.Item>Item 1</Overlay.Item>
+        <Overlay.Item>Item 2</Overlay.Item>
+        <Overlay.Item>Item 3</Overlay.Item>
+      </Overlay.Popover>
+    }
+  </TransitionMotion>
+</Overlay.Manager>
+
+
 ////////////////////////////////////////////
 // MODAL
 ///////////////////////////////////////////

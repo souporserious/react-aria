@@ -7,7 +7,9 @@ import keys from '../keys'
 import specialAssign from '../special-assign'
 import { registerPopover, unregisterPopover, getToggle } from './state-manager'
 
-const isOutsideElement = (node, target) => (node && node !== target && !node.contains(target))
+const isOutsideElement = (node, target) => (
+  (node && target) && (node !== target) && !node.contains(target)
+)
 
 const checkedProps = {
   tag: PropTypes.string,
@@ -73,7 +75,7 @@ class Overlay extends Component {
       this.setState({ isOpen })
 
       // make sure click handler is added and removed when isOpen changes
-      if (isOpen === true) {
+      if (isOpen) {
         this._registerEvents()
       } else {
         this._unregisterEvents()
@@ -174,14 +176,18 @@ class Overlay extends Component {
 
     if (type === 'menu') {
       props['role'] = 'menu'
-    } else if (type === 'modal') {
+    }
+    else if (type === 'modal') {
       props['role'] = 'dialog'
-    } else if (type === 'alert') {
+    }
+    else if (type === 'alert') {
       props['role'] = 'alertdialog'
-    } else if (type === 'tooltip') {
+    }
+    else if (type === 'tooltip') {
       props['id'] = id
       props['role'] = 'tooltip'
-    } else if (type === 'popover') {
+    }
+    else if (type === 'popover') {
       props['aria-labelledby'] = id
     }
 
