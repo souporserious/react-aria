@@ -38,7 +38,7 @@ class Item extends Component {
   _handleClick = (e) => {
     const { onClick } = this.props
 
-    this.context.overlayManager.onItemSelection(this._member, e)
+    this._handleSelection(e)
 
     if (typeof onClick === 'function') {
       onClick(e)
@@ -50,11 +50,21 @@ class Item extends Component {
 
     if ([' ', 'Enter'].indexOf(e.key) > -1) {
       e.preventDefault()
-      this.context.overlayManager.onItemSelection(this._member, e)
+      this._handleSelection(e)
     }
 
     if (typeof onKeyDown === 'function') {
       onKeyDown(e)
+    }
+  }
+
+  _handleSelection = (e) => {
+    const { onSelect } = this.props
+
+    this.context.overlayManager.onItemSelection(this._member, e)
+
+    if (typeof onSelect === 'function') {
+      onSelect(this._member, e)
     }
   }
 
