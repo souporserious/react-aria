@@ -2,13 +2,13 @@ import React, { Component, PropTypes, createElement } from 'react'
 import specialAssign from '../special-assign'
 
 const checkedProps = {
-  tag:      PropTypes.string,
+  tag: PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
 class TabList extends Component {
   static contextTypes = {
-    ariaManager: PropTypes.object.isRequired
+    tabs: PropTypes.object.isRequired
   }
 
   static propTypes = checkedProps
@@ -18,13 +18,13 @@ class TabList extends Component {
   }
 
   render() {
-    const { type } = this.context.ariaManager
+    const { accordion, multiple } = this.context.tabs
     const { tag, children } = this.props
     const componentProps = {
       role: 'tablist'
     }
 
-    if (type === 'accordion') {
+    if (accordion && multiple) {
       componentProps['aria-multiselectable'] = true
     }
 

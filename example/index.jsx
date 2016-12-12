@@ -4,7 +4,9 @@ import axe from 'react-axe'
 import a11y from 'react-a11y'
 import Portal from 'react-travel'
 import Transition from 'react-motion-ui-pack'
-import { Overlays, Manager, Toggle, Popover, Item, TabList, Tab, TabPanel } from '../src/react-aria'
+import { Overlays, Manager, Toggle, Popover, Item, Tabs } from '../src/react-aria'
+
+const { Wrapper, TabList, Tab, TabPanel } = Tabs
 
 // axe(React)
 // a11y(React)
@@ -135,7 +137,7 @@ class PopoverComponent extends Component {
   }
 }
 
-class Tabs extends Component {
+class TabsDemo extends Component {
   state = {
     tabs: [{
       id: 't1',
@@ -160,7 +162,7 @@ class Tabs extends Component {
   render() {
     const { tabs, activeId } = this.state
     return (
-      <Manager
+      <Wrapper
         type="tabs"
         activeTabId={activeId}
         onChange={this._handleChange}
@@ -192,12 +194,12 @@ class Tabs extends Component {
             )}
           </div>
         </div>
-      </Manager>
+      </Wrapper>
     )
   }
 }
 
-class Accordion extends Component {
+class AccordionDemo extends Component {
   state = {
     tabs: [{
       tab: 'one',
@@ -214,7 +216,10 @@ class Accordion extends Component {
   render() {
     const { tabs } = this.state
     return (
-      <Manager type="accordion">
+      <Wrapper
+        accordion
+        multiple
+      >
         <div>
           <h3>Accordion (Stateful)</h3>
           <TabList>
@@ -230,12 +235,12 @@ class Accordion extends Component {
             )}
           </TabList>
         </div>
-      </Manager>
+      </Wrapper>
     )
   }
 }
 
-class OverlayComponent extends Component {
+class OverlayDemo extends Component {
   state = {
     isOpen: false
   }
@@ -283,7 +288,9 @@ class App extends Component {
   render() {
     return (
       <div>
-        <OverlayComponent/>
+        <OverlayDemo/>
+        <TabsDemo/>
+        <AccordionDemo/>
         {/*<Overlays.Manager>
           { isOpen =>
             <div>
@@ -302,7 +309,7 @@ class App extends Component {
         <Modal/>
         <PopoverComponent/>
         <Tabs/>
-        <Accordion/>*/}
+        */}
       </div>
     )
   }

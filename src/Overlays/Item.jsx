@@ -49,6 +49,7 @@ class Item extends Component {
     const { onKeyDown } = this.props
 
     if ([' ', 'Enter'].indexOf(e.key) > -1) {
+      e.preventDefault()
       this.context.overlayManager.onItemSelection(this._member, e)
     }
 

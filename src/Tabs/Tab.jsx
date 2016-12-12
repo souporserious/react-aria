@@ -3,15 +3,14 @@ import ReactDOM, { findDOMNode } from 'react-dom'
 import specialAssign from '../special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   isActive: PropTypes.bool,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
+  tag: PropTypes.string
 }
 
 class Tab extends Component {
   static contextTypes = {
-    ariaManager: PropTypes.object.isRequired
+    tabs: PropTypes.object.isRequired
   }
 
   static propTypes = checkedProps
@@ -26,18 +25,17 @@ class Tab extends Component {
 
   componentDidMount() {
     this._member = {
-      type: 'tab',
       id: this.props.id,
       node: findDOMNode(this),
       text: this.props.text,
       setActiveState: this._setActiveState,
       toggleActiveState: this._toggleActiveState
     }
-    this.context.ariaManager.addMember(this._member)
+    this.context.tabs.members.add(this._member)
   }
 
   componentWillUnmount() {
-    this.context.ariaManager.removeMember(this._member)
+    this.context.tabs.members.remove(this._member)
   }
 
   _setActiveState = (isActive) => {
@@ -48,47 +46,58 @@ class Tab extends Component {
     this.setState({ isActive: !this.state.isActive })
   }
 
-  _handleKeyDown = (e) => {
-    const { type, activateTab } = this.context.ariaManager
-    const { id, onKeyDown } = this.props
+  _handleClick = (e) => {
+    const { onClick } = this.props
 
-    if (type === 'accordion' && [' ', 'Enter'].indexOf(e.key) > -1) {
-      activateTab(id)
+    this.context.tabs.activateTab(this.props.id)
+
+    if (typeof onClick === 'function') {
+      onClick(e)
     }
+  }
+
+  _handleKeyDown = (e) => {
+    const { id, tag, onKeyDown } = this.props
+
+    if (tag !== 'button' && ['Enter', ' '].indexOf(e.key) > -1) {
+      e.preventDefault()
+      this.context.tabs.activateTab(id)
+    }
+
     if (onKeyDown) {
       onKeyDown(e)
     }
   }
 
   _handleFocus = (e) => {
-    const { type, activateTab } = this.context.ariaManager
-    const { id, onFocus } = this.props
+    const { onFocus } = this.props
 
-    if (type === 'tabs') {
-      activateTab(id)
-    }
-    if (onFocus) {
+    this.context.tabs.activateTab(this.props.id)
+
+    if (typeof onFocus === 'function') {
       onFocus(e)
     }
   }
 
   render() {
-    const { type } = this.context.ariaManager
+    const { accordion } = this.context.tabs
     const { tag, id, disabled, children } = this.props
     const isActive = (this.props.isActive !== undefined) ? this.props.isActive : this.state.isActive
     const componentProps = {
       id,
       role: 'tab',
-      tabIndex: type === 'accordion' ? 0 : (isActive ? 0 : -1),
+      tabIndex: accordion ? 0 : (isActive ? 0 : -1),
       'aria-selected': isActive,
       'aria-controls': `${id}-panel`,
-      'aria-disabled': disabled,
-      onKeyDown: this._handleKeyDown,
-      onFocus: this._handleFocus
+      'aria-disabled': disabled
     }
 
-    if (type === 'accordion') {
+    if (accordion) {
       componentProps['aria-expanded'] = isActive
+      componentProps['onClick'] = this._handleClick
+      componentProps['onKeyDown'] = this._handleKeyDown
+    } else {
+      componentProps['onFocus'] = this._handleFocus
     }
 
     const props = specialAssign(componentProps, this.props, checkedProps)

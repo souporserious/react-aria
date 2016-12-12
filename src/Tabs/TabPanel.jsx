@@ -3,15 +3,14 @@ import ReactDOM, { findDOMNode } from 'react-dom'
 import specialAssign from '../special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
   controlledBy: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   isActive: PropTypes.bool,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
+  tag: PropTypes.string
 }
 
 class TabPanel extends Component {
   static contextTypes = {
-    ariaManager: PropTypes.object.isRequired
+    tabs: PropTypes.object.isRequired
   }
 
   static propTypes = checkedProps
@@ -25,7 +24,7 @@ class TabPanel extends Component {
   }
 
   componentDidMount() {
-    this.context.ariaManager.addPanel({
+    this.context.tabs.addPanel({
       controlledBy: this.props.controlledBy,
       node: findDOMNode(this),
       setActiveState: this._setActiveState,
@@ -42,11 +41,14 @@ class TabPanel extends Component {
   }
 
   _handleKeyDown = (e) => {
+    const { onKeyDown } = this.props
+
     if (e.ctrlKey && e.key === 'ArrowUp') {
-      this.context.ariaManager.focusTab(this.props.controlledBy)
+      this.context.members.focus(this.props.controlledBy)
     }
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(e)
+
+    if (typeof onKeyDown === 'function') {
+      onKeyDown(e)
     }
   }
 
@@ -58,7 +60,7 @@ class TabPanel extends Component {
       role: 'tabpanel',
       'aria-hidden': !isActive,
       'aria-labelledby': controlledBy,
-      onKeyDown: this._handleKeyDown,
+      onKeyDown: this._handleKeyDown
     }
 
     if (!isActive) {

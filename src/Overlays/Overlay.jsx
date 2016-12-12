@@ -41,16 +41,16 @@ class Overlay extends Component {
     onItemSelection: () => null
   }
 
-  state = {
-    isOpen: this.props.isOpen
+  constructor(props) {
+    super(props)
+    this.state = { isOpen: props.isOpen }
+    this._members = new Members(props)
   }
-
-  members = new Members()
 
   getChildContext() {
     return {
       overlayManager: {
-        members: this.members,
+        members: this._members,
         onItemSelection: this.props.onItemSelection
       }
     }
@@ -119,7 +119,7 @@ class Overlay extends Component {
 
       if (focusFirstMember) {
         setTimeout(() => {
-          this.members.focus(0)
+          this._members.focus(0)
         }, 0)
       }
     })

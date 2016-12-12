@@ -10,54 +10,60 @@ const defaultOptions = {
   },
   wrap: true,
   stringSearch: true,
-  stringSearchDelay: 600,
+  stringSearchDelay: 600
 }
 
 class Members {
-  constructor(options) {
-    this._members = []
-    this._focusGroup = createFocusGroup({
-      ...defaultOptions,
-      ...options
-    })
+  constructor(options = {}) {
+    this.collection = []
+    this.options = { ...defaultOptions, ...options }
+    this.focusGroup = createFocusGroup(this.options)
   }
 
   add = (member) => {
     const { id, index, node, text } = member
 
     if (index === undefined) {
-      this._members.push(member)
+      this.collection.push(member)
     } else {
-      this._members.splice(index, 0, member)
+      this.collection.splice(index, 0, member)
     }
 
-    this._focusGroup.addMember({
+    this.focusGroup.addMember({
       node,
       text: text || node.innerHTML
     })
 
     // activate focus trap if this was the first member added
-    if (this._members.length === 1) {
-      this._focusGroup.activate()
+    if (this.collection.length === 1) {
+      this.focusGroup.activate()
+    }
+
+    if (typeof this.options.onAdd === 'function') {
+      this.options.onAdd(member)
     }
   }
 
   remove = (member) => {
-    const pos = this._members.indexOf(member)
+    const pos = this.collection.indexOf(member)
 
     if (pos > -1) {
-      this._members.splice(member, 1)
-      this._focusGroup.removeMember(member.node)
+      this.collection.splice(member, 1)
+      this.focusGroup.removeMember(member.node)
     }
 
     // deactivate focus trap if this was the last member removed
-    if (this._members.length <= 0) {
-      this._focusGroup.activate()
+    if (this.collection.length <= 0) {
+      this.focusGroup.activate()
+    }
+
+    if (typeof this.options.onRemove === 'function') {
+      this.options.onRemove(member)
     }
   }
 
   focus = (index) => {
-    this._focusGroup.focusNodeAtIndex(index)
+    this.focusGroup.focusNodeAtIndex(index)
   }
 }
 
