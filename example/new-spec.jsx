@@ -1,14 +1,12 @@
 // NEW REACT ARIA SPEC
-import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
-
 
 ////////////////////////////////////////////
 // POPOVER (LATEST)
 ///////////////////////////////////////////
-<Overlay.Toggle controls="my-popover">
+<Toggle controls="my-popover">
   Toggle Popover (Receives focus after modal closes, keyboard accessible, etc..)
-</Overlay.Toggle>
-<Overlay.Manager
+</Toggle>
+<Overlay
   id="my-popover"
   trapFocus={false} // traps focus within the popover, mainly useful for compliant ARIA modals
   freezeScroll={false} // prevents the main document scrollbar from being able to scroll while popover is open
@@ -19,17 +17,17 @@ import { Popovers: { Manager, Toggle, Input, Popover, Item } } = 'react-aria'
     this.setState({ isOpen: false })
   }}
 >
-  <TransitionMotion> // allows composition of other components
+  <Transition> // allows composition of other components
     { this.state.isOpen &&
-      <Overlay.Popover> // this can be other provided components <Overlay.Modal>, <Overlay.Menu>, etc.
+      <Popover> // this can be other provided components <Modal>, <Menu>, etc.
         <div>Popover!</div>
-        <Overlay.Item>Item 1</Overlay.Item>
-        <Overlay.Item>Item 2</Overlay.Item>
-        <Overlay.Item>Item 3</Overlay.Item>
-      </Overlay.Popover>
+        <Item>Item 1</Item>
+        <Item>Item 2</Item>
+        <Item>Item 3</Item>
+      </Popover>
     }
-  </TransitionMotion>
-</Overlay.Manager>
+  </Transition>
+</Overlay>
 
 
 // building our own ARIA tooltip
@@ -206,39 +204,32 @@ const { Manager, Toggle, Tooltip } = Overlays
 // TOOLTIP ALT
 ///////////////////////////////////////////
 const { Manager, Toggle, Tooltip } = Overlays
-<Manager>
-  <Toggle>
-    { (props, isOpen) =>
-      <div {...props}>Trigger</div>
+<Toggle>
+  Trigger
+</Toggle>
+<Overlay>
+  <Transition>
+    { this.state.isOpen &&
+      <Tooltip>
+        This is some helper information that pops up on hover.
+      </Tooltip>
     }
-  </Toggle>
-  <Tooltip>
-    { (props, isOpen) =>
-      <Transition>
-        { isOpen &&
-          <div {...props}>
-            This is some helper information that pops up on hover.
-          </div>
-        }
-      </Transition>
-    }
-  </Tooltip>
-</Manager>
+  </Transition>
+</Overlay>
 
 
 ////////////////////////////////////////////
 // ALERT
 ///////////////////////////////////////////
-<Manager>
-  <Popover
-    type="alert"
-    isOpen={this.state.hasError}
-  >
-    Alert things are broken!
-    <Button type="button">Cancel</Button>
-    <Button type="submit">Save</Button>
-  </Popover>
-</Manager>
+<Overlay>
+  { isOpen &&
+    <Alert>
+      Alert things are broken!
+      <Button type="button">Cancel</Button>
+      <Button type="submit">Save</Button>
+    </Alert>
+  }
+</Overlay>
 
 
 ////////////////////////////////////////////
