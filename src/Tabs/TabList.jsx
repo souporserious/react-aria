@@ -18,13 +18,13 @@ class TabList extends Component {
   }
 
   render() {
-    const { accordion, multiple } = this.context.tabs
+    const { accordion, multiselect } = this.context.tabs
     const { tag, children } = this.props
     const componentProps = {
       role: 'tablist'
     }
 
-    if (accordion && multiple) {
+    if (accordion && multiselect) {
       componentProps['aria-multiselectable'] = true
     }
 

@@ -17,7 +17,7 @@ class Wrapper extends Component {
     return {
       tabs: {
         accordion: this.props.accordion,
-        multiple: this.props.multiple,
+        multiselect: this.props.multiselect,
         members: this._members,
         addPanel: this._addPanel,
         activateTab: this._activateTab,
@@ -57,7 +57,7 @@ class Wrapper extends Component {
   }
 
   _setActiveStates(id) {
-    const { accordion, multiple } = this.props
+    const { accordion, multiselect } = this.props
     const { collection } = this._members
 
     for (let i = collection.length; i--;) {
@@ -65,7 +65,7 @@ class Wrapper extends Component {
       if (accordion) {
         if (tab.id === id) {
           tab.toggleActiveState()
-        } else if (!multiple) {
+        } else if (!multiselect) {
           tab.setActiveState(false)
         }
       } else {
@@ -78,7 +78,7 @@ class Wrapper extends Component {
       if (accordion) {
         if (panel.controlledBy === id) {
           panel.toggleActiveState()
-        } else if (!multiple) {
+        } else if (!multiselect) {
           panel.setActiveState(false)
         }
       } else {

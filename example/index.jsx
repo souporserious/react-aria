@@ -218,7 +218,7 @@ class AccordionDemo extends Component {
     return (
       <Wrapper
         accordion
-        multiple
+        multiselect
       >
         <div>
           <h3>Accordion (Stateful)</h3>
