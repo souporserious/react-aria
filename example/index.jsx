@@ -4,9 +4,7 @@ import axe from 'react-axe'
 import a11y from 'react-a11y'
 import Portal from 'react-travel'
 import Transition from 'react-motion-ui-pack'
-import { Overlays, Manager, Toggle, Popover, Item, Tabs } from '../src/react-aria'
-
-const { Wrapper, TabList, Tab, TabPanel } = Tabs
+import { Overlays, Tabs } from '../src/react-aria'
 
 // axe(React)
 // a11y(React)
@@ -29,42 +27,10 @@ const { Wrapper, TabList, Tab, TabPanel } = Tabs
 // - Panel
 // - Rows & Columns https://www.w3.org/TR/wai-aria-practices/#grid
 
+const { Trigger, Overlay, Item } = Overlays
+const { Manager, TabList, Tab, TabPanel } = Tabs
+
 import './main.scss'
-
-class Dropdown extends Component {
-  state = {
-    selection: null
-  }
-
-  _handleSelection = (value, e) => {
-    this.setState({ selection: value })
-  }
-
-  render() {
-    return (
-      <Manager
-        type="menu"
-        onItemSelection={this._handleSelection}
-      >
-        { isOpen =>
-          <div>
-            <h3>Dropdown</h3>
-            <Toggle>
-              {this.state.selection || 'Select A Menu Item'}
-            </Toggle>
-            { isOpen &&
-              <Popover>
-                <Item>Apples</Item>
-                <Item>Pears</Item>
-                <Item>Oranges</Item>
-              </Popover>
-            }
-          </div>
-        }
-      </Manager>
-    )
-  }
-}
 
 class SelectDemo extends Component {
   state = {
@@ -79,16 +45,16 @@ class SelectDemo extends Component {
     const { value, isOpen } = this.state
     return (
       <div>
-        <Overlays.Trigger
+        <Trigger
           controls="select"
           type="menu"
           isOpen={isOpen}
           onToggle={this._toggle}
         >
           { value ? value : 'Select Option' }
-        </Overlays.Trigger>
+        </Trigger>
         { isOpen &&
-          <Overlays.Overlay
+          <Overlay
             id="select"
             type="menu"
             onRequestClose={() => {
@@ -98,10 +64,10 @@ class SelectDemo extends Component {
               this.setState({ isOpen: false, value })
             }}
           >
-            <Overlays.Item value="Item 1">Item 1</Overlays.Item>
-            <Overlays.Item value="Item 2">Item 2</Overlays.Item>
-            <Overlays.Item value="Item 3">Item 3</Overlays.Item>
-          </Overlays.Overlay>
+            <Item value="Item 1">Item 1</Item>
+            <Item value="Item 2">Item 2</Item>
+            <Item value="Item 3">Item 3</Item>
+          </Overlay>
         }
       </div>
     )
@@ -151,7 +117,7 @@ class ModalDemo extends Component {
               key="popover"
               style={this.modalStyles}
             >
-              <Overlays.Overlay
+              <Overlay
                 type="popover"
                 onRequestClose={() => this.setState({ isOpen: false })}
                 onItemSelection={(member, e) => {
@@ -162,7 +128,7 @@ class ModalDemo extends Component {
               >
                 <div>Modal</div>
                 <div>Modal Content 💁🏼</div>
-              </Overlays.Overlay>
+              </Overlay>
             </div>
           }
         </Transition>
@@ -196,7 +162,7 @@ class TabsDemo extends Component {
   render() {
     const { tabs, activeId } = this.state
     return (
-      <Wrapper
+      <Manager
         type="tabs"
         activeTabId={activeId}
         onChange={this._handleChange}
@@ -228,7 +194,7 @@ class TabsDemo extends Component {
             )}
           </div>
         </div>
-      </Wrapper>
+      </Manager>
     )
   }
 }
@@ -250,7 +216,7 @@ class AccordionDemo extends Component {
   render() {
     const { tabs } = this.state
     return (
-      <Wrapper
+      <Manager
         accordion
         multiselect
       >
@@ -269,7 +235,7 @@ class AccordionDemo extends Component {
             )}
           </TabList>
         </div>
-      </Wrapper>
+      </Manager>
     )
   }
 }

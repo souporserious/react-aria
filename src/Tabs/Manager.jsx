@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import Members from '../Members'
 
-class Wrapper extends Component {
+class Manager extends Component {
   static childContextTypes = {
     tabs: PropTypes.object
   }
@@ -92,4 +92,4 @@ class Wrapper extends Component {
   }
 }
 
-export default Wrapper
+export default Manager
