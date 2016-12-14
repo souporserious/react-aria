@@ -5,22 +5,17 @@ import noScroll from 'no-scroll'
 import Members from '../Members'
 import keys from '../keys'
 import specialAssign from '../special-assign'
-import { registerPopover, unregisterPopover, getToggle } from './state-manager'
-
-const isOutsideElement = (node, target) => (
-  (node && target) && (node !== target) && !node.contains(target)
-)
 
 const checkedProps = {
   tag: PropTypes.string,
-  id: PropTypes.any.isRequired,
-  type: PropTypes.string,
-  isOpen: PropTypes.bool.isRequired,
+  id: PropTypes.string,
+  type: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert']),
   trapFocus: PropTypes.bool,
+  initialFocus: PropTypes.any,
   freezeScroll: PropTypes.bool,
-  onOpen: PropTypes.func,
-  onClose: PropTypes.func,
-  onOutsideClick: PropTypes.func,
+  closeOnEscapeKey: PropTypes.bool,
+  closeOnOutsideClick: PropTypes.bool,
+  onRequestClose: PropTypes.func,
   onItemSelection: PropTypes.func
 }
 
@@ -34,18 +29,13 @@ class Overlay extends Component {
   static defaultProps = {
     tag: 'div',
     type: 'popover',
-    isOpen: true,
-    onOpen: () => null,
-    onClose: () => null,
-    onOutsideClick: () => null,
+    closeOnEscapeKey: true,
+    closeOnOutsideClick: true,
+    onRequestClose: () => null,
     onItemSelection: () => null
   }
 
-  constructor(props) {
-    super(props)
-    this.state = { isOpen: props.isOpen }
-    this._members = new Members(props)
-  }
+  _members = new Members(this.props)
 
   getChildContext() {
     return {
@@ -57,37 +47,39 @@ class Overlay extends Component {
   }
 
   componentDidMount() {
-    registerPopover(this.props.id, this)
+    const { trapFocus, initialFocus, freezeScroll } = this.props
+    this._lastActiveElement = document.activeElement
 
-    if (this.props.trapFocus) {
+    if (trapFocus) {
       this._focusTrap = focusTrap(findDOMNode(this), {
-        initialFocus: this.props.initialFocus,
+        initialFocus,
         escapeDeactivates: false,
         clickOutsideDeactivates: true
       }).activate()
     }
 
+    if (freezeScroll) {
+      noScroll.on()
+    }
+
+    if (!initialFocus) {
+      this._members.focus(0)
+    }
+
     this._registerEvents()
   }
 
-  componentWillReceiveProps({ isOpen }) {
-    if (this.props.isOpen !== isOpen) {
-      this.setState({ isOpen })
-
-      // make sure click handler is added and removed when isOpen changes
-      if (isOpen) {
-        this._registerEvents()
-      } else {
-        this._unregisterEvents()
-      }
-    }
-  }
-
   componentWillUnmount() {
-    unregisterPopover(this.props.id)
-
     if (this.props.trapFocus) {
       this._focusTrap.deactivate()
+    }
+
+    if (this.props.freezeScroll) {
+      noScroll.off()
+    }
+
+    if (this._lastActiveElement) {
+      this._lastActiveElement.focus()
     }
 
     this._unregisterEvents()
@@ -96,7 +88,7 @@ class Overlay extends Component {
   _registerEvents() {
     document.addEventListener('keydown', this._handleDocumentKeyDown)
 
-    if (typeof this.props.onOutsideClick === 'function') {
+    if (this.props.closeOnOutsideClick) {
       document.addEventListener('click', this._handleDocumentClick)
     }
   }
@@ -104,75 +96,27 @@ class Overlay extends Component {
   _unregisterEvents() {
     document.removeEventListener('keydown', this._handleDocumentKeyDown)
 
-    if (typeof this.props.onOutsideClick === 'function') {
+    if (this.props.closeOnOutsideClick) {
       document.removeEventListener('click', this._handleDocumentClick)
     }
   }
 
-  open = (focusFirstMember = true) => {
-    this.setState({ isOpen: true }, () => {
-      if (this.props.freezeScroll) {
-        noScroll.on()
-      }
-
-      this.props.onOpen()
-
-      if (focusFirstMember) {
-        setTimeout(() => {
-          this._members.focus(0)
-        }, 0)
-      }
-    })
-  }
-
-  close = (focusToggle = true) => {
-    this.setState({ isOpen: false }, () => {
-      if (this.props.freezeScroll) {
-        noScroll.off()
-      }
-
-      this.props.onClose()
-
-      if (focusToggle) {
-        setTimeout(() => {
-          const toggle = getToggle(this.props.id)
-          findDOMNode(toggle).focus()
-        }, 0)
-      }
-    })
-  }
-
-  toggle = () => {
-    if (this.state.isOpen) {
-      this.close()
-    } else {
-      this.open()
-    }
-  }
-
   _handleDocumentKeyDown = ({ keyCode }) => {
-    if (this.state.isOpen) {
-      if (!this.props.trapFocus && keyCode === keys.tab) {
-        this.close(false)
-      } else if (keyCode === keys.escape) {
-        this.close()
-      }
+    if (keyCode === keys.escape) {
+      this.props.onRequestClose()
     }
   }
 
   _handleDocumentClick = ({ target }) => {
-    const toggle = getToggle(this.props.id)
-    if (isOutsideElement(findDOMNode(this), target) &&
-        findDOMNode(toggle) !== target) {
-      this.props.onOutsideClick()
+    const node = findDOMNode(this)
+    if ((node !== target) && !node.contains(target)) {
+      this.props.onRequestClose()
     }
   }
 
   _getProps() {
-    const { type, id, isOpen } = this.props
-    const props = {
-      'aria-hidden': !isOpen
-    }
+    const { type, id } = this.props
+    const props = {}
 
     if (type === 'menu') {
       props['role'] = 'menu'

@@ -66,73 +66,107 @@ class Dropdown extends Component {
   }
 }
 
-class Modal extends Component {
+class SelectDemo extends Component {
+  state = {
+    isOpen: false
+  }
+
+  _toggle = () => {
+    this.setState({ isOpen: !this.state.isOpen })
+  }
+
   render() {
+    const { value, isOpen } = this.state
     return (
-      <Manager
-        type="modal"
-        trapFocus
-        freezeScroll
-      >
-        { isOpen =>
-          <div>
-            <h3>Modal</h3>
-            <Toggle>
-              Toggle Modal
-            </Toggle>
-            <Transition>
-              { isOpen &&
-                <div key="popover">
-                  Clicking here will close since it's outside
-                  <Popover>
-                    <a href="#">One</a>
-                    <a href="#">Two</a>
-                    <a href="#">Three</a>
-                  </Popover>
-                </div>
-              }
-            </Transition>
-          </div>
+      <div>
+        <Overlays.Trigger
+          controls="select"
+          type="menu"
+          isOpen={isOpen}
+          onToggle={this._toggle}
+        >
+          { value ? value : 'Select Option' }
+        </Overlays.Trigger>
+        { isOpen &&
+          <Overlays.Overlay
+            id="select"
+            type="menu"
+            onRequestClose={() => {
+              this.setState({ isOpen: false })
+            }}
+            onItemSelection={({ value }) => {
+              this.setState({ isOpen: false, value })
+            }}
+          >
+            <Overlays.Item value="Item 1">Item 1</Overlays.Item>
+            <Overlays.Item value="Item 2">Item 2</Overlays.Item>
+            <Overlays.Item value="Item 3">Item 3</Overlays.Item>
+          </Overlays.Overlay>
         }
-      </Manager>
+      </div>
     )
   }
 }
 
-class PopoverComponent extends Component {
+class ModalDemo extends Component {
   state = {
-    isFocused: false,
-    searchValue: ''
+    isOpen: false
+  }
+
+  modalStyles = {
+    display: 'flex',
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    background: 'rgba(0, 0, 0, 0.5)',
+    pointerEvents: 'none'
+  }
+
+  modalContentStyles = {
+    width: '100%',
+    maxWidth: 600,
+    padding: 12,
+    margin: 'auto',
+    background: 'rgb(255, 255, 255)',
+    pointerEvents: 'bounding-box'
+  }
+
+  _toggle = () => {
+    this.setState({ isOpen: !this.state.isOpen })
   }
 
   render() {
-    const { isFocused, searchValue } = this.state
-    const isOpen = isFocused && searchValue.length > 0
+    const { isOpen } = this.state
+
     return (
-      <Manager
-        type="popover"
-        isOpen={isOpen}
-        onPopoverOpen={() => this.setState({ isOpen: true })}
-        onPopoverClose={() => this.setState({ isOpen: false })}
-        openPopoverOn="tap"
-      >
-        <div>
-          <h3>Input Popover</h3>
-          <Toggle
-            tag="input"
-            type="search"
-            className="popover-toggle"
-            onFocus={() => this.setState({ isFocused: true })}
-            onBlur={() => this.setState({ isFocused: false })}
-            onChange={e => this.setState({ searchValue: e.target.value })}
-          />
+      <div>
+        <button onClick={this._toggle}>
+          Trigger
+        </button>
+        <Transition>
           { isOpen &&
-            <Popover>
-              Some cool popover content.
-            </Popover>
+            <div
+              key="popover"
+              style={this.modalStyles}
+            >
+              <Overlays.Overlay
+                type="popover"
+                onRequestClose={() => this.setState({ isOpen: false })}
+                onItemSelection={(member, e) => {
+                  console.log(member, e)
+                  this.setState({ isOpen: false })
+                }}
+                style={this.modalContentStyles}
+              >
+                <div>Modal</div>
+                <div>Modal Content 💁🏼</div>
+              </Overlays.Overlay>
+            </div>
           }
-        </div>
-      </Manager>
+        </Transition>
+      </div>
     )
   }
 }
@@ -240,55 +274,12 @@ class AccordionDemo extends Component {
   }
 }
 
-class OverlayDemo extends Component {
-  state = {
-    isOpen: false
-  }
-
-  render() {
-    const { isOpen } = this.state
-    return (
-      <div>
-        <Overlays.Toggle
-          type="popover"
-          controls="popover"
-          isOpen={isOpen}
-        >
-          Toggle
-        </Overlays.Toggle>
-        <Overlays.Overlay
-          type="popover"
-          id="popover"
-          isOpen={isOpen}
-          onOpen={() => this.setState({ isOpen: true })}
-          onClose={() => this.setState({ isOpen: false })}
-          onOutsideClick={() => this.setState({ isOpen: false })}
-          onItemSelection={(member, e) => {
-            console.log(member, e)
-            this.setState({ isOpen: false })
-          }}
-        >
-          { props => isOpen &&
-            <div
-              {...props}
-            >
-              <div>Popover!</div>
-              <Overlays.Item>Item 1</Overlays.Item>
-              <Overlays.Item>Item 2</Overlays.Item>
-              <Overlays.Item>Item 3</Overlays.Item>
-            </div>
-          }
-        </Overlays.Overlay>
-      </div>
-    )
-  }
-}
-
 class App extends Component {
   render() {
     return (
       <div>
-        <OverlayDemo/>
+        <SelectDemo/>
+        <ModalDemo/>
         <TabsDemo/>
         <AccordionDemo/>
         {/*<Overlays.Manager>
