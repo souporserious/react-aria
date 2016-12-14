@@ -2,9 +2,9 @@ import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import focusTrap from 'focus-trap'
 import noScroll from 'no-scroll'
-import Members from '../Members'
-import keys from '../keys'
-import specialAssign from '../special-assign'
+import Members from '../helpers/Members'
+import keys from '../helpers/keys'
+import specialAssign from '../helpers/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,

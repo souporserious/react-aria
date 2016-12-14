@@ -1,5 +1,5 @@
 import React, { Component, PropTypes, createElement } from 'react'
-import specialAssign from '../special-assign'
+import specialAssign from '../helpers/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,

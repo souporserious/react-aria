@@ -3,8 +3,8 @@ import keys from './keys'
 
 const defaultOptions = {
   keybindings: {
-    next:[{ keyCode: keys.arrowDown }, { keyCode: keys.arrowRight }],
-    prev:[{ keyCode: keys.arrowUp }, { keyCode: keys.arrowLeft }],
+    next: [{ keyCode: keys.arrowDown }, { keyCode: keys.arrowRight }],
+    prev: [{ keyCode: keys.arrowUp }, { keyCode: keys.arrowLeft }],
     first: { keyCode: keys.home },
     last: { keyCode: keys.end }
   },
@@ -34,7 +34,7 @@ class Members {
       text: text || node.innerHTML
     })
 
-    // activate focus trap if this was the first member added
+    // activate focus group if this was the first member added
     if (this.collection.length === 1) {
       this.focusGroup.activate()
     }
@@ -52,7 +52,7 @@ class Members {
       this.focusGroup.removeMember(member.node)
     }
 
-    // deactivate focus trap if this was the last member removed
+    // deactivate focus group if this was the last member removed
     if (this.collection.length <= 0) {
       this.focusGroup.activate()
     }

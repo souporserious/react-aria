@@ -1,10 +1,25 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM from 'react-dom'
-import Members from '../Members'
+import Members from '../helpers/Members'
+import specialAssign from '../helpers/special-assign'
+
+const checkedProps = {
+  tag: PropTypes.string,
+  activeTabId: PropTypes.string,
+  accordion: PropTypes.bool,
+  multiselect: PropTypes.bool,
+  onChange: PropTypes.func
+}
 
 class Manager extends Component {
   static childContextTypes = {
     tabs: PropTypes.object
+  }
+
+  static propTypes = checkedProps
+
+  static defaultProps = {
+    tag: 'div'
   }
 
   constructor(props) {
@@ -88,7 +103,8 @@ class Manager extends Component {
   }
 
   render() {
-    return this.props.children
+    const props = specialAssign({}, this.props, checkedProps)
+    return createElement(this.props.tag, props)
   }
 }
 

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import specialAssign from '../special-assign'
+import specialAssign from '../helpers/special-assign'
 
 const checkedProps = {
   controlledBy: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
