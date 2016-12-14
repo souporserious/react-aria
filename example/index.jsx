@@ -74,6 +74,44 @@ class SelectDemo extends Component {
   }
 }
 
+class InputDemo extends Component {
+  state = {
+    currValue: ''
+  }
+
+  render() {
+    const { currValue, isOpen } = this.state
+    return (
+      <div>
+        <input
+          type="text"
+          value={currValue}
+          onKeyDown={e => e.key === 'ArrowDown' && this.overlay && this.overlay.focusItem(0)}
+          onChange={e => this.setState({ currValue: e.target.value })}
+        />
+        { currValue.length > 0 &&
+          <Overlay
+            ref={c => this.overlay = c}
+            type="popover"
+            initialFocus={false}
+            closeOnOutsideClick={false}
+            onRequestClose={() => {
+              this.setState({ currValue: '' })
+            }}
+            onItemSelection={() => {
+              this.setState({ currValue: '' })
+            }}
+          >
+            <Item value="Item 1">Item 1</Item>
+            <Item value="Item 2">Item 2</Item>
+            <Item value="Item 3">Item 3</Item>
+          </Overlay>
+        }
+      </div>
+    )
+  }
+}
+
 class ModalDemo extends Component {
   state = {
     isOpen: false
@@ -245,28 +283,10 @@ class App extends Component {
     return (
       <div>
         <SelectDemo/>
+        <InputDemo/>
         <ModalDemo/>
         <TabsDemo/>
         <AccordionDemo/>
-        {/*<Overlays.Manager>
-          { isOpen =>
-            <div>
-              <Overlays.Toggle>
-                Toggle
-              </Overlays.Toggle>
-              { isOpen &&
-                <Overlays.Popover style={{ padding: 12, background: '#ccc' }}>
-                  Popover!
-                </Overlays.Popover>
-              }
-            </div>
-          }
-        </Overlays.Manager>*/}
-        {/*<Dropdown/>
-        <Modal/>
-        <PopoverComponent/>
-        <Tabs/>
-        */}
       </div>
     )
   }

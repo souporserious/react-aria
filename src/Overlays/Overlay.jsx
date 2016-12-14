@@ -10,6 +10,7 @@ const checkedProps = {
   tag: PropTypes.string,
   id: PropTypes.string,
   type: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert']),
+  focusOnMount: PropTypes.bool,
   trapFocus: PropTypes.bool,
   initialFocus: PropTypes.any,
   freezeScroll: PropTypes.bool,
@@ -29,18 +30,19 @@ class Overlay extends Component {
   static defaultProps = {
     tag: 'div',
     type: 'popover',
+    initialFocus: 'first',
     closeOnEscapeKey: true,
     closeOnOutsideClick: true,
     onRequestClose: () => null,
     onItemSelection: () => null
   }
 
-  _members = new Members(this.props)
+  members = new Members(this.props)
 
   getChildContext() {
     return {
       overlayManager: {
-        members: this._members,
+        members: this.members,
         onItemSelection: this.props.onItemSelection
       }
     }
@@ -62,8 +64,8 @@ class Overlay extends Component {
       noScroll.on()
     }
 
-    if (!initialFocus) {
-      this._members.focus(0)
+    if (initialFocus === 'first') {
+      this.members.focus(0)
     }
 
     this._registerEvents()
@@ -83,6 +85,10 @@ class Overlay extends Component {
     }
 
     this._unregisterEvents()
+  }
+
+  focusItem = (index) => {
+    this.members.focus(index)
   }
 
   _registerEvents() {
