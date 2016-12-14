@@ -1,4 +1,9 @@
 ## CHANGELOG
+### 0.6.0
+Exports as `Tabs`, and `Overlays` now, can be imported individually if needed ( e.g. import `Tabs` from `react-aria/Tabs` )
+
+All new props will be documented in README
+
 ### 0.5.1
 Fixed `Item` component to accept and use `value` prop
 

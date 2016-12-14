@@ -33,12 +33,6 @@ var externals = {
     commonjs2: 'no-scroll',
     commonjs: 'no-scroll',
     amd: 'no-scroll'
-  },
-  'teeny-tap': {
-    root: 'createTapListener',
-    commonjs2: 'teeny-tap',
-    commonjs: 'teeny-tap',
-    amd: 'teeny-tap'
   }
 };
 

@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/react-aria.svg)](https://badge.fury.io/js/react-aria)
 [![Dependency Status](https://david-dm.org/souporserious/react-aria.svg)](https://david-dm.org/souporserious/react-aria)
 
-Utility components to help compose React ARIA components.
+Utility components to help compose ARIA components in React. Please feel free to file an issue or submit a PR if you feel these can be more ARIA compliant ❤️
 
 ## Usage
 
@@ -16,37 +16,108 @@ Utility components to help compose React ARIA components.
 (UMD library exposed as `ReactARIA`)
 ```
 
-### Example
+### Building a select menu
 
-```js
-import { Manager, Toggle, Popover, Item } from 'react-aria'
+```jsx
+import { Overlays: { Trigger, Overlay, Item } } from 'react-aria'
 
-class Dropdown extends Component {
+class SelectMenu extends Component {
   state = {
     selection: null
   }
 
-  _handleSelection = (value, e) => {
-    this.setState({ selection: value })
+  _handleSelection = (item, e) => {
+    this.setState({
+      selection: item.value,
+      isOpen: false
+    })
   }
 
   render() {
+    const { isOpen } = this.state
     return (
-      <Manager onItemSelection={this._handleSelection}>
-        { isOpen =>
-          <div>
-            <Toggle>
-              {this.state.selection || 'Select A Dropdown Item'}
-            </Toggle>
-            { isOpen &&
-              <Popover role="menu">
-                <Item>Apples</Item>
-                <Item>Pears</Item>
-                <Item>Oranges</Item>
-              </Popover>
-            }
-          </div>
+      <div>
+        <Trigger
+          controls="select-menu"
+          type="menu"
+          isOpen={isOpen}
+          onToggle={() => this.setState({ isOpen: !isOpen })}
+        >
+          {this.state.selection || 'Select A Dropdown Item'}
+        </Trigger>
+        { isOpen &&
+          <Overlay
+            id="select-menu"
+            type="menu"
+            onItemSelection={this._handleSelection}
+            onRequestClose={() => this.setState({ isOpen: false })}
+          >
+            <Item value="apples">Apples</Item>
+            <Item value="pears">Pears</Item>
+            <Item value="oranges">Oranges</Item>
+          </Overlay>
         }
+      </div>
+    )
+  }
+}
+```
+
+### Building a set of tabs
+
+```jsx
+import { Tabs: { Manager, TabList, Tab, TabPanel } } from 'react-aria'
+
+class TabsDemo extends Component {
+  state = {
+    tabs: [{
+      id: 't1',
+      title: 'Bacon 🐷',
+      panel: <div>And eggs 🐔</div>
+    }, {
+      id: 't2',
+      title: 'Zombiez 💀',
+      panel: <div>Brainz</div>
+    }, {
+      id: 't3',
+      title: 'Samuel 👨🏿',
+      panel: <div>Samuel L Jackson</div>
+    }],
+    activeId: 't2'
+  }
+
+  render() {
+    const { tabs, activeId } = this.state
+    return (
+      <Manager
+        activeTabId={activeId}
+        onChange={id => this.setState({ activeId: id })}
+        className="tab-set"
+      >
+        <TabList className="tab-list">
+          {tabs.map(({ id, title }) =>
+            <Tab
+              key={id}
+              id={id}
+              isActive={id === activeId}
+              className={`tab-list-item ${id === activeId ? 'is-active' : ''}`}
+            >
+              {title}
+            </Tab>
+          )}
+        </TabList>
+        <div className="tab-panels">
+          {tabs.map(({ id, panel }) =>
+            <TabPanel
+              key={id}
+              controlledBy={id}
+              isActive={id === activeId}
+              className="tab-panel"
+            >
+              {panel}
+            </TabPanel>
+          )}
+        </div>
       </Manager>
     )
   }
