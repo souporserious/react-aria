@@ -1,10 +1,12 @@
 import React, { Component, PropTypes, Children, createElement } from 'react'
-import ReactDOM, { findDOMNode } from 'react-dom'
+import ReactDOM from 'react-dom'
+import axe from 'react-axe'
 import a11y from 'react-a11y'
 import Portal from 'react-travel'
 import Transition from 'react-motion-ui-pack'
-import { Manager, Toggle, Popover, Item, TabList, Tab, TabPanel } from '../src/react-aria'
+import { Overlays, Tabs } from '../src/react-aria'
 
+// axe(React)
 // a11y(React)
 
 // Inspiration
@@ -12,123 +14,153 @@ import { Manager, Toggle, Popover, Item, TabList, Tab, TabPanel } from '../src/r
 // https://standards.usa.gov/
 // http://ianmcburnie.github.io/mindpatterns/
 // http://jqueryui.com/widget/
+// dropdown - https://www.w3.org/WAI/GL/wiki/Using_ARIA_menus#Success_Criteria_2.1.1_Keyboard
+// tooltip - https://rawgit.com/w3c/aria-in-html/master/index.html#aria-labelledby-and-aria-describedby
 
-// Components
-// - Popover
-// - Modal
-// - Dropdown https://www.w3.org/WAI/GL/wiki/Using_ARIA_menus#Success_Criteria_2.1.1_Keyboard
-// - Tooltip https://rawgit.com/w3c/aria-in-html/master/index.html#aria-labelledby-and-aria-describedby
-// - Select
+// Components that can be built
+// - Popover ✓
+// - Modal ✓
+// - Dropdown ✓
+// - Tooltip ✓
+// - Select ✓
 // - ComboBox
-// - Tabs
-// - Accordion
-// - Panel
+// - Tabs ✓
+// - Accordion ✓
+// - Panel ✓
 // - Rows & Columns https://www.w3.org/TR/wai-aria-practices/#grid
+
+const { Trigger, Overlay, Item } = Overlays
+const { Manager, TabList, Tab, TabPanel } = Tabs
 
 import './main.scss'
 
-class Dropdown extends Component {
-  state = {
-    selection: null
-  }
-
-  _handleSelection = (value, e) => {
-    this.setState({ selection: value })
-  }
-
-  render() {
-    return (
-      <Manager
-        type="menu"
-        onItemSelection={this._handleSelection}
-      >
-        { isOpen =>
-          <div>
-            <h3>Dropdown</h3>
-            <Toggle>
-              {this.state.selection || 'Select A Menu Item'}
-            </Toggle>
-            { isOpen &&
-              <Popover>
-                <Item>Apples</Item>
-                <Item>Pears</Item>
-                <Item>Oranges</Item>
-              </Popover>
-            }
-          </div>
-        }
-      </Manager>
-    )
-  }
-}
-
-class Modal extends Component {
-  render() {
-    return (
-      <Manager
-        type="modal"
-        trapFocus
-        freezeScroll
-      >
-        { isOpen =>
-          <div>
-            <h3>Modal</h3>
-            <Toggle>
-              Toggle Modal
-            </Toggle>
-            <Transition>
-              { isOpen &&
-                <div key="popover">
-                  Clicking here will close since it's outside
-                  <Popover>
-                    <a href="#">One</a>
-                    <a href="#">Two</a>
-                    <a href="#">Three</a>
-                  </Popover>
-                </div>
-              }
-            </Transition>
-          </div>
-        }
-      </Manager>
-    )
-  }
-}
-
-class PopoverComponent extends Component {
+class SelectDemo extends Component {
   state = {
     isOpen: false
+  }
+
+  _toggle = () => {
+    this.setState({ isOpen: !this.state.isOpen })
+  }
+
+  render() {
+    const { value, isOpen } = this.state
+    return (
+      <div>
+        <Trigger
+          controls="select"
+          type="menu"
+          isOpen={isOpen}
+          onToggle={this._toggle}
+        >
+          { value ? value : 'Select Option' }
+        </Trigger>
+        { isOpen &&
+          <Overlay
+            id="select"
+            type="menu"
+            onRequestClose={() => { this.setState({ isOpen: false }) }}
+            onItemSelection={({ value }) => { this.setState({ isOpen: false, value }) }}
+          >
+            <Item value="Item 1">Item 1</Item>
+            <Item value="Item 2">Item 2</Item>
+            <Item value="Item 3">Item 3</Item>
+          </Overlay>
+        }
+      </div>
+    )
+  }
+}
+
+class InputDemo extends Component {
+  state = {
+    currValue: ''
+  }
+
+  render() {
+    const { currValue, isOpen } = this.state
+    return (
+      <div>
+        <input
+          type="text"
+          value={currValue}
+          onKeyDown={e => e.key === 'ArrowDown' && this.overlay && this.overlay.focusItem(0)}
+          onChange={e => this.setState({ currValue: e.target.value })}
+        />
+        { currValue.length > 0 &&
+          <Overlay
+            ref={c => this.overlay = c}
+            type="popover"
+            initialFocus={false}
+            closeOnOutsideClick={false}
+            onRequestClose={() => { this.setState({ currValue: '' }) }}
+            onItemSelection={() => { this.setState({ currValue: '' }) }}
+          >
+            <Item value="Item 1">Item 1</Item>
+            <Item value="Item 2">Item 2</Item>
+            <Item value="Item 3">Item 3</Item>
+          </Overlay>
+        }
+      </div>
+    )
+  }
+}
+
+class ModalDemo extends Component {
+  state = {
+    isOpen: false
+  }
+
+  modalStyles = {
+    display: 'flex',
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    background: 'rgba(0, 0, 0, 0.5)',
+    pointerEvents: 'none'
+  }
+
+  modalContentStyles = {
+    width: '100%',
+    maxWidth: 600,
+    padding: 12,
+    margin: 'auto',
+    background: 'rgb(255, 255, 255)',
+    pointerEvents: 'bounding-box'
   }
 
   render() {
     const { isOpen } = this.state
     return (
-      <Manager
-        type="popover"
-        onPopoverOpen={() => this.setState({ isOpen: true })}
-        onPopoverClose={() => this.setState({ isOpen: false })}
-        openPopoverOn="hover"
-      >
-        <div>
-          <h3>Popover</h3>
-          <Toggle className="popover-toggle">
-            Toggle Popover <span>👻</span>
-          </Toggle>
+      <div>
+        <button onClick={() => this.setState({ isOpen: true })}>
+          Open Modal
+        </button>
+        <Transition>
           { isOpen &&
-            <Popover>
-              Some cool popover content.
-            </Popover>
+            <div
+              key="popover"
+              style={this.modalStyles}
+            >
+              <Overlay
+                type="popover"
+                onRequestClose={() => this.setState({ isOpen: false })}
+                style={this.modalContentStyles}
+              >
+                <div>Modal</div>
+                <div>Modal Content 💁🏼</div>
+              </Overlay>
+            </div>
           }
-          <div>
-            Popover is {isOpen ? 'Open' : 'Closed'}
-          </div>
-        </div>
-      </Manager>
+        </Transition>
+      </div>
     )
   }
 }
 
-class Tabs extends Component {
+class TabsDemo extends Component {
   state = {
     tabs: [{
       id: 't1',
@@ -146,51 +178,44 @@ class Tabs extends Component {
     activeId: 't2'
   }
 
-  _handleChange = (activeId) => {
-    this.setState({ activeId })
-  }
-
   render() {
     const { tabs, activeId } = this.state
     return (
       <Manager
-        type="tabs"
         activeTabId={activeId}
-        onChange={this._handleChange}
+        onChange={id => this.setState({ activeId: id })}
+        className="tab-set"
       >
-        <div className="tab-set">
-          <h3>Tabs (Stateless)</h3>
-          <TabList className="tab-list">
-            {tabs.map(({ id, title }) =>
-              <Tab
-                key={id}
-                id={id}
-                isActive={id === activeId}
-                className={`tab-list-item ${id === activeId ? 'is-active' : ''}`}
-              >
-                {title}
-              </Tab>
-            )}
-          </TabList>
-          <div className="tab-panels">
-            {tabs.map(({ id, panel }) =>
-              <TabPanel
-                key={id}
-                controlledBy={id}
-                isActive={id === activeId}
-                className="tab-panel"
-              >
-                {panel}
-              </TabPanel>
-            )}
-          </div>
+        <TabList className="tab-list">
+          {tabs.map(({ id, title }) =>
+            <Tab
+              key={id}
+              id={id}
+              isActive={id === activeId}
+              className={`tab-list-item ${id === activeId ? 'is-active' : ''}`}
+            >
+              {title}
+            </Tab>
+          )}
+        </TabList>
+        <div className="tab-panels">
+          {tabs.map(({ id, panel }) =>
+            <TabPanel
+              key={id}
+              controlledBy={id}
+              isActive={id === activeId}
+              className="tab-panel"
+            >
+              {panel}
+            </TabPanel>
+          )}
         </div>
       </Manager>
     )
   }
 }
 
-class Accordion extends Component {
+class AccordionDemo extends Component {
   state = {
     tabs: [{
       tab: 'one',
@@ -207,22 +232,22 @@ class Accordion extends Component {
   render() {
     const { tabs } = this.state
     return (
-      <Manager type="accordion">
-        <div>
-          <h3>Accordion (Stateful)</h3>
-          <TabList>
-            {tabs.map(({ tab, panel }) =>
-              <div key={tab}>
-                <Tab id={tab}>
-                  {tab}
-                </Tab>
-                <TabPanel controlledBy={tab}>
-                  {panel}
-                </TabPanel>
-              </div>
-            )}
-          </TabList>
-        </div>
+      <Manager
+        accordion
+        multiselect
+      >
+        <TabList>
+          {tabs.map(({ tab, panel }) =>
+            <div key={tab}>
+              <Tab id={tab}>
+                {tab}
+              </Tab>
+              <TabPanel controlledBy={tab}>
+                {panel}
+              </TabPanel>
+            </div>
+          )}
+        </TabList>
       </Manager>
     )
   }
@@ -232,11 +257,20 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Dropdown/>
-        <Modal/>
-        <PopoverComponent/>
-        <Tabs/>
-        <Accordion/>
+        <h1>Select Menu</h1>
+        <SelectDemo/>
+
+        <h1>Input w/ Popover</h1>
+        <InputDemo/>
+
+        <h1>Modal</h1>
+        <ModalDemo/>
+
+        <h1>Tabs (Stateless)</h1>
+        <TabsDemo/>
+
+        <h1>Accordion (Stateful)</h1>
+        <AccordionDemo/>
       </div>
     )
   }
