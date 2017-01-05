@@ -6,7 +6,7 @@ const checkedProps = {
   type: PropTypes.string,
   controls: PropTypes.string,
   isOpen: PropTypes.bool,
-  onRequestOpen: PropTypes.func
+  children: PropTypes.func
 }
 
 class Trigger extends Component {
@@ -16,24 +16,8 @@ class Trigger extends Component {
     type: 'popover'
   }
 
-  _handleKeyDown = (e) => {
-    const { tag, onRequestOpen, onKeyDown } = this.props
-
-    if (['ArrowDown'].indexOf(e.key) > -1 ||
-        (tag !== 'button' && ['Enter', ' '].indexOf(e.key) > -1)) {
-      onRequestOpen()
-    }
-
-    if (typeof onKeyDown === 'function') {
-      onKeyDown(e)
-    }
-  }
-
   _getProps() {
     const { type, controls, isOpen } = this.props
-    const props = {
-      onKeyDown: this._handleKeyDown
-    }
 
     if (type !== 'modal') {
       props['aria-haspopup'] = true
@@ -51,7 +35,14 @@ class Trigger extends Component {
   }
 
   render() {
-    return createElement('input', this._getProps())
+    const { children } = this.props
+    const props = this._getProps()
+
+    if (typeof children === 'function') {
+      return children(props)
+    }
+
+    return createElement('input', props)
   }
 }
 
