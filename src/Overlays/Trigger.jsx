@@ -6,7 +6,8 @@ const checkedProps = {
   tag: PropTypes.string,
   isOpen: PropTypes.bool,
   toggleOn: PropTypes.array,
-  onToggle: PropTypes.func
+  onToggle: PropTypes.func,
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
 class Trigger extends Component {

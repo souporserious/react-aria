@@ -17,7 +17,8 @@ const checkedProps = {
   closeOnEscapeKey: PropTypes.bool,
   closeOnOutsideClick: PropTypes.bool,
   onRequestClose: PropTypes.func,
-  onItemSelection: PropTypes.func
+  onItemSelection: PropTypes.func,
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
 class Overlay extends Component {

@@ -5,7 +5,8 @@ import specialAssign from '../helpers/special-assign'
 const checkedProps = {
   controlledBy: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   isActive: PropTypes.bool,
-  tag: PropTypes.string
+  tag: PropTypes.string,
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
 class TabPanel extends Component {
