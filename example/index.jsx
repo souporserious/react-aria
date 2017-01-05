@@ -78,7 +78,7 @@ class InputDemo extends Component {
   }
 
   _handleKeyDown = (e) => {
-    if (this.state.currValue.length > 0 && ['ArrowDown'].indexOf(e.key) > -1) {
+    if (this.state.currValue.length > 0 && e.key === 'ArrowDown') {
       this.overlay.focusItem(0)
     }
   }
