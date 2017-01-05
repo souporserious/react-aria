@@ -10,7 +10,6 @@ const checkedProps = {
   tag: PropTypes.string,
   id: PropTypes.string,
   role: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert']),
-  focusOnMount: PropTypes.bool,
   trapFocus: PropTypes.bool,
   initialFocus: PropTypes.any,
   freezeScroll: PropTypes.bool,
