@@ -29,7 +29,7 @@ import { Overlays, Tabs } from '../src/react-aria'
 // - Panel ✓
 // - Rows & Columns https://www.w3.org/TR/wai-aria-practices/#grid
 
-const { Trigger, Overlay, Item } = Overlays
+const { Trigger, Input, Overlay, Item } = Overlays
 const { Manager, TabList, Tab, TabPanel } = Tabs
 
 import './main.scss'
@@ -77,20 +77,28 @@ class InputDemo extends Component {
     currValue: ''
   }
 
+  _handleKeyDown = (e) => {
+    if (this.state.currValue.length > 0 && ['ArrowDown'].indexOf(e.key) > -1) {
+      this.overlay.focusItem(0)
+    }
+  }
+
   render() {
-    const { currValue, isOpen } = this.state
+    const { currValue } = this.state
     return (
       <div>
-        <input
-          type="text"
+        <Input
+          type="popover"
+          controls="overlay"
           value={currValue}
-          onKeyDown={e => e.key === 'ArrowDown' && this.overlay && this.overlay.focusItem(0)}
+          onKeyDown={this._handleKeyDown}
           onChange={e => this.setState({ currValue: e.target.value })}
         />
         { currValue.length > 0 &&
           <Overlay
             ref={c => this.overlay = c}
             type="popover"
+            id="overlay"
             initialFocus={false}
             closeOnOutsideClick={false}
             onRequestClose={() => { this.setState({ currValue: '' }) }}

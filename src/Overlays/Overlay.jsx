@@ -88,6 +88,10 @@ class Overlay extends Component {
     this._unregisterEvents()
   }
 
+  getMembers = () => {
+    return this.members
+  }
+
   focusItem = (index) => {
     this.members.focus(index)
   }

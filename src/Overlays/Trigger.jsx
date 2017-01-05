@@ -4,6 +4,8 @@ import specialAssign from '../helpers/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,
+  type: PropTypes.string,
+  controls: PropTypes.string,
   isOpen: PropTypes.bool,
   toggleOn: PropTypes.array,
   onToggle: PropTypes.func,
@@ -15,6 +17,7 @@ class Trigger extends Component {
 
   static defaultProps = {
     tag: 'button',
+    type: 'popover',
     toggleOn: ['click']
   }
 

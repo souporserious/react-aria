@@ -1,4 +1,13 @@
 ## CHANGELOG
+### 0.6.1
+Make sure `children` get pulled off of props so child functions work as expected
+
+Cleanup invalid prop warnings
+
+Added `Input` component for input + overlay combos
+
+Added public `getMembers` method to `Overlay` component
+
 ### 0.6.0
 Exports as `Tabs`, and `Overlays` now, can be imported individually if needed ( e.g. import `Tabs` from `react-aria/Tabs` )
 
