@@ -4,7 +4,7 @@ import specialAssign from '../helpers/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,
-  type: PropTypes.string,
+  overlayRole: PropTypes.string,
   controls: PropTypes.string,
   isOpen: PropTypes.bool,
   toggleOn: PropTypes.array,
@@ -17,7 +17,7 @@ class Trigger extends Component {
 
   static defaultProps = {
     tag: 'button',
-    type: 'popover',
+    overlayRole: 'popover',
     toggleOn: ['click']
   }
 
@@ -50,7 +50,7 @@ class Trigger extends Component {
   }
 
   _getProps() {
-    const { disabled, type, controls, isOpen, toggleOn } = this.props
+    const { disabled, overlayRole, controls, isOpen, toggleOn } = this.props
     const props = {
       role: 'button',
       tabIndex: (disabled) ? '' : 0,
@@ -58,15 +58,15 @@ class Trigger extends Component {
       onKeyDown: this._handleKeyDown
     }
 
-    if (type !== 'modal') {
+    if (overlayRole !== 'modal') {
       props['aria-haspopup'] = true
       props['aria-expanded'] = isOpen
     }
 
-    if (type === 'popover') {
+    if (overlayRole === 'popover') {
       props['id'] = controls
     }
-    else if (type === 'tooltip') {
+    else if (overlayRole === 'tooltip') {
       props['aria-describedby'] = controls
     }
 

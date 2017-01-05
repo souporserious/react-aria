@@ -3,7 +3,7 @@ import ReactDOM, { findDOMNode } from 'react-dom'
 import specialAssign from '../helpers/special-assign'
 
 const checkedProps = {
-  type: PropTypes.string,
+  overlayRole: PropTypes.string,
   controls: PropTypes.string,
   isOpen: PropTypes.bool,
   children: PropTypes.func
@@ -13,21 +13,22 @@ class Trigger extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    type: 'popover'
+    overlayRole: 'popover'
   }
 
   _getProps() {
-    const { type, controls, isOpen } = this.props
+    const { overlayRole, controls, isOpen } = this.props
+    const props = {}
 
-    if (type !== 'modal') {
+    if (overlayRole !== 'modal') {
       props['aria-haspopup'] = true
       props['aria-expanded'] = isOpen
     }
 
-    if (type === 'popover') {
+    if (overlayRole === 'popover') {
       props['id'] = controls
     }
-    else if (type === 'tooltip') {
+    else if (overlayRole === 'tooltip') {
       props['aria-describedby'] = controls
     }
 

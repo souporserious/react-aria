@@ -9,7 +9,7 @@ import specialAssign from '../helpers/special-assign'
 const checkedProps = {
   tag: PropTypes.string,
   id: PropTypes.string,
-  type: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert']),
+  role: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert']),
   focusOnMount: PropTypes.bool,
   trapFocus: PropTypes.bool,
   initialFocus: PropTypes.any,
@@ -30,7 +30,7 @@ class Overlay extends Component {
 
   static defaultProps = {
     tag: 'div',
-    type: 'popover',
+    role: 'popover',
     initialFocus: 'first',
     closeOnEscapeKey: true,
     closeOnOutsideClick: true,
@@ -126,23 +126,23 @@ class Overlay extends Component {
   }
 
   _getProps() {
-    const { type, id } = this.props
+    const { role, id } = this.props
     const props = {}
 
-    if (type === 'menu') {
+    if (role === 'menu') {
       props['role'] = 'menu'
     }
-    else if (type === 'modal') {
+    else if (role === 'modal') {
       props['role'] = 'dialog'
     }
-    else if (type === 'alert') {
+    else if (role === 'alert') {
       props['role'] = 'alertdialog'
     }
-    else if (type === 'tooltip') {
+    else if (role === 'tooltip') {
       props['id'] = id
       props['role'] = 'tooltip'
     }
-    else if (type === 'popover') {
+    else if (role === 'popover') {
       props['aria-labelledby'] = id
     }
 

@@ -49,7 +49,7 @@ class SelectDemo extends Component {
       <div>
         <Trigger
           controls="select"
-          type="menu"
+          overlayRole="menu"
           isOpen={isOpen}
           onToggle={this._toggle}
         >
@@ -58,7 +58,7 @@ class SelectDemo extends Component {
         { isOpen &&
           <Overlay
             id="select"
-            type="menu"
+            role="menu"
             onRequestClose={() => { this.setState({ isOpen: false }) }}
             onItemSelection={({ value }) => { this.setState({ isOpen: false, value }) }}
           >
@@ -88,7 +88,7 @@ class InputDemo extends Component {
     return (
       <div>
         <Input
-          type="popover"
+          overlayRole="popover"
           controls="overlay"
           value={currValue}
           onKeyDown={this._handleKeyDown}
@@ -97,8 +97,8 @@ class InputDemo extends Component {
         { currValue.length > 0 &&
           <Overlay
             ref={c => this.overlay = c}
-            type="popover"
             id="overlay"
+            role="popover"
             initialFocus={false}
             closeOnOutsideClick={false}
             onRequestClose={() => { this.setState({ currValue: '' }) }}
@@ -153,7 +153,7 @@ class ModalDemo extends Component {
               style={this.modalStyles}
             >
               <Overlay
-                type="popover"
+                role="popover"
                 onRequestClose={() => this.setState({ isOpen: false })}
                 style={this.modalContentStyles}
               >

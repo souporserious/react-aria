@@ -8,6 +8,10 @@ Added `Input` component for input + overlay combos
 
 Added public `getMembers` method to `Overlay` component
 
+Breaking Changes:
+
+Renamed `type` prop to `role` since `type` is a reserved word
+
 ### 0.6.0
 Exports as `Tabs`, and `Overlays` now, can be imported individually if needed ( e.g. import `Tabs` from `react-aria/Tabs` )
 
