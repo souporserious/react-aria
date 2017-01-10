@@ -1,7 +1,7 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM from 'react-dom'
-import Members from '../helpers/Members'
-import specialAssign from '../helpers/special-assign'
+import Members from '../utils/Members'
+import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,

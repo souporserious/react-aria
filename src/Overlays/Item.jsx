@@ -1,9 +1,10 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import specialAssign from '../helpers/special-assign'
+import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,
+  onSelect: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
@@ -20,9 +21,9 @@ class Item extends Component {
 
   componentDidMount() {
     this._member = {
-      type: 'item',
       node: findDOMNode(this),
-      text: this.props.text
+      text: this.props.text,
+      index: this.props.index
     }
 
     if (this.props.value) {
@@ -70,9 +71,10 @@ class Item extends Component {
   }
 
   render() {
+    const { overlayManager } = this.context
     const { tag, children } = this.props
     const props = specialAssign({
-      role: 'menuitem',
+      role: (overlayManager.role === 'listbox') ? 'option' : 'menuitem',
       tabIndex: -1,
       onClick: this._handleClick,
       onKeyDown: this._handleKeyDown

@@ -2,20 +2,20 @@ import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { scopeFocus, unscopeFocus } from 'a11y-focus-scope'
 import noScroll from 'no-scroll'
-import Members from '../helpers/Members'
-import keys from '../helpers/keys'
-import specialAssign from '../helpers/special-assign'
+import Members from '../utils/Members'
+import keys from '../utils/keys'
+import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,
-  id: PropTypes.string,
-  role: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert']),
+  root: PropTypes.any,
   scopeFocus: PropTypes.bool,
   initialFocus: PropTypes.any,
   freezeScroll: PropTypes.bool,
   closeOnEscapeKey: PropTypes.bool,
   closeOnOutsideClick: PropTypes.bool,
   onRequestClose: PropTypes.func,
+  onItemFocus: PropTypes.func,
   onItemSelection: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
@@ -25,7 +25,10 @@ class Overlay extends Component {
     overlayManager: PropTypes.object
   }
 
-  static propTypes = checkedProps
+  static propTypes = {
+    role: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert', 'listbox']),
+    ...checkedProps
+  }
 
   static defaultProps = {
     tag: 'div',
@@ -34,14 +37,19 @@ class Overlay extends Component {
     closeOnEscapeKey: true,
     closeOnOutsideClick: true,
     onRequestClose: () => null,
+    onItemFocus: () => null,
     onItemSelection: () => null
   }
 
-  members = new Members(this.props)
+  members = new Members({
+    onChange: this.props.onItemFocus,
+    onSelect: this.props.onItemSelection
+  })
 
   getChildContext() {
     return {
       overlayManager: {
+        role: this.props.role,
         members: this.members,
         onItemSelection: this.props.onItemSelection
       }
@@ -50,6 +58,10 @@ class Overlay extends Component {
 
   componentDidMount() {
     this._lastActiveElement = document.activeElement
+
+    if (this.props.root) {
+      this.members.setRootNode(findDOMNode(this.props.root))
+    }
 
     if (this.props.scopeFocus) {
       scopeFocus(findDOMNode(this))

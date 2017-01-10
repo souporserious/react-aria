@@ -7,6 +7,13 @@ class Members {
     this.focusGroup = new FocusGroup(this.options)
   }
 
+  setRootNode = (node) => {
+    // deactivate, then activate after setting root node so we can attach keydown listener
+    this.focusGroup.deactivate()
+    this.focusGroup.setRootNode(node)
+    this.focusGroup.activate()
+  }
+
   add = (member) => {
     const { index, node, text } = member
 

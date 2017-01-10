@@ -4,7 +4,7 @@ import axe from 'react-axe'
 import a11y from 'react-a11y'
 import Portal from 'react-travel'
 import Transition from 'react-motion-ui-pack'
-import { Overlays, Tabs } from '../src/react-aria'
+import { Overlays, Tabs, ComboBox } from '../src/react-aria'
 
 // axe(React)
 // a11y(React)
@@ -23,14 +23,15 @@ import { Overlays, Tabs } from '../src/react-aria'
 // - Dropdown ✓
 // - Tooltip ✓
 // - Select ✓
-// - ComboBox
+// - ComboBox ✓
 // - Tabs ✓
 // - Accordion ✓
 // - Panel ✓
 // - Rows & Columns https://www.w3.org/TR/wai-aria-practices/#grid
 
-const { Trigger, Input, Overlay, Item } = Overlays
-const { Manager, TabList, Tab, TabPanel } = Tabs
+const { Trigger, Overlay, Item } = Overlays
+const { TabList, Tab, TabPanel } = Tabs
+const { Input, ListBox, Option } = ComboBox
 
 import './main.scss'
 
@@ -72,44 +73,60 @@ class SelectDemo extends Component {
   }
 }
 
-class InputDemo extends Component {
+class ComboBoxDemo extends Component {
   state = {
-    currValue: ''
+    currValue: '',
+    highlightedIndex: null
   }
 
-  _handleKeyDown = (e) => {
-    if (this.state.currValue.length > 0 && e.key === 'ArrowDown') {
-      this.overlay.focusItem(0)
+  renderItems() {
+    const { highlightedIndex } = this.state
+    const items = []
+
+    for (let i = 0; i < 3; i++) {
+      items.push(
+        <Item
+          key={i}
+          tabIndex={null}
+          value={`Item ${i}`}
+          style={{ background: highlightedIndex === i ? 'red' : '' }}
+        >
+          Item {i}
+        </Item>
+      )
     }
+
+    return items
   }
 
   render() {
     const { currValue } = this.state
     return (
-      <div>
+      <ComboBox.Manager>
         <Input
-          overlayRole="popover"
-          controls="overlay"
+          ref={c => this.input = c}
           value={currValue}
-          onKeyDown={this._handleKeyDown}
           onChange={e => this.setState({ currValue: e.target.value })}
         />
         { currValue.length > 0 &&
-          <Overlay
+          <ListBox
             ref={c => this.overlay = c}
-            id="overlay"
-            role="popover"
+            root={this.input}
+            role="listbox"
             initialFocus={false}
             closeOnOutsideClick={false}
             onRequestClose={() => { this.setState({ currValue: '' }) }}
-            onItemSelection={() => { this.setState({ currValue: '' }) }}
+            onItemFocus={(item, index) => { this.setState({ focusedIndex: index }) }}
+            // onItemHighlight={}
+            onItemSelection={(item) => {
+              console.log(item)
+              this.setState({ currValue: '' })
+            }}
           >
-            <Item value="Item 1">Item 1</Item>
-            <Item value="Item 2">Item 2</Item>
-            <Item value="Item 3">Item 3</Item>
-          </Overlay>
+            {this.renderItems()}
+          </ListBox>
         }
-      </div>
+      </ComboBox.Manager>
     )
   }
 }
@@ -195,7 +212,7 @@ class TabsDemo extends Component {
   render() {
     const { tabs, activeId } = this.state
     return (
-      <Manager
+      <Tabs.Manager
         activeTabId={activeId}
         onChange={id => this.setState({ activeId: id })}
         className="tab-set"
@@ -224,7 +241,7 @@ class TabsDemo extends Component {
             </TabPanel>
           )}
         </div>
-      </Manager>
+      </Tabs.Manager>
     )
   }
 }
@@ -246,7 +263,7 @@ class AccordionDemo extends Component {
   render() {
     const { tabs } = this.state
     return (
-      <Manager
+      <Tabs.Manager
         accordion
         multiselect
       >
@@ -262,7 +279,7 @@ class AccordionDemo extends Component {
             </div>
           )}
         </TabList>
-      </Manager>
+      </Tabs.Manager>
     )
   }
 }
@@ -274,8 +291,8 @@ class App extends Component {
         <h1>Select Menu</h1>
         <SelectDemo/>
 
-        <h1>Input w/ Popover</h1>
-        <InputDemo/>
+        <h1>ComboBox</h1>
+        <ComboBoxDemo/>
 
         <h1>Modal</h1>
         <ModalDemo/>

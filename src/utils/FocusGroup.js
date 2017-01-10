@@ -1,18 +1,28 @@
-class IndexManager {
+class FocusGroup {
   constructor({
+    rootNode = document,
     members = [],
     activeIndex = 0,
-    faux = false,
     wrap = true,
-    onChange = () => null
+    onChange = () => null,
+    onSelect = () => null
   }) {
+    this._rootNode = rootNode
     this._members = members
     this._activeIndex = activeIndex
     this._options = {
-      faux,
       wrap,
-      onChange
+      onChange,
+      onSelect
     }
+  }
+
+  activate() {
+    this._rootNode.addEventListener('keydown', this._handleKeydown, true)
+  }
+
+  deactivate() {
+    this._rootNode.removeEventListener('keydown', this._handleKeydown, true)
   }
 
   addMember(member, index) {
@@ -33,6 +43,10 @@ class IndexManager {
     }
   }
 
+  setRootNode(node) {
+    this._rootNode = node
+  }
+
   getMemberIndex(member) {
     for (let i = 0; i < this._members.length; i++) {
       if (this._members[i].node === member) {
@@ -43,7 +57,7 @@ class IndexManager {
   }
 
   getActiveIndex() {
-    return this._options.faux
+    return this._rootNode !== document
       ? this._activeIndex
       : this.getMemberIndex(document.activeElement)
   }
@@ -60,7 +74,7 @@ class IndexManager {
     } else if (this._options.wrap) {
       targetIndex = this._members.length - 1
     }
-    this.select(targetIndex)
+    this.focus(targetIndex)
   }
 
   next() {
@@ -71,18 +85,18 @@ class IndexManager {
     } else if (this._options.wrap) {
       targetIndex = 0
     }
-    this.select(targetIndex)
+    this.focus(targetIndex)
   }
 
   first() {
-    this.select(0)
+    this.focus(0)
   }
 
   last() {
-    this.select(this._members.length - 1)
+    this.focus(this._members.length - 1)
   }
 
-  select(index) {
+  focus(index) {
     const member = this._members[index]
 
     if (!member) {
@@ -96,8 +110,35 @@ class IndexManager {
     }
 
     this._activeIndex = index
-    this._options.onChange(index)
+    this._options.onChange(member, index)
+  }
+
+  selectFocusedMember() {
+    this._options.onSelect(this.getActiveMember())
+  }
+
+  _handleKeydown = (e) => {
+    // only respond to keyboard events when
+    // focus is already within the focus-group
+    if (this.getActiveIndex() === -1) return;
+
+    switch (e.key) {
+      // case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault()
+        this.prev()
+        break;
+      // case 'ArrowRight':
+      case 'ArrowDown':
+        e.preventDefault()
+        this.next()
+        break;
+      case 'Enter':
+      case ' ':
+        this.selectFocusedMember()
+        break;
+    }
   }
 }
 
-export default IndexManager
+export default FocusGroup
