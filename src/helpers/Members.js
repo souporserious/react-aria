@@ -1,27 +1,14 @@
-import createFocusGroup from 'focus-group'
-import keys from './keys'
-
-const defaultOptions = {
-  keybindings: {
-    next: [{ keyCode: keys.arrowDown }, { keyCode: keys.arrowRight }],
-    prev: [{ keyCode: keys.arrowUp }, { keyCode: keys.arrowLeft }],
-    first: { keyCode: keys.home },
-    last: { keyCode: keys.end }
-  },
-  wrap: true,
-  stringSearch: true,
-  stringSearchDelay: 600
-}
+import FocusGroup from './FocusGroup'
 
 class Members {
   constructor(options = {}) {
     this.collection = []
-    this.options = { ...defaultOptions, ...options }
-    this.focusGroup = createFocusGroup(this.options)
+    this.options = options
+    this.focusGroup = new FocusGroup(this.options)
   }
 
   add = (member) => {
-    const { id, index, node, text } = member
+    const { index, node, text } = member
 
     if (index === undefined) {
       this.collection.push(member)
@@ -29,6 +16,7 @@ class Members {
       this.collection.splice(index, 0, member)
     }
 
+    // add member to focus group
     this.focusGroup.addMember({
       node,
       text: text || node.innerHTML
@@ -54,7 +42,7 @@ class Members {
 
     // deactivate focus group if this was the last member removed
     if (this.collection.length <= 0) {
-      this.focusGroup.activate()
+      this.focusGroup.deactivate()
     }
 
     if (typeof this.options.onRemove === 'function') {
@@ -63,7 +51,7 @@ class Members {
   }
 
   focus = (index) => {
-    this.focusGroup.focusNodeAtIndex(index)
+    this.focusGroup.focus(index)
   }
 }
 

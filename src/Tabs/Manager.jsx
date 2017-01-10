@@ -24,7 +24,7 @@ class Manager extends Component {
 
   constructor(props) {
     super(props)
-    this._members = new Members({ ...this.props, onAdd: this._addMember })
+    this._members = new Members({ onAdd: this._addMember })
     this._panels = []
   }
 

@@ -16,18 +16,6 @@ var externals = {
     commonjs: 'react-dom',
     amd: 'react-dom'
   },
-  'focus-group': {
-    root: 'createFocusGroup',
-    commonjs2: 'focus-group',
-    commonjs: 'focus-group',
-    amd: 'focus-group'
-  },
-  'focus-trap': {
-    root: 'focusTrap',
-    commonjs2: 'focus-trap',
-    commonjs: 'focus-trap',
-    amd: 'focus-trap'
-  },
   'no-scroll': {
     root: 'noScroll',
     commonjs2: 'no-scroll',
