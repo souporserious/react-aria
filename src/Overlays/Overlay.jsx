@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import focusTrap from 'focus-trap'
+import { scopeFocus, unscopeFocus } from 'a11y-focus-scope'
 import noScroll from 'no-scroll'
 import Members from '../helpers/Members'
 import keys from '../helpers/keys'
@@ -10,7 +10,7 @@ const checkedProps = {
   tag: PropTypes.string,
   id: PropTypes.string,
   role: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert']),
-  trapFocus: PropTypes.bool,
+  scopeFocus: PropTypes.bool,
   initialFocus: PropTypes.any,
   freezeScroll: PropTypes.bool,
   closeOnEscapeKey: PropTypes.bool,
@@ -30,7 +30,7 @@ class Overlay extends Component {
   static defaultProps = {
     tag: 'div',
     role: 'popover',
-    initialFocus: 'first',
+    initialFocus: true,
     closeOnEscapeKey: true,
     closeOnOutsideClick: true,
     onRequestClose: () => null,
@@ -49,22 +49,17 @@ class Overlay extends Component {
   }
 
   componentDidMount() {
-    const { trapFocus, initialFocus, freezeScroll } = this.props
     this._lastActiveElement = document.activeElement
 
-    if (trapFocus) {
-      this._focusTrap = focusTrap(findDOMNode(this), {
-        initialFocus,
-        escapeDeactivates: false,
-        clickOutsideDeactivates: true
-      }).activate()
+    if (this.props.scopeFocus) {
+      scopeFocus(findDOMNode(this))
     }
 
-    if (freezeScroll) {
+    if (this.props.freezeScroll) {
       noScroll.on()
     }
 
-    if (initialFocus === 'first') {
+    if (this.props.initialFocus) {
       this.members.focus(0)
     }
 
@@ -72,8 +67,8 @@ class Overlay extends Component {
   }
 
   componentWillUnmount() {
-    if (this.props.trapFocus) {
-      this._focusTrap.deactivate()
+    if (this.props.scopeFocus) {
+      unscopeFocus()
     }
 
     if (this.props.freezeScroll) {

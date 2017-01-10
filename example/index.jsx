@@ -154,11 +154,17 @@ class ModalDemo extends Component {
             >
               <Overlay
                 role="popover"
+                scopeFocus
                 onRequestClose={() => this.setState({ isOpen: false })}
                 style={this.modalContentStyles}
               >
                 <div>Modal</div>
-                <div>Modal Content 💁🏼</div>
+                <div>
+                  Modal Content 💁🏼
+                  <button>Scope</button>
+                  <button>Focus</button>
+                  <button>Test</button>
+                </div>
               </Overlay>
             </div>
           }

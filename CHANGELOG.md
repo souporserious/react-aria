@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.6.2
+`trapFocus` -> `scopeFocus`
+
 ### 0.6.1
 Make sure `children` get pulled off of props so child functions work as expected
 
