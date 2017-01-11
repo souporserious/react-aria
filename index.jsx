@@ -4,7 +4,7 @@ import axe from 'react-axe'
 import a11y from 'react-a11y'
 import Portal from 'react-travel'
 import Transition from 'react-motion-ui-pack'
-import { Overlays, Tabs } from '../src/react-aria'
+import { Overlays, Tabs, ComboBox } from '../src/react-aria'
 
 // axe(React)
 // a11y(React)
@@ -23,14 +23,15 @@ import { Overlays, Tabs } from '../src/react-aria'
 // - Dropdown ✓
 // - Tooltip ✓
 // - Select ✓
-// - ComboBox
+// - ComboBox ✓
 // - Tabs ✓
 // - Accordion ✓
 // - Panel ✓
 // - Rows & Columns https://www.w3.org/TR/wai-aria-practices/#grid
 
 const { Trigger, Overlay, Item } = Overlays
-const { Manager, TabList, Tab, TabPanel } = Tabs
+const { TabList, Tab, TabPanel } = Tabs
+const { Input, ListBox, Option } = ComboBox
 
 import './main.scss'
 
@@ -49,7 +50,7 @@ class SelectDemo extends Component {
       <div>
         <Trigger
           controls="select"
-          type="menu"
+          overlayRole="menu"
           isOpen={isOpen}
           onToggle={this._toggle}
         >
@@ -58,7 +59,7 @@ class SelectDemo extends Component {
         { isOpen &&
           <Overlay
             id="select"
-            type="menu"
+            role="menu"
             onRequestClose={() => { this.setState({ isOpen: false }) }}
             onItemSelection={({ value }) => { this.setState({ isOpen: false, value }) }}
           >
@@ -72,36 +73,61 @@ class SelectDemo extends Component {
   }
 }
 
-class InputDemo extends Component {
+class ComboBoxDemo extends Component {
   state = {
-    currValue: ''
+    currValue: '',
+    highlightedIndex: null
+  }
+
+  renderItems() {
+    const { highlightedIndex } = this.state
+    const items = []
+
+    for (let i = 0; i < 3; i++) {
+      items.push(
+        <Option
+          key={i}
+          index={i}
+          value={`Item ${i}`}
+          style={{
+            border: '1px solid',
+            borderColor: (highlightedIndex === i) ? '#ccc' : 'transparent'
+          }}
+        >
+          Item {i + 1}
+        </Option>
+      )
+    }
+
+    return items
   }
 
   render() {
-    const { currValue, isOpen } = this.state
+    const { currValue } = this.state
     return (
-      <div>
-        <input
-          type="text"
+      <ComboBox.Manager>
+        <Input
           value={currValue}
-          onKeyDown={e => e.key === 'ArrowDown' && this.overlay && this.overlay.focusItem(0)}
           onChange={e => this.setState({ currValue: e.target.value })}
         />
         { currValue.length > 0 &&
-          <Overlay
-            ref={c => this.overlay = c}
-            type="popover"
-            initialFocus={false}
-            closeOnOutsideClick={false}
-            onRequestClose={() => { this.setState({ currValue: '' }) }}
-            onItemSelection={() => { this.setState({ currValue: '' }) }}
+          <ListBox
+            onRequestClose={() => {
+              this.setState({ currValue: '' })
+            }}
+            onItemHighlight={(item) => {
+              console.log('highlighted:', item)
+              this.setState({ highlightedIndex: item.index })
+            }}
+            onItemSelection={(item) => {
+              console.log('selected:', item)
+              this.setState({ currValue: '' })
+            }}
           >
-            <Item value="Item 1">Item 1</Item>
-            <Item value="Item 2">Item 2</Item>
-            <Item value="Item 3">Item 3</Item>
-          </Overlay>
+            {this.renderItems()}
+          </ListBox>
         }
-      </div>
+      </ComboBox.Manager>
     )
   }
 }
@@ -145,12 +171,18 @@ class ModalDemo extends Component {
               style={this.modalStyles}
             >
               <Overlay
-                type="popover"
+                role="popover"
+                scopeFocus
                 onRequestClose={() => this.setState({ isOpen: false })}
                 style={this.modalContentStyles}
               >
                 <div>Modal</div>
-                <div>Modal Content 💁🏼</div>
+                <div>
+                  Modal Content 💁🏼
+                  <button>Scope</button>
+                  <button>Focus</button>
+                  <button>Test</button>
+                </div>
               </Overlay>
             </div>
           }
@@ -181,7 +213,7 @@ class TabsDemo extends Component {
   render() {
     const { tabs, activeId } = this.state
     return (
-      <Manager
+      <Tabs.Manager
         activeTabId={activeId}
         onChange={id => this.setState({ activeId: id })}
         className="tab-set"
@@ -210,7 +242,7 @@ class TabsDemo extends Component {
             </TabPanel>
           )}
         </div>
-      </Manager>
+      </Tabs.Manager>
     )
   }
 }
@@ -232,7 +264,7 @@ class AccordionDemo extends Component {
   render() {
     const { tabs } = this.state
     return (
-      <Manager
+      <Tabs.Manager
         accordion
         multiselect
       >
@@ -248,7 +280,7 @@ class AccordionDemo extends Component {
             </div>
           )}
         </TabList>
-      </Manager>
+      </Tabs.Manager>
     )
   }
 }
@@ -260,8 +292,8 @@ class App extends Component {
         <h1>Select Menu</h1>
         <SelectDemo/>
 
-        <h1>Input w/ Popover</h1>
-        <InputDemo/>
+        <h1>ComboBox</h1>
+        <ComboBoxDemo/>
 
         <h1>Modal</h1>
         <ModalDemo/>
