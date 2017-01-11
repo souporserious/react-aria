@@ -85,14 +85,14 @@ class ComboBoxDemo extends Component {
 
     for (let i = 0; i < 3; i++) {
       items.push(
-        <Item
+        <Option
           key={i}
-          tabIndex={null}
+          index={i}
           value={`Item ${i}`}
           style={{ background: highlightedIndex === i ? 'red' : '' }}
         >
           Item {i}
-        </Item>
+        </Option>
       )
     }
 
@@ -111,15 +111,16 @@ class ComboBoxDemo extends Component {
         { currValue.length > 0 &&
           <ListBox
             ref={c => this.overlay = c}
-            root={this.input}
             role="listbox"
             initialFocus={false}
             closeOnOutsideClick={false}
             onRequestClose={() => { this.setState({ currValue: '' }) }}
-            onItemFocus={(item, index) => { this.setState({ focusedIndex: index }) }}
-            // onItemHighlight={}
+            onItemHighlight={(item) => {
+              console.log('highlighted:', item)
+              this.setState({ highlightedIndex: item.index })
+            }}
             onItemSelection={(item) => {
-              console.log(item)
+              console.log('selected:', item)
               this.setState({ currValue: '' })
             }}
           >

@@ -8,17 +8,18 @@ import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,
-  root: PropTypes.any,
+  rootNode: PropTypes.any,
   scopeFocus: PropTypes.bool,
   initialFocus: PropTypes.any,
   freezeScroll: PropTypes.bool,
   closeOnEscapeKey: PropTypes.bool,
   closeOnOutsideClick: PropTypes.bool,
   onRequestClose: PropTypes.func,
-  onItemFocus: PropTypes.func,
+  onItemHighlight: PropTypes.func,
   onItemSelection: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
+const noop = () => null
 
 class Overlay extends Component {
   static childContextTypes = {
@@ -36,13 +37,13 @@ class Overlay extends Component {
     initialFocus: true,
     closeOnEscapeKey: true,
     closeOnOutsideClick: true,
-    onRequestClose: () => null,
-    onItemFocus: () => null,
-    onItemSelection: () => null
+    onRequestClose: noop,
+    onItemHighlight: noop,
+    onItemSelection: noop
   }
 
   members = new Members({
-    onChange: this.props.onItemFocus,
+    onChange: this.props.onItemHighlight,
     onSelect: this.props.onItemSelection
   })
 
@@ -59,8 +60,8 @@ class Overlay extends Component {
   componentDidMount() {
     this._lastActiveElement = document.activeElement
 
-    if (this.props.root) {
-      this.members.setRootNode(findDOMNode(this.props.root))
+    if (this.props.rootNode) {
+      this.members.setRootNode(this.props.rootNode)
     }
 
     if (this.props.scopeFocus) {

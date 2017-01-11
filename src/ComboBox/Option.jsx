@@ -9,6 +9,10 @@ const checkedProps = {
 }
 
 class Option extends Component {
+  static contextTypes = {
+    comboBox: PropTypes.object
+  }
+
   static propTypes = checkedProps
 
   static defaultProps = {
@@ -16,8 +20,12 @@ class Option extends Component {
   }
 
   render() {
-    const { tag, children } = this.props
+    const { comboBox } = this.context
+    const { tag, id, children } = this.props
     const props = specialAssign({
+      role: 'option',
+      tabIndex: null, // null out default tabIndex for Item component
+      // 'aria-selected': comboBox.activeDescendant
     }, this.props, checkedProps)
 
     return createElement(Item, props, children)

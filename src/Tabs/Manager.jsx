@@ -73,7 +73,7 @@ class Manager extends Component {
 
   _setActiveStates(id) {
     const { accordion, multiselect } = this.props
-    const { collection } = this._members
+    const collection = this._members.getCollection()
 
     for (let i = collection.length; i--;) {
       const tab = collection[i]

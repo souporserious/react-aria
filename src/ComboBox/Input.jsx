@@ -18,19 +18,6 @@ class Input extends Component {
     this.context.comboBox.setInputNode(findDOMNode(this))
   }
 
-  _handleKeyDown = (e) => {
-    const { tag, onToggle, onKeyDown } = this.props
-
-    if (['ArrowUp', 'ArrowDown'].indexOf(e.key) > -1 ||
-        (tag !== 'button' && ['Enter', ' '].indexOf(e.key) > -1)) {
-      // highlight first item
-    }
-
-    if (typeof onKeyDown === 'function') {
-      onKeyDown(e)
-    }
-  }
-
   _getProps() {
     const { comboBox } = this.context
     const { isOpen } = this.props
@@ -38,10 +25,10 @@ class Input extends Component {
       role: 'combobox',
       autoComplete: 'off',
       'aria-autocomplete': 'list',
-      'aria-haspopup': true,
+      'aria-owns': comboBox.uuid,
+      'aria-haspopup': isOpen,
       'aria-expanded': isOpen,
-      'aria-owns': comboBox.uuid
-      // onKeyDown: this._handleKeyDown
+      'aria-activedescendant': comboBox.activeDescendant
     }
 
     return specialAssign(props, this.props, checkedProps)

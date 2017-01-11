@@ -1,9 +1,12 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
+import uuid from '../utils/uuid'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,
+  index: PropTypes.any,
+  value: PropTypes.any,
   onSelect: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
@@ -19,8 +22,11 @@ class Item extends Component {
     tag: 'div'
   }
 
+  _id = this.props.id || uuid()
+
   componentDidMount() {
     this._member = {
+      id: this._id,
       node: findDOMNode(this),
       text: this.props.text,
       index: this.props.index
@@ -72,9 +78,10 @@ class Item extends Component {
 
   render() {
     const { overlayManager } = this.context
-    const { tag, children } = this.props
+    const { tag, id, children } = this.props
     const props = specialAssign({
-      role: (overlayManager.role === 'listbox') ? 'option' : 'menuitem',
+      id: id || this._id,
+      role: 'menuitem',
       tabIndex: -1,
       onClick: this._handleClick,
       onKeyDown: this._handleKeyDown

@@ -2,63 +2,64 @@ import FocusGroup from './FocusGroup'
 
 class Members {
   constructor(options = {}) {
-    this.collection = []
-    this.options = options
-    this.focusGroup = new FocusGroup(this.options)
+    this._collection = []
+    this._options = options
+    this._focusGroup = new FocusGroup(options)
   }
 
   setRootNode = (node) => {
-    // deactivate, then activate after setting root node so we can attach keydown listener
-    this.focusGroup.deactivate()
-    this.focusGroup.setRootNode(node)
-    this.focusGroup.activate()
+    this._focusGroup.setRootNode(node)
+  }
+
+  getCollection() {
+    return this._collection
   }
 
   add = (member) => {
     const { index, node, text } = member
 
-    if (index === undefined) {
-      this.collection.push(member)
+    if (index !== null && index !== undefined) {
+      this._collection.splice(index, 0, member)
     } else {
-      this.collection.splice(index, 0, member)
+      this._collection.push(member)
     }
 
     // add member to focus group
-    this.focusGroup.addMember({
-      node,
+    this._focusGroup.addMember({
+      ...member,
       text: text || node.innerHTML
     })
 
     // activate focus group if this was the first member added
-    if (this.collection.length === 1) {
-      this.focusGroup.activate()
+    if (this._collection.length === 1) {
+      this._focusGroup.activate()
     }
 
-    if (typeof this.options.onAdd === 'function') {
-      this.options.onAdd(member)
+    if (typeof this._options.onAdd === 'function') {
+      this._options.onAdd(member)
     }
   }
 
   remove = (member) => {
-    const pos = this.collection.indexOf(member)
+    const pos = this._collection.indexOf(member)
 
     if (pos > -1) {
-      this.collection.splice(member, 1)
-      this.focusGroup.removeMember(member.node)
+      this._collection.splice(member, 1)
+      this._focusGroup.removeMember(member.node)
     }
 
     // deactivate focus group if this was the last member removed
-    if (this.collection.length <= 0) {
-      this.focusGroup.deactivate()
+    if (this._collection.length <= 0) {
+      this._focusGroup.deactivate()
     }
 
-    if (typeof this.options.onRemove === 'function') {
-      this.options.onRemove(member)
+    if (typeof this._options.onRemove === 'function') {
+      this._options.onRemove(member)
     }
   }
 
   focus = (index) => {
-    this.focusGroup.focus(index)
+    this._focusGroup.focus(index)
   }
 }
 

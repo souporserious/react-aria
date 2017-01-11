@@ -25,6 +25,14 @@ class FocusGroup {
     this._rootNode.removeEventListener('keydown', this._handleKeydown, true)
   }
 
+  setRootNode(node) {
+    // deactivate, and then reactivate after setting root node so we can
+    // attach the proper element to the keydown listener
+    this.deactivate()
+    this._rootNode = node
+    this.activate()
+  }
+
   addMember(member, index) {
     if (index !== null && index !== undefined) {
       this._members.splice(index, 0, member)
@@ -41,10 +49,6 @@ class FocusGroup {
     if (indexToRemove !== -1) {
       this._members.splice(indexToRemove, 1)
     }
-  }
-
-  setRootNode(node) {
-    this._rootNode = node
   }
 
   getMemberIndex(member) {

@@ -20,15 +20,20 @@ class ComboBox extends Component {
   }
 
   state = {
-    inputNode: null
+    inputNode: null,
+    activeDescendant: null
   }
+
+  _id = uuid()
 
   getChildContext() {
     return {
       comboBox: {
-        uuid: uuid,
+        uuid: this._id,
         setInputNode: this._setInputNode,
-        getInputNode: this._getInputNode
+        inputNode: this.state.inputNode,
+        setActiveDescendant: this._setActiveDescendant,
+        activeDescendant: this.state.activeDescendant
       }
     }
   }
@@ -37,16 +42,13 @@ class ComboBox extends Component {
     this.setState({ inputNode: node })
   }
 
-  _getInputNode = () => {
-    return this.state.inputNode
+  _setActiveDescendant = (item) => {
+    this.setState({ activeDescendant: item })
   }
 
   render() {
-    const { tag, children } = this.props
-    const props = specialAssign({
-    }, this.props, checkedProps)
-
-    return createElement(tag, props, children)
+    const { tag, ...props } = this.props
+    return createElement(tag, props)
   }
 }
 
