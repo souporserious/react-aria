@@ -18,11 +18,11 @@ class FocusGroup {
   }
 
   activate() {
-    this._rootNode.addEventListener('keydown', this._handleKeydown, true)
+    this._rootNode.addEventListener('keydown', this._handleKeydown)
   }
 
   deactivate() {
-    this._rootNode.removeEventListener('keydown', this._handleKeydown, true)
+    this._rootNode.removeEventListener('keydown', this._handleKeydown)
   }
 
   setRootNode(node) {

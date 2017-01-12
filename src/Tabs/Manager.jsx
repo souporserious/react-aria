@@ -4,7 +4,7 @@ import Members from '../utils/Members'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
+  tag: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   activeTabId: PropTypes.string,
   accordion: PropTypes.bool,
   multiselect: PropTypes.bool,
@@ -103,8 +103,9 @@ class Manager extends Component {
   }
 
   render() {
+    const { tag } = this.props
     const props = specialAssign({}, this.props, checkedProps)
-    return createElement(this.props.tag, props)
+    return tag ? createElement(tag, props) : props.children
   }
 }
 

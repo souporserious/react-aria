@@ -47,8 +47,8 @@ class Overlay extends Component {
   getChildContext() {
     return {
       overlay: {
-        role: this.props.role,
-        members: this.members
+        members: this.members,
+        onItemSelection: this.props.onItemSelection
       }
     }
   }

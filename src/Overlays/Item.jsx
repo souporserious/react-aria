@@ -45,8 +45,23 @@ class Item extends Component {
     this.context.overlay.members.remove(this._member)
   }
 
+  _handleClick = (e) => {
+    const { onSelect, onClick } = this.props
+
+    this.context.overlay.onItemSelection(this._member, e)
+
+    if (typeof onSelect === 'function') {
+      onSelect(this._member, e)
+    }
+
+    if (typeof onClick === 'function') {
+      onClick(e)
+    }
+  }
+
   _handleSelection = (item, e) => {
     const { onSelect } = this.props
+
     if (this._member.id === item.id && typeof onSelect === 'function') {
       onSelect(item, e)
     }
@@ -57,7 +72,8 @@ class Item extends Component {
     const props = specialAssign({
       id: id || this._id,
       role: 'menuitem',
-      tabIndex: -1
+      tabIndex: -1,
+      onClick: this._handleClick,
     }, this.props, checkedProps)
 
     if (typeof children === 'function') {

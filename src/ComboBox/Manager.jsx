@@ -4,7 +4,7 @@ import uuid from '../utils/uuid'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
+  tag: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   children: PropTypes.node
 }
 

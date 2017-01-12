@@ -64,6 +64,7 @@ class SelectDemo extends Component {
               this.setState({ isOpen: false })
             }}
             onItemSelection={({ value }) => {
+              console.log('item selected: ', value)
               this.setState({ isOpen: false, value })
             }}
           >

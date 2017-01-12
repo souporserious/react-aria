@@ -25,8 +25,12 @@ class Trigger extends Component {
   _handleKeyDown = (e) => {
     const { tag, onToggle, onKeyDown } = this.props
 
-    if (['ArrowUp', 'ArrowDown'].indexOf(e.key) > -1 ||
-        (tag !== 'button' && ['Enter', ' '].indexOf(e.key) > -1)) {
+    // prevent Enter from triggering click event when using a button tag
+    if (tag === 'button' && e.key === 'Enter') {
+      e.preventDefault()
+    }
+    // listen for keyboard toggle
+    else if ([' ', 'ArrowUp', 'ArrowDown'].indexOf(e.key) > -1) {
       this._toggle(e)
     }
 
@@ -51,9 +55,9 @@ class Trigger extends Component {
   }
 
   _getProps() {
-    const { disabled, overlayRole, controls, isOpen, toggleOn } = this.props
+    const { tag, disabled, overlayRole, controls, isOpen, toggleOn } = this.props
     const props = {
-      role: 'button',
+      [tag === 'button' ? 'type' : 'role']: 'button',
       tabIndex: (disabled) ? '' : 0,
       'aria-disabled': disabled,
       onKeyDown: this._handleKeyDown
