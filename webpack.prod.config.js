@@ -15,12 +15,6 @@ var externals = {
     commonjs2: 'react-dom',
     commonjs: 'react-dom',
     amd: 'react-dom'
-  },
-  'no-scroll': {
-    root: 'noScroll',
-    commonjs2: 'no-scroll',
-    commonjs: 'no-scroll',
-    amd: 'no-scroll'
   }
 };
 
