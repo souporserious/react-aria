@@ -126,19 +126,27 @@ class FocusGroup {
     // focus is already within the focus-group
     if (this.getActiveIndex() === -1) return;
 
-    switch (e.key) {
-      // case 'ArrowLeft':
-      case 'ArrowUp':
+    switch (e.keyCode) {
+      // case 37: // ArrowLeft
+      case 38: // ArrowUp
         e.preventDefault()
         this.prev()
         break;
-      // case 'ArrowRight':
-      case 'ArrowDown':
+      // case 39: // ArrowRight
+      case 40: // ArrowDown
         e.preventDefault()
         this.next()
         break;
-      case 'Enter':
-      case ' ':
+      case 36: // Home
+        e.preventDefault()
+        this.first()
+        break;
+      case 35: // End
+        e.preventDefault()
+        this.last()
+        break;
+      case 13: // Enter
+      // case 32: // Space shouldn't be used on ComboBox
         this.selectFocusedMember(e)
         break;
     }

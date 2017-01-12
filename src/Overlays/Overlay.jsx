@@ -3,7 +3,6 @@ import ReactDOM, { findDOMNode } from 'react-dom'
 import { scopeFocus, unscopeFocus } from 'a11y-focus-scope'
 import noScroll from 'no-scroll'
 import Members from '../utils/Members'
-import keys from '../utils/keys'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
@@ -119,7 +118,7 @@ class Overlay extends Component {
   }
 
   _handleDocumentKeyDown = ({ keyCode }) => {
-    if (keyCode === keys.escape) {
+    if (keyCode === 27) { // Escape
       this.props.onRequestClose()
     }
   }

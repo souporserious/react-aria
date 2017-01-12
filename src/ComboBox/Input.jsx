@@ -24,6 +24,7 @@ class Input extends Component {
     const props = {
       role: 'combobox',
       autoComplete: 'off',
+      spellCheck: false,
       'aria-autocomplete': 'list',
       'aria-owns': comboBox.uuid,
       'aria-haspopup': isOpen,

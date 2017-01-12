@@ -1,13 +1,3 @@
-export default (prefix = 'RA') => (
-  `${prefix}-${Math.abs(~~(Math.random() * new Date()))}`
+export default () => (
+  `RA-${Math.abs(~~(Math.random() * new Date()))}`
 )
-
-// export default function guid() {
-//   function s4() {
-//     return Math.floor((1 + Math.random()) * 0x10000)
-//       .toString(16)
-//       .substring(1);
-//   }
-//   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-//     s4() + '-' + s4() + s4() + s4();
-// }
