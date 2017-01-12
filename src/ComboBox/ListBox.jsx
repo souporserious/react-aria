@@ -6,6 +6,7 @@ import specialAssign from '../utils/special-assign'
 const checkedProps = {
   tag: PropTypes.string,
   children: PropTypes.node,
+  closeOnOutsideClick: PropTypes.bool,
   onItemHighlight: PropTypes.func
 }
 
@@ -17,7 +18,8 @@ class ListBox extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div'
+    tag: 'div',
+    closeOnOutsideClick: false
   }
 
   _handleItemHightlight = (item) => {
@@ -30,12 +32,13 @@ class ListBox extends Component {
 
   render() {
     const { comboBox } = this.context
-    const { tag, children } = this.props
+    const { tag, closeOnOutsideClick, children } = this.props
     const props = specialAssign({
       role: 'listbox',
       id: comboBox.uuid,
       rootNode: comboBox.inputNode,
-      onItemHighlight: this._handleItemHightlight
+      closeOnOutsideClick,
+      onItemHighlight: this._handleItemHightlight,
     }, this.props, checkedProps)
 
     return createElement(Overlay, props, children)

@@ -5,7 +5,7 @@ import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,
-  children: PropTypes.node
+  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
 class Option extends Component {
@@ -21,14 +21,22 @@ class Option extends Component {
 
   render() {
     const { comboBox } = this.context
-    const { tag, id, children } = this.props
+    const { tag, children } = this.props
+    const { id: activeId } = comboBox.activeDescendant || {}
     const props = specialAssign({
       role: 'option',
       tabIndex: null, // null out default tabIndex for Item component
-      // 'aria-selected': comboBox.activeDescendant
     }, this.props, checkedProps)
 
-    return createElement(Item, props, children)
+    return createElement(Item, props, (itemProps) => {
+      const isHighlighted = (itemProps.id === activeId)
+
+      if (typeof children === 'function') {
+        return children({ props: itemProps, isHighlighted })
+      }
+
+      return createElement(tag, itemProps, children)
+    })
   }
 }
 

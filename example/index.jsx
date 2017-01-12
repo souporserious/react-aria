@@ -89,9 +89,19 @@ class ComboBoxDemo extends Component {
           key={i}
           index={i}
           value={`Item ${i}`}
-          style={{ background: highlightedIndex === i ? 'red' : '' }}
         >
-          Item {i}
+          {({ props, isHighlighted }) =>
+            <div
+              {...props}
+              style={{
+                border: '1px solid',
+                borderColor: (highlightedIndex === i) ? '#ccc' : 'transparent',
+                background: isHighlighted ? '#f7f7f7' : ''
+              }}
+            >
+              Item {i + 1}
+            </div>
+          }
         </Option>
       )
     }
@@ -104,23 +114,20 @@ class ComboBoxDemo extends Component {
     return (
       <ComboBox.Manager>
         <Input
-          ref={c => this.input = c}
           value={currValue}
           onChange={e => this.setState({ currValue: e.target.value })}
         />
         { currValue.length > 0 &&
           <ListBox
-            ref={c => this.overlay = c}
-            role="listbox"
-            initialFocus={false}
-            closeOnOutsideClick={false}
-            onRequestClose={() => { this.setState({ currValue: '' }) }}
+            onRequestClose={() => {
+              this.setState({ currValue: '' })
+            }}
             onItemHighlight={(item) => {
-              console.log('highlighted:', item)
+              // console.log('highlighted:', item)
               this.setState({ highlightedIndex: item.index })
             }}
             onItemSelection={(item) => {
-              console.log('selected:', item)
+              // console.log('selected:', item)
               this.setState({ currValue: '' })
             }}
           >

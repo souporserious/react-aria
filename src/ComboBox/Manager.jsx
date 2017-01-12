@@ -48,7 +48,7 @@ class ComboBox extends Component {
 
   render() {
     const { tag, ...props } = this.props
-    return createElement(tag, props)
+    return tag ? createElement(tag, props) : props.children
   }
 }
 
