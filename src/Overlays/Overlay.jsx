@@ -23,7 +23,7 @@ const noop = () => null
 
 class Overlay extends Component {
   static childContextTypes = {
-    overlayManager: PropTypes.object
+    overlay: PropTypes.object
   }
 
   static propTypes = {
@@ -42,23 +42,22 @@ class Overlay extends Component {
     onItemSelection: noop
   }
 
-  members = new Members({
-    onChange: this.props.onItemHighlight,
-    onSelect: this.props.onItemSelection
-  })
+  members = new Members()
 
   getChildContext() {
     return {
-      overlayManager: {
+      overlay: {
         role: this.props.role,
-        members: this.members,
-        onItemSelection: this.props.onItemSelection
+        members: this.members
       }
     }
   }
 
   componentDidMount() {
     this._lastActiveElement = document.activeElement
+
+    this.members.on('change', this.props.onItemHighlight)
+    this.members.on('select', this.props.onItemSelection)
 
     if (this.props.rootNode) {
       this.members.setRootNode(this.props.rootNode)

@@ -117,8 +117,8 @@ class FocusGroup {
     this._options.onChange(member, index)
   }
 
-  selectFocusedMember() {
-    this._options.onSelect(this.getActiveMember())
+  selectFocusedMember(e) {
+    this._options.onSelect(this.getActiveMember(), e)
   }
 
   _handleKeydown = (e) => {
@@ -139,7 +139,7 @@ class FocusGroup {
         break;
       case 'Enter':
       case ' ':
-        this.selectFocusedMember()
+        this.selectFocusedMember(e)
         break;
     }
   }

@@ -18,7 +18,8 @@ class Trigger extends Component {
   static defaultProps = {
     tag: 'button',
     overlayRole: 'popover',
-    toggleOn: ['click']
+    toggleOn: ['click'],
+    onToggle: () => null
   }
 
   _handleKeyDown = (e) => {

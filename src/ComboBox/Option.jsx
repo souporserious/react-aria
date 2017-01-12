@@ -23,19 +23,23 @@ class Option extends Component {
     const { comboBox } = this.context
     const { tag, children } = this.props
     const { id: activeId } = comboBox.activeDescendant || {}
-    const props = specialAssign({
+    const itemProps = specialAssign({
       role: 'option',
       tabIndex: null, // null out default tabIndex for Item component
     }, this.props, checkedProps)
 
-    return createElement(Item, props, (itemProps) => {
-      const isHighlighted = (itemProps.id === activeId)
-
-      if (typeof children === 'function') {
-        return children({ props: itemProps, isHighlighted })
+    return createElement(Item, itemProps, _props => {
+      const isHighlighted = (_props.id === activeId)
+      const props = {
+        ..._props,
+        'aria-selected': isHighlighted
       }
 
-      return createElement(tag, itemProps, children)
+      if (typeof children === 'function') {
+        return children({ props, isHighlighted })
+      }
+
+      return createElement(tag, props, children)
     })
   }
 }

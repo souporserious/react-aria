@@ -1,10 +1,15 @@
+import Events from 'minivents'
 import FocusGroup from './FocusGroup'
 
-class Members {
+class Members extends Events {
   constructor(options = {}) {
+    super()
     this._collection = []
     this._options = options
-    this._focusGroup = new FocusGroup(options)
+    this._focusGroup = new FocusGroup({
+      onChange: (item, e) => this.emit('change', item, e),
+      onSelect: (item, e) => this.emit('select', item, e)
+    })
   }
 
   setRootNode = (node) => {

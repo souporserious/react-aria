@@ -60,8 +60,12 @@ class SelectDemo extends Component {
           <Overlay
             id="select"
             role="menu"
-            onRequestClose={() => { this.setState({ isOpen: false }) }}
-            onItemSelection={({ value }) => { this.setState({ isOpen: false, value }) }}
+            onRequestClose={() => {
+              this.setState({ isOpen: false })
+            }}
+            onItemSelection={({ value }) => {
+              this.setState({ isOpen: false, value })
+            }}
           >
             <Item value="Item 1">Item 1</Item>
             <Item value="Item 2">Item 2</Item>
@@ -89,6 +93,9 @@ class ComboBoxDemo extends Component {
           key={i}
           index={i}
           value={`Item ${i}`}
+          onSelect={(option) => {
+            console.log('option selected: ', option.id)
+          }}
         >
           {({ props, isHighlighted }) =>
             <div
@@ -127,7 +134,7 @@ class ComboBoxDemo extends Component {
               this.setState({ highlightedIndex: item.index })
             }}
             onItemSelection={(item) => {
-              // console.log('selected:', item)
+              console.log('selected:', item)
               this.setState({ currValue: '' })
             }}
           >
