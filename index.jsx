@@ -4,7 +4,6 @@ import axe from 'react-axe'
 import a11y from 'react-a11y'
 import Portal from 'react-travel'
 import Transition from 'react-motion-ui-pack'
-import { Overlays, Tabs, ComboBox } from '../src/react-aria'
 
 // axe(React)
 // a11y(React)
@@ -29,9 +28,11 @@ import { Overlays, Tabs, ComboBox } from '../src/react-aria'
 // - Panel ✓
 // - Rows & Columns https://www.w3.org/TR/wai-aria-practices/#grid
 
-const { Trigger, Overlay, Item } = Overlays
+import { Trigger, Overlay, Items, Tabs, Select } from '../src/react-aria'
+
+const { ItemList, Item } = Items
 const { TabList, Tab, TabPanel } = Tabs
-const { Input, ListBox, Option } = ComboBox
+const { Toggle, Input, OptionList, Option } = Select
 
 import './main.scss'
 
@@ -41,34 +42,69 @@ class SelectDemo extends Component {
   }
 
   _toggle = () => {
+    console.log('toggle', this.state.isOpen)
     this.setState({ isOpen: !this.state.isOpen })
+  }
+
+  _renderOptions() {
+    const options = []
+    for (let i = 0; i < 24; i++) {
+      options.push(
+        <Option
+          key={i}
+          index={i}
+          value={`Item ${i}`}
+          onSelect={(option) => {
+            console.log('option selected: ', option.id)
+          }}
+        >
+          {({ props, isHighlighted }) =>
+            <div
+              {...props}
+              style={{
+                background: isHighlighted ? 'orange' : ''
+              }}
+            >
+              Item {i}
+            </div>
+          }
+        </Option>
+      )
+    }
+    return options
   }
 
   render() {
     const { value, isOpen } = this.state
     return (
-      <div>
+      <Select.Manager>
         <Trigger
-          controls="select"
-          overlayRole="menu"
           isOpen={isOpen}
-          onToggle={this._toggle}
+          keybindings={isOpen ? [] : [' ']}
+          onTrigger={this._toggle}
         >
           { value ? value : 'Select Option' }
         </Trigger>
         { isOpen &&
-          <Overlay
-            id="select"
-            role="menu"
-            onRequestClose={() => { this.setState({ isOpen: false }) }}
-            onItemSelection={({ value }) => { this.setState({ isOpen: false, value }) }}
+          <OptionList
+            scopeFocus
+            closeOnOutsideClick
+            onOptionSelection={({ value }) => {
+              this.setState({ isOpen: false, value })
+            }}
+            onRequestClose={() => {
+              console.log('onRequestClose', this.state.isOpen)
+              this.setState({ isOpen: false })
+            }}
+            style={{
+              maxHeight: 100,
+              overflow: 'auto'
+            }}
           >
-            <Item value="Item 1">Item 1</Item>
-            <Item value="Item 2">Item 2</Item>
-            <Item value="Item 3">Item 3</Item>
-          </Overlay>
+            {this._renderOptions()}
+          </OptionList>
         }
-      </div>
+      </Select.Manager>
     )
   }
 }
@@ -79,55 +115,65 @@ class ComboBoxDemo extends Component {
     highlightedIndex: null
   }
 
-  renderItems() {
+  renderOptions() {
     const { highlightedIndex } = this.state
-    const items = []
+    const options = []
 
-    for (let i = 0; i < 3; i++) {
-      items.push(
+    for (let i = 0; i < 30; i++) {
+      options.push(
         <Option
           key={i}
           index={i}
           value={`Item ${i}`}
-          style={{
-            border: '1px solid',
-            borderColor: (highlightedIndex === i) ? '#ccc' : 'transparent'
+          onSelect={(option) => {
+            console.log('option selected: ', option.id)
           }}
         >
-          Item {i + 1}
+          {({ props, isHighlighted }) =>
+            <div
+              {...props}
+              style={{
+                border: '1px solid',
+                borderColor: (highlightedIndex === i) ? '#ccc' : 'transparent',
+                background: isHighlighted ? '#f7f7f7' : ''
+              }}
+            >
+              Item {i + 1}
+            </div>
+          }
         </Option>
       )
     }
 
-    return items
+    return options
   }
 
   render() {
     const { currValue } = this.state
     return (
-      <ComboBox.Manager>
+      <Select.Manager>
         <Input
           value={currValue}
           onChange={e => this.setState({ currValue: e.target.value })}
         />
         { currValue.length > 0 &&
-          <ListBox
+          <OptionList
             onRequestClose={() => {
               this.setState({ currValue: '' })
             }}
-            onItemHighlight={(item) => {
-              console.log('highlighted:', item)
+            onOptionHighlight={(item) => {
+              // console.log('highlighted:', item)
               this.setState({ highlightedIndex: item.index })
             }}
-            onItemSelection={(item) => {
+            onOptionSelection={(item) => {
               console.log('selected:', item)
               this.setState({ currValue: '' })
             }}
           >
-            {this.renderItems()}
-          </ListBox>
+            {this.renderOptions()}
+          </OptionList>
         }
-      </ComboBox.Manager>
+      </Select.Manager>
     )
   }
 }
@@ -173,6 +219,7 @@ class ModalDemo extends Component {
               <Overlay
                 role="popover"
                 scopeFocus
+                freezeScroll
                 onRequestClose={() => this.setState({ isOpen: false })}
                 style={this.modalContentStyles}
               >
