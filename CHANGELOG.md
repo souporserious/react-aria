@@ -1,19 +1,26 @@
 ## CHANGELOG
-### 0.6.2
-`trapFocus` -> `scopeFocus`
-
-### 0.6.1
+### 0.7.0
 Make sure `children` get pulled off of props so child functions work as expected
 
 Cleanup invalid prop warnings
 
-Added `Input` component for input + overlay combos
+Added `ItemList`, and `Item` components for focusable and keyboard friendly items
 
-Added public `getMembers` method to `Overlay` component
+Added `Select` components to build custom combobox and select menus
 
 Breaking Changes:
 
 Renamed `type` prop to `role` since `type` is a reserved word
+
+Renamed `Overlay` prop `trapFocus` -> `scopeFocus`
+
+Exports as `Trigger`, `Overlay`, `Items`, `Tabs`, `Select` now
+
+Replaced `minivents` with `mitt`
+
+Replaced `focus-trap` with `a11y-focus-scope`
+
+Added `scroll-into-view`, and `upper-case-first` as dependencies
 
 ### 0.6.0
 Exports as `Tabs`, and `Overlays` now, can be imported individually if needed ( e.g. import `Tabs` from `react-aria/Tabs` )
