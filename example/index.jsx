@@ -32,7 +32,7 @@ import { Trigger, Overlay, Items, Tabs, Select } from '../src/react-aria'
 
 const { ItemList, Item } = Items
 const { TabList, Tab, TabPanel } = Tabs
-const { Toggle, Input, OptionList, Option } = Select
+const { Input, OptionList, Option } = Select
 
 import './main.scss'
 
