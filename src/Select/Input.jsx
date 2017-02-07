@@ -9,29 +9,28 @@ const checkedProps = {
 
 class Input extends Component {
   static contextTypes = {
-    comboBox: PropTypes.object
+    select: PropTypes.object
   }
 
   static propTypes = checkedProps
 
   componentDidMount() {
-    this.context.comboBox.setInputNode(findDOMNode(this))
+    this.context.select.setRootNode(findDOMNode(this))
   }
 
   _getProps() {
-    const { comboBox } = this.context
+    const { select } = this.context
     const { isOpen } = this.props
     const props = {
       role: 'combobox',
       autoComplete: 'off',
       spellCheck: false,
       'aria-autocomplete': 'list',
-      'aria-owns': comboBox.uuid,
+      'aria-owns': select.uuid,
       'aria-haspopup': isOpen,
       'aria-expanded': isOpen,
-      'aria-activedescendant': comboBox.activeDescendant
+      'aria-activedescendant': select.activeDescendant
     }
-
     return specialAssign(props, this.props, checkedProps)
   }
 

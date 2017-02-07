@@ -1,4 +1,4 @@
 export Manager from './Manager'
 export Input from './Input'
-export ListBox from './ListBox'
+export OptionList from './OptionList'
 export Option from './Option'

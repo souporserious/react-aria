@@ -1,3 +1,5 @@
-export * as Overlays from './Overlays'
+export Trigger from './Trigger'
+export Overlay from './Overlay'
+export * as Items from './Items'
 export * as Tabs from './Tabs'
-export * as ComboBox from './ComboBox'
+export * as Select from './Select'

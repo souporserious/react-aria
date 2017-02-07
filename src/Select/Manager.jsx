@@ -8,9 +8,9 @@ const checkedProps = {
   children: PropTypes.node
 }
 
-class ComboBox extends Component {
+class Select extends Component {
   static childContextTypes = {
-    comboBox: PropTypes.object
+    select: PropTypes.object
   }
 
   static propTypes = checkedProps
@@ -20,7 +20,7 @@ class ComboBox extends Component {
   }
 
   state = {
-    inputNode: null,
+    rootNode: null,
     activeDescendant: null
   }
 
@@ -28,18 +28,18 @@ class ComboBox extends Component {
 
   getChildContext() {
     return {
-      comboBox: {
+      select: {
         uuid: this._id,
-        setInputNode: this._setInputNode,
-        inputNode: this.state.inputNode,
+        setRootNode: this._setRootNode,
+        rootNode: this.state.rootNode,
         setActiveDescendant: this._setActiveDescendant,
         activeDescendant: this.state.activeDescendant
       }
     }
   }
 
-  _setInputNode = (node) => {
-    this.setState({ inputNode: node })
+  _setRootNode = (node) => {
+    this.setState({ rootNode: node })
   }
 
   _setActiveDescendant = (item) => {
@@ -52,4 +52,4 @@ class ComboBox extends Component {
   }
 }
 
-export default ComboBox
+export default Select

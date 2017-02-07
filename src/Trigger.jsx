@@ -1,37 +1,49 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import specialAssign from '../utils/special-assign'
+import upperCaseFirst from 'upper-case-first'
+import specialAssign from './utils/special-assign'
 
 const checkedProps = {
   tag: PropTypes.string,
   overlayRole: PropTypes.string,
   controls: PropTypes.string,
   isOpen: PropTypes.bool,
-  toggleOn: PropTypes.array,
-  onToggle: PropTypes.func,
+  keybindings: PropTypes.array,
+  triggerOn: PropTypes.array,
+  onTrigger: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
 class Trigger extends Component {
+  static contextTypes = {
+    select: PropTypes.object
+  }
+
   static propTypes = checkedProps
 
   static defaultProps = {
     tag: 'button',
     overlayRole: 'popover',
-    toggleOn: ['click'],
-    onToggle: () => null
+    keybindings: [' ', 'ArrowUp', 'ArrowDown'],
+    triggerOn: ['click'],
+    onTrigger: () => null,
+  }
+
+  _isKeyDown = false
+
+  componentDidMount() {
+    if (this.context.select) {
+      this.context.select.setRootNode(findDOMNode(this))
+    }
   }
 
   _handleKeyDown = (e) => {
-    const { tag, onToggle, onKeyDown } = this.props
+    const { keybindings, onKeyDown } = this.props
 
-    // prevent Enter from triggering click event when using a button tag
-    if (tag === 'button' && e.key === 'Enter') {
-      e.preventDefault()
-    }
-    // listen for keyboard toggle
-    else if ([' ', 'ArrowUp', 'ArrowDown'].indexOf(e.key) > -1) {
-      this._toggle(e)
+    this._isKeyDown = true
+
+    if (keybindings.indexOf(e.key) > -1) {
+      this._trigger(e)
     }
 
     if (typeof onKeyDown === 'function') {
@@ -39,28 +51,39 @@ class Trigger extends Component {
     }
   }
 
-  _handleEvent(name, e) {
-    const onEvent = this.props[`on${name}`]
+  _handleKeyUp = (e) => {
+    this._isKeyDown = false
 
-    this._toggle(e)
+    if (typeof this.props.onKeyUp === 'function') {
+      this.props.onKeyUp(e)
+    }
+  }
+
+  _handleEvent(name, e) {
+    const onEvent = this.props[`on${upperCaseFirst(name)}`]
+
+    if (this._isKeyDown) return;
+
+    this._trigger(e)
 
     if (typeof onEvent === 'function') {
       onEvent(e)
     }
   }
 
-  _toggle(e) {
+  _trigger(e) {
     e.preventDefault()
-    this.props.onToggle()
+    this.props.onTrigger(e)
   }
 
   _getProps() {
-    const { tag, disabled, overlayRole, controls, isOpen, toggleOn } = this.props
+    const { tag, disabled, overlayRole, controls, isOpen, triggerOn } = this.props
     const props = {
       [tag === 'button' ? 'type' : 'role']: 'button',
       tabIndex: (disabled) ? '' : 0,
       'aria-disabled': disabled,
-      onKeyDown: this._handleKeyDown
+      onKeyDown: this._handleKeyDown,
+      onKeyUp: this._handleKeyUp
     }
 
     if (overlayRole !== 'modal') {
@@ -75,14 +98,16 @@ class Trigger extends Component {
       props['aria-describedby'] = controls
     }
 
-    if (toggleOn.indexOf('click') > -1) {
+    if (triggerOn.indexOf('click') > -1) {
       props.onClick = this._handleEvent.bind(this, 'click')
     }
-    if (toggleOn.indexOf('hover') > -1) {
+
+    if (triggerOn.indexOf('hover') > -1) {
       props.onMouseOver = this._handleEvent.bind(this, 'mouseOver')
       props.onMouseOut = this._handleEvent.bind(this, 'mouseOut')
     }
-    if (toggleOn.indexOf('focus') > -1) {
+
+    if (triggerOn.indexOf('focus') > -1) {
       props.onFocus = this._handleEvent.bind(this, 'focus')
       props.onBlur = this._handleEvent.bind(this, 'blur')
     }

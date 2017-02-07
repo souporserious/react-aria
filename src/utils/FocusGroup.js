@@ -4,7 +4,7 @@ class FocusGroup {
     members = [],
     activeIndex = 0,
     wrap = true,
-    onChange = () => null,
+    onFocus = () => null,
     onSelect = () => null
   }) {
     this._rootNode = rootNode
@@ -12,17 +12,17 @@ class FocusGroup {
     this._activeIndex = activeIndex
     this._options = {
       wrap,
-      onChange,
+      onFocus,
       onSelect
     }
   }
 
   activate() {
-    this._rootNode.addEventListener('keydown', this._handleKeydown)
+    this._rootNode.addEventListener('keydown', this._handleKeydown, true)
   }
 
   deactivate() {
-    this._rootNode.removeEventListener('keydown', this._handleKeydown)
+    this._rootNode.removeEventListener('keydown', this._handleKeydown, true)
   }
 
   setRootNode(node) {
@@ -114,7 +114,7 @@ class FocusGroup {
     }
 
     this._activeIndex = index
-    this._options.onChange(member, index)
+    this._options.onFocus(member, index)
   }
 
   selectFocusedMember(e) {
@@ -126,30 +126,30 @@ class FocusGroup {
     // focus is already within the focus-group
     if (this.getActiveIndex() === -1) return;
 
+    // setTimeout prevents React from grabbing the event immediately after and
+    // causing unexpected behaviour like triggering a button that receives focus
+    // maybe we can fix this somehow?
     switch (e.keyCode) {
-      // case 37: // ArrowLeft
       case 38: // ArrowUp
-        e.preventDefault()
         this.prev()
         break;
-      // case 39: // ArrowRight
       case 40: // ArrowDown
-        e.preventDefault()
         this.next()
         break;
       case 36: // Home
-        e.preventDefault()
         this.first()
         break;
       case 35: // End
-        e.preventDefault()
         this.last()
         break;
       case 13: // Enter
-      // case 32: // Space shouldn't be used on ComboBox
         this.selectFocusedMember(e)
         break;
+      default:
+        return;
     }
+    // if we've made it here then we can safely preventDefault since it hit a method we wanted
+    e.preventDefault()
   }
 }
 

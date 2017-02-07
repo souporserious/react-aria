@@ -1,14 +1,19 @@
-import Events from 'minivents'
+import mitt from 'mitt'
 import FocusGroup from './FocusGroup'
 
-class Members extends Events {
+class Members {
   constructor(options = {}) {
-    super()
+    const emitter = mitt()
+
+    this.on = emitter.on
+    this.emit = emitter.emit
+    this.off = emitter.off
+
     this._collection = []
     this._options = options
     this._focusGroup = new FocusGroup({
-      onChange: (item, e) => this.emit('change', item, e),
-      onSelect: (item, e) => this.emit('select', item, e)
+      onFocus: (member, index) => this.emit('focus', member, index),
+      onSelect: (member, event) => this.emit('select', member, event)
     })
   }
 

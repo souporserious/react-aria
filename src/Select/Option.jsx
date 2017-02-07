@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
-import { Item } from '../Overlays'
+import { Item } from '../Items'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
@@ -10,7 +10,7 @@ const checkedProps = {
 
 class Option extends Component {
   static contextTypes = {
-    comboBox: PropTypes.object
+    select: PropTypes.object
   }
 
   static propTypes = checkedProps
@@ -20,9 +20,9 @@ class Option extends Component {
   }
 
   render() {
-    const { comboBox } = this.context
+    const { select } = this.context
     const { tag, children } = this.props
-    const { id: activeId } = comboBox.activeDescendant || {}
+    const { id: activeId } = select.activeDescendant || {}
     const itemProps = specialAssign({
       role: 'option',
       tabIndex: null, // null out default tabIndex for Item component

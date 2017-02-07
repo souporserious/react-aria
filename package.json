@@ -50,7 +50,10 @@
   "dependencies": {
     "a11y-focus-scope": "^1.1.3",
     "minivents": "^2.0.2",
-    "no-scroll": "^2.0.0"
+    "mitt": "^1.0.1",
+    "no-scroll": "^2.0.0",
+    "scroll-into-view": "^1.7.3",
+    "upper-case-first": "^1.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
