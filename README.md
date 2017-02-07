@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/react-aria.svg)](https://badge.fury.io/js/react-aria)
 [![Dependency Status](https://david-dm.org/souporserious/react-aria.svg)](https://david-dm.org/souporserious/react-aria)
 
-Utility components to help compose ARIA components in React. Please feel free to file an issue or submit a PR if you feel these can be more ARIA compliant ❤️
+A set of utility components to help compose ARIA components in React. Please feel free to file an issue or submit a PR if you feel these can be more ARIA compliant ❤️
 
 ## Usage
 
@@ -19,7 +19,7 @@ Utility components to help compose ARIA components in React. Please feel free to
 ### Building a select menu
 
 ```jsx
-import { Overlays: { Trigger, Overlay, Item } } from 'react-aria'
+import { Trigger, Select: { Manager, OptionList, Option } } from 'react-aria'
 
 class SelectMenu extends Component {
   state = {
@@ -36,7 +36,7 @@ class SelectMenu extends Component {
   render() {
     const { isOpen } = this.state
     return (
-      <div>
+      <Manager>
         <Trigger
           controls="select-menu"
           type="menu"
@@ -46,18 +46,17 @@ class SelectMenu extends Component {
           {this.state.selection || 'Select A Dropdown Item'}
         </Trigger>
         { isOpen &&
-          <Overlay
+          <OptionList
             id="select-menu"
-            type="menu"
-            onItemSelection={this._handleSelection}
+            onOptionSelection={this._handleSelection}
             onRequestClose={() => this.setState({ isOpen: false })}
           >
-            <Item value="apples">Apples</Item>
-            <Item value="pears">Pears</Item>
-            <Item value="oranges">Oranges</Item>
-          </Overlay>
+            <Option value="apples">Apples</Option>
+            <Option value="pears">Pears</Option>
+            <Option value="oranges">Oranges</Option>
+          </OptionList>
         }
-      </div>
+      </Manager>
     )
   }
 }
