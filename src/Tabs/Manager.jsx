@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM from 'react-dom'
-import Members from '../utils/Members'
+import FocusGroup from '../utils/FocusGroup'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
@@ -24,7 +24,7 @@ class Manager extends Component {
 
   constructor(props) {
     super(props)
-    this._members = new Members({ onAdd: this._addMember })
+    this._focusGroup = new FocusGroup()
     this._panels = []
   }
 
@@ -33,7 +33,8 @@ class Manager extends Component {
       tabs: {
         accordion: this.props.accordion,
         multiselect: this.props.multiselect,
-        members: this._members,
+        activeTabId: this.props.activeTabId,
+        focusGroup: this._focusGroup,
         addPanel: this._addPanel,
         activateTab: this._activateTab,
         focusTab: this.focusTab
@@ -41,10 +42,12 @@ class Manager extends Component {
     }
   }
 
-  _addMember = ({ id }) => {
-    if (id === this.props.activeTabId) {
-      this._activateTab(id, true, false)
-    }
+  componentDidMount() {
+    this._focusGroup.activate()
+  }
+
+  componentWillUnmount() {
+    this._focusGroup.deactivate()
   }
 
   _addPanel = (panel) => {
@@ -73,7 +76,7 @@ class Manager extends Component {
 
   _setActiveStates(id) {
     const { accordion, multiselect } = this.props
-    const collection = this._members.getCollection()
+    const collection = this._focusGroup.getMembers()
 
     for (let i = collection.length; i--;) {
       const tab = collection[i]

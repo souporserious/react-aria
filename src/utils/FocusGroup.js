@@ -1,20 +1,24 @@
+import mitt from 'mitt'
+
 class FocusGroup {
-  constructor({
-    rootNode = document,
-    members = [],
-    activeIndex = 0,
-    wrap = true,
-    onFocus = () => null,
-    onSelect = () => null
-  }) {
-    this._rootNode = rootNode
-    this._members = members
-    this._activeIndex = activeIndex
-    this._options = {
-      wrap,
-      onFocus,
-      onSelect
+  constructor(userOptions) {
+    const options = {
+      rootNode: document,
+      members: [],
+      initialIndex: 0,
+      wrap: true,
+      ...userOptions
     }
+    const emitter = mitt()
+
+    this.on = emitter.on
+    this.emit = emitter.emit
+    this.off = emitter.off
+
+    this._rootNode = options.rootNode
+    this._members = options.members
+    this._activeIndex = options.initialIndex
+    this._options = options
   }
 
   activate() {
@@ -49,6 +53,10 @@ class FocusGroup {
     if (indexToRemove !== -1) {
       this._members.splice(indexToRemove, 1)
     }
+  }
+
+  getMembers() {
+    return this._members
   }
 
   getMemberIndex(member) {
@@ -114,11 +122,12 @@ class FocusGroup {
     }
 
     this._activeIndex = index
-    this._options.onFocus(member, index)
+
+    this.emit('focus', member, index)
   }
 
   selectFocusedMember(e) {
-    this._options.onSelect(this.getActiveMember(), e)
+    this.emit('select', this.getActiveMember(), e)
   }
 
   _handleKeydown = (e) => {

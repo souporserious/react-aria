@@ -45,7 +45,7 @@ class TabPanel extends Component {
     const { onKeyDown } = this.props
 
     if (e.ctrlKey && e.key === 'ArrowUp') {
-      this.context.members.focus(this.props.controlledBy)
+      this.context.focusGroup.focus(this.props.controlledBy)
     }
 
     if (typeof onKeyDown === 'function') {

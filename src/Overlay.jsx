@@ -8,6 +8,7 @@ const checkedProps = {
   tag: PropTypes.string,
   role: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert', 'listbox']),
   scopeFocus: PropTypes.bool,
+  returnFocus: PropTypes.bool,
   freezeScroll: PropTypes.bool,
   closeOnEscapeKey: PropTypes.bool,
   closeOnOutsideClick: PropTypes.bool,
@@ -22,6 +23,7 @@ class Overlay extends Component {
   static defaultProps = {
     tag: 'div',
     role: 'popover',
+    returnFocus: true,
     closeOnEscapeKey: true,
     closeOnOutsideClick: true,
     onRequestClose: noop,
@@ -30,6 +32,10 @@ class Overlay extends Component {
   componentDidMount() {
     if (this.props.scopeFocus) {
       scopeFocus(findDOMNode(this))
+    }
+
+    if (this.props.returnFocus) {
+      this._lastActiveElement = document.activeElement
     }
 
     if (this.props.freezeScroll) {
@@ -42,6 +48,10 @@ class Overlay extends Component {
   componentWillUnmount() {
     if (this.props.scopeFocus) {
       unscopeFocus()
+    }
+
+    if (this.props.returnFocus) {
+      this._lastActiveElement.focus()
     }
 
     if (this.props.freezeScroll) {

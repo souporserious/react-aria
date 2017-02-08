@@ -2,14 +2,14 @@ import React, { Component, PropTypes, createElement, cloneElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { scopeFocus, unscopeFocus } from 'a11y-focus-scope'
 import scrollIntoView from 'scroll-into-view'
-import Members from '../utils/Members'
+import FocusGroup from '../utils/FocusGroup'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   tag: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   rootNode: PropTypes.any,
   scopeFocus: PropTypes.bool,
-  currentFocus: PropTypes.number,
+  initialFocus: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   onItemFocus: PropTypes.func,
   onItemSelection: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
@@ -25,61 +25,46 @@ class ItemList extends Component {
 
   static defaultProps = {
     tag: false,
-    currentFocus: 0,
+    initialFocus: 0,
     onItemFocus: noop,
     onItemSelection: noop
   }
 
-  state = {
-    currentFocus: this.props.currentFocus
-  }
-
-  _members = new Members()
+  _focusGroup = new FocusGroup()
 
   getChildContext() {
     return {
       itemList: {
-        members: this._members,
+        focusGroup: this._focusGroup,
+        focusItem: this.focusItem,
         onItemSelection: this.props.onItemSelection
       }
     }
   }
 
   componentDidMount() {
-    this._lastActiveElement = document.activeElement
-
-    this._members.on('focus', this._handleFocus)
-    this._members.on('select', this._handleSelect)
+    this._focusGroup.on('focus', this._handleFocus)
+    this._focusGroup.on('select', this._handleSelect)
 
     if (this.props.rootNode) {
-      this._members.setRootNode(this.props.rootNode)
+      this._focusGroup.setRootNode(this.props.rootNode)
     }
 
     if (this.props.scopeFocus) {
       scopeFocus(findDOMNode(this))
     }
 
-    if (this.props.currentFocus !== false) {
-      this._members.focus(this.props.currentFocus)
-    }
-  }
-
-  componentDidUpdate(nextProps) {
-    if (this.props.currentFocus !== nextProps.currentFocus) {
-      this._members.focus(nextProps.currentFocus)
+    if (this.props.initialFocus !== false) {
+      this._focusGroup.focus(this.props.initialFocus)
     }
   }
 
   componentWillUnmount() {
-    this._members.off('focus', this._handleFocus)
-    this._members.off('select', this._handleSelect)
+    this._focusGroup.off('focus', this._handleFocus)
+    this._focusGroup.off('select', this._handleSelect)
 
     if (this.props.scopeFocus) {
       unscopeFocus()
-    }
-
-    if (this._lastActiveElement) {
-      this._lastActiveElement.focus()
     }
   }
 
@@ -92,12 +77,8 @@ class ItemList extends Component {
     this.props.onItemSelection(member, event)
   }
 
-  getItems = () => {
-    return this._members
-  }
-
   focusItem = (index) => {
-    this._members.focus(index)
+    this._focusGroup.focus(index)
   }
 
   render() {

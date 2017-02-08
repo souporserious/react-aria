@@ -8,7 +8,7 @@ const checkedProps = {
   tag: PropTypes.string,
   children: PropTypes.node,
   scopeFocus: PropTypes.bool,
-  currentFocus: PropTypes.number,
+  initialFocus: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   closeOnOutsideClick: PropTypes.bool,
   onOptionHighlight: PropTypes.func,
   onOptionSelection: PropTypes.func
@@ -24,7 +24,7 @@ class OptionList extends Component {
   static defaultProps = {
     tag: 'div',
     role: 'listbox',
-    currentFocus: 0,
+    initialFocus: 0,
     closeOnOutsideClick: false
   }
 
@@ -38,7 +38,7 @@ class OptionList extends Component {
 
   render() {
     const { select } = this.context
-    const { tag, role, scopeFocus, currentFocus, onOptionSelection, closeOnOutsideClick, children } = this.props
+    const { tag, role, scopeFocus, initialFocus, onOptionSelection, closeOnOutsideClick, children } = this.props
     const props = specialAssign({
       tag,
       role,
@@ -50,7 +50,7 @@ class OptionList extends Component {
       <ItemList
         rootNode={select.rootNode}
         scopeFocus={scopeFocus}
-        currentFocus={currentFocus}
+        initialFocus={initialFocus}
         onItemFocus={this._handleItemFocus}
         onItemSelection={onOptionSelection}
       >

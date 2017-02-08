@@ -25,18 +25,26 @@ class Tab extends Component {
   }
 
   componentDidMount() {
+    const { tabs } = this.context
+    const { id, text } = this.props
+
     this._member = {
-      id: this.props.id,
+      id,
+      text,
       node: findDOMNode(this),
-      text: this.props.text,
       setActiveState: this._setActiveState,
       toggleActiveState: this._toggleActiveState
     }
-    this.context.tabs.members.add(this._member)
+
+    tabs.focusGroup.addMember(this._member)
+
+    if (id === tabs.activeTabId) {
+      tabs.activateTab(id, true, false)
+    }
   }
 
   componentWillUnmount() {
-    this.context.tabs.members.remove(this._member)
+    this.context.tabs.focusGroup.removeMember(this._member)
   }
 
   _setActiveState = (isActive) => {

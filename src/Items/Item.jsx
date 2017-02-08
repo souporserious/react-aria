@@ -33,7 +33,7 @@ class Item extends Component {
   _id = this.props.id || uuid()
 
   componentDidMount() {
-    const { itemList: { members } } = this.context
+    const { itemList: { focusGroup } } = this.context
     const { index, text, value } = this.props
 
     this._member = {
@@ -45,18 +45,30 @@ class Item extends Component {
     }
 
     // add this item as a member
-    members.add(this._member)
+    focusGroup.addMember(this._member)
 
     // listen for respective focus group events
-    members.on('focus', this._handleMemberFocus)
-    members.on('select', this._handleMemberSelect)
+    focusGroup.on('focus', this._handleMemberFocus)
+    focusGroup.on('select', this._handleMemberSelect)
+
+    // activate focus group if this was the first member added
+    if (focusGroup.getMembers().length === 1) {
+      focusGroup.activate()
+    }
   }
 
   componentWillUnmount() {
-    const { itemList: { members } } = this.context
-    members.remove(this._member)
-    members.off('focus', this._handleMemberFocus)
-    members.off('select', this._handleMemberSelect)
+    const { itemList: { focusGroup } } = this.context
+
+    focusGroup.removeMember(this._member)
+
+    focusGroup.off('focus', this._handleMemberFocus)
+    focusGroup.off('select', this._handleMemberSelect)
+
+    // deactivate focus group if this was the last member removed
+    if (focusGroup.getMembers().length <= 0) {
+      focusGroup.deactivate()
+    }
   }
 
   _handleMemberFocus = (member, e) => {

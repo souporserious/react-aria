@@ -38,11 +38,11 @@ import './main.scss'
 
 class SelectDemo extends Component {
   state = {
-    isOpen: false
+    currentOption: {},
+    isOpen: false,
   }
 
   _toggle = () => {
-    console.log('toggle', this.state.isOpen)
     this.setState({ isOpen: !this.state.isOpen })
   }
 
@@ -75,7 +75,7 @@ class SelectDemo extends Component {
   }
 
   render() {
-    const { value, isOpen } = this.state
+    const { currentOption, isOpen } = this.state
     return (
       <Select.Manager>
         <Trigger
@@ -83,17 +83,17 @@ class SelectDemo extends Component {
           keybindings={isOpen ? [] : [' ']}
           onTrigger={this._toggle}
         >
-          { value ? value : 'Select Option' }
+          { currentOption.value || 'Select Option' }
         </Trigger>
         { isOpen &&
           <OptionList
             scopeFocus
             closeOnOutsideClick
-            onOptionSelection={({ value }) => {
-              this.setState({ isOpen: false, value })
+            initialFocus={currentOption.index}
+            onOptionSelection={option => {
+              this.setState({ isOpen: false, currentOption: option })
             }}
             onRequestClose={() => {
-              console.log('onRequestClose', this.state.isOpen)
               this.setState({ isOpen: false })
             }}
             style={{

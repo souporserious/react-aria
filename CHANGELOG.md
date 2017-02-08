@@ -1,4 +1,15 @@
 ## CHANGELOG
+### 0.8.1
+Rename `currentFocus` -> `initialFocus` since `initialFocus` is more practical
+
+Removed internal `Members` class in place of just using `FocusGroup` class
+
+Added `returnFocus` to `Overlay` component to specify whether or not to return focus to the original element before mounting
+
+
+### 0.8.0
+Fix published build
+
 ### 0.7.0
 Make sure `children` get pulled off of props so child functions work as expected
 
