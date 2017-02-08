@@ -30,12 +30,10 @@ class Overlay extends Component {
   }
 
   componentDidMount() {
+    this._lastActiveElement = document.activeElement
+
     if (this.props.scopeFocus) {
       scopeFocus(findDOMNode(this))
-    }
-
-    if (this.props.returnFocus) {
-      this._lastActiveElement = document.activeElement
     }
 
     if (this.props.freezeScroll) {
@@ -89,7 +87,7 @@ class Overlay extends Component {
 
   _handleDocumentClick = (e) => {
     const node = findDOMNode(this)
-    if ((node !== e.target) && !node.contains(e.target)) {
+    if ((node !== e.target) && !node.contains(e.target) && this._lastActiveElement !== e.target) {
       e.stopPropagation()
       this.props.onRequestClose()
     }

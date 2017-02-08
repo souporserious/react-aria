@@ -190,8 +190,7 @@ class ModalDemo extends Component {
     right: 0,
     bottom: 0,
     left: 0,
-    background: 'rgba(0, 0, 0, 0.5)',
-    pointerEvents: 'none'
+    background: 'rgba(0, 0, 0, 0.5)'
   }
 
   modalContentStyles = {
