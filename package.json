@@ -1,6 +1,6 @@
 {
   "name": "react-aria",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Utilities to help create React ARIA components.",
   "main": "lib/react-aria.js",
   "files": [
