@@ -77,8 +77,12 @@ class ItemList extends Component {
     this.props.onItemSelection(member, event)
   }
 
-  focusItem = (index) => {
+  focusMember = (index) => {
     this._focusGroup.focus(index)
+  }
+
+  getActiveMember = () => {
+    return this._focusGroup.getActiveMember()
   }
 
   render() {

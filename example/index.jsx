@@ -43,7 +43,14 @@ class SelectDemo extends Component {
   }
 
   _toggle = () => {
-    this.setState({ isOpen: !this.state.isOpen })
+    const { isOpen } = this.state
+    const state = { isOpen: !isOpen }
+
+    if (isOpen) {
+      state.currentOption = this._optionsList.getActiveMember()
+    }
+
+    this.setState(state)
   }
 
   _renderOptions() {
@@ -80,13 +87,14 @@ class SelectDemo extends Component {
       <Select.Manager>
         <Trigger
           isOpen={isOpen}
-          keybindings={isOpen ? [] : [' ']}
+          keybindings={[' ']}
           onTrigger={this._toggle}
         >
           { currentOption.value || 'Select Option' }
         </Trigger>
         { isOpen &&
           <OptionList
+            ref={c => this._optionsList = c}
             scopeFocus
             closeOnOutsideClick
             initialFocus={currentOption.index}

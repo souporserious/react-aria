@@ -2,6 +2,10 @@
 ### 0.8.2
 Exclude `lastActiveElement` as an outside click
 
+Prevent `button` element from triggering `onClick` with keyboard
+
+Added public `focusMember` and `getActiveMember` methods to `ItemList` and `OptionList`
+
 ### 0.8.1
 Rename `currentFocus` -> `initialFocus` since `initialFocus` is more practical
 

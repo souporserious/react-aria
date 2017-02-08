@@ -52,7 +52,10 @@ class Trigger extends Component {
   }
 
   _handleKeyUp = (e) => {
-    this._isKeyDown = false
+    // allow _handleEvent to check whether key was just down
+    setTimeout(() => {
+      this._isKeyDown = false
+    })
 
     if (typeof this.props.onKeyUp === 'function') {
       this.props.onKeyUp(e)
@@ -62,6 +65,7 @@ class Trigger extends Component {
   _handleEvent(name, e) {
     const onEvent = this.props[`on${upperCaseFirst(name)}`]
 
+    // don't allow button tag to trigger onClick
     if (this._isKeyDown) return;
 
     this._trigger(e)

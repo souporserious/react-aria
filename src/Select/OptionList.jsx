@@ -36,6 +36,14 @@ class OptionList extends Component {
     }
   }
 
+  focusMember = (index) => {
+    this._itemList.focusMember(index)
+  }
+
+  getActiveMember = () => {
+    return this._itemList.getActiveMember()
+  }
+
   render() {
     const { select } = this.context
     const { tag, role, scopeFocus, initialFocus, onOptionSelection, closeOnOutsideClick, children } = this.props
@@ -48,6 +56,7 @@ class OptionList extends Component {
 
     return (
       <ItemList
+        ref={c => this._itemList = c}
         rootNode={select.rootNode}
         scopeFocus={scopeFocus}
         initialFocus={initialFocus}
