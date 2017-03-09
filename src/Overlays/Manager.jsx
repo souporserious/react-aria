@@ -7,7 +7,7 @@ class Manager extends Component {
   }
 
   static propTypes = {
-    component: PropTypes.any,
+    tag:      PropTypes.any,
     children: PropTypes.node
   }
 
@@ -42,14 +42,14 @@ class Manager extends Component {
   }
 
   render() {
-    const { component, children, ...restProps } = this.props
+    const { tag, children, ...restProps } = this.props
 
     if (typeof children === 'function') {
       return children(this.state.isOpen)
     }
 
-    return component
-      ? createElement(component, restProps)
+    return tag
+      ? createElement(tag, restProps)
       : children
   }
 }

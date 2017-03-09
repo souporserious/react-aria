@@ -347,10 +347,10 @@ class App extends Component {
         <Overlays.Manager>
           <div>
             <Trigger>
-              Cool
+              Select Menu
             </Trigger>
             <Overlay>
-              Overlay bitch
+              <SelectDemo/>
             </Overlay>
           </div>
         </Overlays.Manager>

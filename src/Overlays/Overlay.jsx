@@ -84,7 +84,10 @@ class Overlay extends Component {
   }
 
   _requestClose() {
-    if (this.context.overlayManager) {
+    if (
+      this.context.overlayManager &&
+      typeof this.props.isOpen === 'undefined'
+    ) {
       this.context.overlayManager.close()
     }
     this.props.onRequestClose()

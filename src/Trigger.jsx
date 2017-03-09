@@ -79,7 +79,10 @@ class Trigger extends Component {
   _trigger(e) {
     e.preventDefault()
 
-    if (this.context.overlayManager) {
+    if (
+      this.context.overlayManager &&
+      typeof this.props.isOpen === 'undefined'
+    ) {
       this.context.overlayManager.toggle()
     }
 
