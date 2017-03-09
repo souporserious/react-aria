@@ -52,6 +52,7 @@
     "mitt": "^1.0.1",
     "no-scroll": "^2.0.0",
     "scroll-into-view": "^1.7.3",
+    "unique-number": "^2.0.1",
     "upper-case-first": "^1.1.2"
   },
   "devDependencies": {

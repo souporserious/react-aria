@@ -4,29 +4,30 @@ import upperCaseFirst from 'upper-case-first'
 import specialAssign from './utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
+  tag:         PropTypes.string,
   overlayRole: PropTypes.string,
-  controls: PropTypes.string,
-  isOpen: PropTypes.bool,
+  controls:    PropTypes.string,
+  isOpen:      PropTypes.bool,
   keybindings: PropTypes.array,
-  triggerOn: PropTypes.array,
-  onTrigger: PropTypes.func,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
+  triggerOn:   PropTypes.array,
+  onTrigger:   PropTypes.func,
+  children:    PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
 class Trigger extends Component {
   static contextTypes = {
-    select: PropTypes.object
+    select:         PropTypes.object,
+    overlayManager: PropTypes.object
   }
 
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'button',
+    tag:         'button',
     overlayRole: 'popover',
     keybindings: [' ', 'ArrowUp', 'ArrowDown'],
-    triggerOn: ['click'],
-    onTrigger: () => null,
+    triggerOn:   ['click'],
+    onTrigger:   () => null,
   }
 
   _isKeyDown = false
@@ -77,17 +78,24 @@ class Trigger extends Component {
 
   _trigger(e) {
     e.preventDefault()
+
+    if (this.context.overlayManager) {
+      this.context.overlayManager.toggle()
+    }
+
     this.props.onTrigger(e)
   }
 
   _getProps() {
-    const { tag, disabled, overlayRole, controls, isOpen, triggerOn } = this.props
+    const { overlayManager } = this.context
+    const { tag, disabled, overlayRole, controls, triggerOn } = this.props
+    const isOpen = overlayManager ? overlayManager.isOpen : this.props.isOpen
     const props = {
       [tag === 'button' ? 'type' : 'role']: 'button',
-      tabIndex: (disabled) ? '' : 0,
+      tabIndex:        disabled ? '' : 0,
       'aria-disabled': disabled,
-      onKeyDown: this._handleKeyDown,
-      onKeyUp: this._handleKeyUp
+      onKeyDown:       this._handleKeyDown,
+      onKeyUp:         this._handleKeyUp
     }
 
     if (overlayRole !== 'modal') {

@@ -2,31 +2,35 @@ import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { scopeFocus, unscopeFocus } from 'a11y-focus-scope'
 import noScroll from 'no-scroll'
-import specialAssign from './utils/special-assign'
+import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
-  role: PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert', 'listbox']),
-  scopeFocus: PropTypes.bool,
-  returnFocus: PropTypes.bool,
-  freezeScroll: PropTypes.bool,
-  closeOnEscapeKey: PropTypes.bool,
+  tag:                 PropTypes.string,
+  role:                PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert', 'listbox']),
+  scopeFocus:          PropTypes.bool,
+  returnFocus:         PropTypes.bool,
+  freezeScroll:        PropTypes.bool,
+  closeOnEscapeKey:    PropTypes.bool,
   closeOnOutsideClick: PropTypes.bool,
-  onRequestClose: PropTypes.func,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
+  onRequestClose:      PropTypes.func,
+  children:            PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 const noop = () => null
 
 class Overlay extends Component {
+  static contextTypes = {
+    overlayManager: PropTypes.object
+  }
+
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div',
-    role: 'popover',
-    returnFocus: true,
-    closeOnEscapeKey: true,
+    tag:                 'div',
+    role:                'popover',
+    returnFocus:         true,
+    closeOnEscapeKey:    true,
     closeOnOutsideClick: true,
-    onRequestClose: noop,
+    onRequestClose:      noop,
   }
 
   componentDidMount() {
@@ -79,31 +83,54 @@ class Overlay extends Component {
     }
   }
 
+  _requestClose() {
+    if (this.context.overlayManager) {
+      this.context.overlayManager.close()
+    }
+    this.props.onRequestClose()
+  }
+
   _handleDocumentKeyDown = ({ keyCode }) => {
     if (keyCode === 27) { // Escape
-      this.props.onRequestClose()
+      this._requestClose()
     }
   }
 
   _handleDocumentClick = (e) => {
     const node = findDOMNode(this)
-    if ((node !== e.target) && !node.contains(e.target) && this._lastActiveElement !== e.target) {
+    if (
+      node &&
+      node !== e.target &&
+      !node.contains(e.target) &&
+      this._lastActiveElement !== e.target
+    ) {
       e.stopPropagation()
-      this.props.onRequestClose()
+      this._requestClose()
     }
   }
 
   render() {
-    const { tag, role, children } = this.props
+    const { overlayManager } = this.context
+    const { tag, role, isOpen, children } = this.props
     const props = specialAssign({
       role
     }, this.props, checkedProps)
 
     if (typeof children === 'function') {
-      return children(props)
+      return children(props, overlayManager.isOpen)
     }
 
-    return createElement(tag, props, children)
+    const component = createElement(tag, props, children)
+
+    if (overlayManager) {
+      if (overlayManager.isOpen) {
+        return component
+      } else {
+        return null
+      }
+    } else {
+      return component
+    }
   }
 }
 

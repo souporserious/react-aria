@@ -1,3 +1,2 @@
-export default () => (
-  `RA-${Math.abs(~~(Math.random() * new Date()))}`
-)
+const uniqueNumber = require('unique-number')(true)
+export default () => uniqueNumber.generate()

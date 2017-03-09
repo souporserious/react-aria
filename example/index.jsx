@@ -28,9 +28,10 @@ import Transition from 'react-motion-ui-pack'
 // - Panel ✓
 // - Rows & Columns https://www.w3.org/TR/wai-aria-practices/#grid
 
-import { Trigger, Overlay, Items, Tabs, Select } from '../src/react-aria'
+import { Trigger, Overlays, Items, Tabs, Select } from '../src/react-aria'
 
 const { ItemList, Item } = Items
+const { Overlay } = Overlays
 const { TabList, Tab, TabPanel } = Tabs
 const { Input, OptionList, Option } = Select
 
@@ -343,6 +344,17 @@ class App extends Component {
   render() {
     return (
       <div>
+        <Overlays.Manager>
+          <div>
+            <Trigger>
+              Cool
+            </Trigger>
+            <Overlay>
+              Overlay bitch
+            </Overlay>
+          </div>
+        </Overlays.Manager>
+
         <h1>Select Menu</h1>
         <SelectDemo/>
 

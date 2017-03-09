@@ -1,7 +1,7 @@
 import React, { Component, PropTypes, createElement } from 'react'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { ItemList } from '../Items'
-import Overlay from '../Overlay'
+import Overlay from '../Overlays/Overlay'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
