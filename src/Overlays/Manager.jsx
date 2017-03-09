@@ -49,7 +49,7 @@ class Manager extends Component {
     }
 
     return tag
-      ? createElement(tag, restProps)
+      ? createElement(tag, restProps, children)
       : children
   }
 }

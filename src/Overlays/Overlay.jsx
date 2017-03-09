@@ -120,7 +120,7 @@ class Overlay extends Component {
     }, this.props, checkedProps)
 
     if (typeof children === 'function') {
-      return children(props, overlayManager.isOpen)
+      return children(props, overlayManager && overlayManager.isOpen)
     }
 
     const component = createElement(tag, props, children)
