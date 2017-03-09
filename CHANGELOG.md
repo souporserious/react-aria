@@ -1,4 +1,11 @@
 ## CHANGELOG
+### 0.9.0
+Move `Overlay` into `Overlays` namespace
+
+Add `Manager` component for easy uncontrolled `Trigger` and `Overlay` usage
+
+Use `unique-number` package to generate better uuid's
+
 ### 0.8.2
 Exclude `lastActiveElement` as an outside click
 
