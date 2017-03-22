@@ -4,6 +4,8 @@ Fix nested `Overlay` components causing the whole tree to close
 
 Change prop name `tag` -> `component`
 
+Allow all `Manager` style components to just pass `children` through
+
 ### 0.9.0
 Move `Overlay` into `Overlays` namespace
 

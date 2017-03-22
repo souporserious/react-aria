@@ -88,12 +88,9 @@ class ItemList extends Component {
   render() {
     const { component, children } = this.props
     const props = specialAssign({}, this.props, checkedProps)
-
-    if (!component) {
-      return children
-    }
-
-    return createElement(component, props, children)
+    return component
+      ? createElement(component, props, children)
+      : children
   }
 }
 

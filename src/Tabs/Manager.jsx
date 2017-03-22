@@ -108,7 +108,9 @@ class Manager extends Component {
   render() {
     const { component, children } = this.props
     const props = specialAssign({}, this.props, checkedProps)
-    return component ? createElement(component, props, children) : children
+    return component
+      ? createElement(component, props, children)
+      : children
   }
 }
 

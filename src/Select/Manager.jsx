@@ -47,8 +47,10 @@ class Select extends Component {
   }
 
   render() {
-    const { component, ...props } = this.props
-    return component ? createElement(component, props) : props.children
+    const { component, children, ...props } = this.props
+    return component
+      ? createElement(component, props, children)
+      : children
   }
 }
 

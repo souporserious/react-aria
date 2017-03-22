@@ -54,14 +54,14 @@ class Manager extends Component {
   }
 
   render() {
-    const { component, children, ...restProps } = this.props
+    const { component, children, ...props } = this.props
 
     if (typeof children === 'function') {
       return children(this.state.isOpen)
     }
 
     return component
-      ? createElement(component, restProps, children)
+      ? createElement(component, props, children)
       : children
   }
 }
