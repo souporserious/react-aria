@@ -56,7 +56,9 @@ class Overlay extends Component {
       unscopeFocus()
     }
 
-    if (this.props.returnFocus) {
+    // make sure to only return focus if another focusable item was not clicked
+    // clicking an element that is not focusable returns document.body as the activeElement
+    if (this.props.returnFocus && document.activeElement === document.body) {
       this._lastActiveElement.focus()
     }
 
