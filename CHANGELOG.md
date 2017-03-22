@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.9.1
+Fix nested `Overlay` components causing the whole tree to close
+
 ### 0.9.0
 Move `Overlay` into `Overlays` namespace
 

@@ -20,13 +20,25 @@ class Manager extends Component {
   getChildContext() {
     return {
       overlayManager: {
-        id:     this._id,
-        open:   this.open,
-        close:  this.close,
-        toggle: this.toggle,
-        isOpen: this.state.isOpen
+        setOverlay: this._setOverlay,
+        getOverlay: this._getOverlay,
+        id:         this._id,
+        open:       this.open,
+        close:      this.close,
+        toggle:     this.toggle,
+        isOpen:     this.state.isOpen,
       }
     }
+  }
+
+  _setOverlay = (component) => {
+    if (!this._overlay) {
+      this._overlay = component
+    }
+  }
+
+  _getOverlay = (component) => {
+    return this._overlay
   }
 
   open = () => {
@@ -38,7 +50,7 @@ class Manager extends Component {
   }
 
   toggle = () => {
-    this.setState({ isOpen: !this.state.isOpen })
+    this.setState(state => ({ isOpen: !state.isOpen }))
   }
 
   render() {

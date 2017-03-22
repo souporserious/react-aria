@@ -37,6 +37,34 @@ const { Input, OptionList, Option } = Select
 
 import './main.scss'
 
+function renderFakeOptions(onSelect = () => null) {
+  const options = []
+
+  for (let i = 0; i < 24; i++) {
+    options.push(
+      <Option
+        key={i}
+        index={i}
+        value={`Item ${i}`}
+        onSelect={onSelect}
+      >
+        {({ props, isHighlighted }) =>
+          <div
+            {...props}
+            style={{
+              background: isHighlighted ? 'orange' : ''
+            }}
+          >
+            Item {i}
+          </div>
+        }
+      </Option>
+    )
+  }
+
+  return options
+}
+
 class SelectDemo extends Component {
   state = {
     currentOption: {},
@@ -44,42 +72,9 @@ class SelectDemo extends Component {
   }
 
   _toggle = () => {
-    const { isOpen } = this.state
-    const state = { isOpen: !isOpen }
-
-    if (isOpen) {
-      state.currentOption = this._optionsList.getActiveMember()
-    }
-
-    this.setState(state)
-  }
-
-  _renderOptions() {
-    const options = []
-    for (let i = 0; i < 24; i++) {
-      options.push(
-        <Option
-          key={i}
-          index={i}
-          value={`Item ${i}`}
-          onSelect={(option) => {
-            console.log('option selected: ', option.id)
-          }}
-        >
-          {({ props, isHighlighted }) =>
-            <div
-              {...props}
-              style={{
-                background: isHighlighted ? 'orange' : ''
-              }}
-            >
-              Item {i}
-            </div>
-          }
-        </Option>
-      )
-    }
-    return options
+    this.setState(state => ({
+      isOpen: !state.isOpen
+    }))
   }
 
   render() {
@@ -110,7 +105,9 @@ class SelectDemo extends Component {
               overflow: 'auto'
             }}
           >
-            {this._renderOptions()}
+            {renderFakeOptions(item =>
+              console.log('item selected: ', item)
+            )}
           </OptionList>
         }
       </Select.Manager>
@@ -345,11 +342,11 @@ class App extends Component {
     return (
       <div>
         <Overlays.Manager>
-          <div>
+          <div style={{ padding: 10, backgroundColor: '#ccc' }}>
             <Trigger>
               Select Menu
             </Trigger>
-            <Overlay>
+            <Overlay style={{ padding: 40 }}>
               <SelectDemo/>
             </Overlay>
           </div>

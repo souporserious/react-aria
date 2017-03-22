@@ -36,6 +36,10 @@ class Overlay extends Component {
   componentDidMount() {
     this._lastActiveElement = document.activeElement
 
+    if (this.context.overlayManager) {
+      this.context.overlayManager.setOverlay(this)
+    }
+
     if (this.props.scopeFocus) {
       scopeFocus(findDOMNode(this))
     }
@@ -84,11 +88,9 @@ class Overlay extends Component {
   }
 
   _requestClose() {
-    if (
-      this.context.overlayManager &&
-      typeof this.props.isOpen === 'undefined'
-    ) {
-      this.context.overlayManager.close()
+    const { overlayManager } = this.context
+    if (overlayManager && overlayManager.getOverlay() === this) {
+      overlayManager.close()
     }
     this.props.onRequestClose()
   }
@@ -114,7 +116,7 @@ class Overlay extends Component {
 
   render() {
     const { overlayManager } = this.context
-    const { tag, role, isOpen, children } = this.props
+    const { tag, role, children } = this.props
     const props = specialAssign({
       role
     }, this.props, checkedProps)
