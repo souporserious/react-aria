@@ -8,6 +8,8 @@ Allow all `Manager` style components to just pass `children` through
 
 Make sure the `Overlay` component only returns focus if another focusable item was not clicked
 
+Set `activeDescendant` properly
+
 ### 0.9.0
 Move `Overlay` into `Overlays` namespace
 

@@ -29,7 +29,7 @@ class Input extends Component {
       'aria-owns': select.uuid,
       'aria-haspopup': isOpen,
       'aria-expanded': isOpen,
-      'aria-activedescendant': select.activeDescendant
+      'aria-activedescendant': select.activeDescendant && select.activeDescendant.id
     }
     return specialAssign(props, this.props, checkedProps)
   }
