@@ -1,5 +1,11 @@
 ## CHANGELOG
-### 0.10.0
+### 0.9.0
+Move `Overlay` into `Overlays` namespace
+
+Add `Manager` component for easy uncontrolled `Trigger` and `Overlay` usage
+
+Use `unique-number` package to generate better uuid's
+
 Fix nested `Overlay` components causing the whole tree to close
 
 Change prop name `tag` -> `component`
@@ -9,13 +15,6 @@ Allow all `Manager` style components to just pass `children` through
 Make sure the `Overlay` component only returns focus if another focusable item was not clicked
 
 Set `activeDescendant` properly
-
-### 0.9.0
-Move `Overlay` into `Overlays` namespace
-
-Add `Manager` component for easy uncontrolled `Trigger` and `Overlay` usage
-
-Use `unique-number` package to generate better uuid's
 
 ### 0.8.2
 Exclude `lastActiveElement` as an outside click
