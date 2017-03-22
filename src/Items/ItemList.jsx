@@ -24,7 +24,7 @@ class ItemList extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    component:       false,
+    component:       'div',
     initialFocus:    0,
     onItemFocus:     noop,
     onItemSelection: noop

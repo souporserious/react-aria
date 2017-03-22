@@ -7,7 +7,6 @@ import specialAssign from '../utils/special-assign'
 const checkedProps = {
   component:           PropTypes.string,
   children:            PropTypes.node,
-  scopeFocus:          PropTypes.bool,
   initialFocus:        PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   closeOnOutsideClick: PropTypes.bool,
   onOptionHighlight:   PropTypes.func,
@@ -23,7 +22,6 @@ class OptionList extends Component {
 
   static defaultProps = {
     component:           'div',
-    role:                'listbox',
     initialFocus:        0,
     closeOnOutsideClick: false
   }
@@ -49,16 +47,17 @@ class OptionList extends Component {
     const { component, role, scopeFocus, initialFocus, onOptionSelection, closeOnOutsideClick, children } = this.props
     const props = specialAssign({
       component,
-      role,
-      id: select.uuid,
+      role: 'listbox',
+      id:   select.uuid,
       closeOnOutsideClick
     }, this.props, checkedProps)
 
     return (
       <ItemList
         ref={c => this._itemList = c}
+        component={false}
         rootNode={select.rootNode}
-        scopeFocus={scopeFocus}
+        scopeFocus={false}
         initialFocus={initialFocus}
         onItemFocus={this._handleItemFocus}
         onItemSelection={onOptionSelection}
