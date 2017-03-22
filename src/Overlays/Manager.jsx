@@ -7,8 +7,8 @@ class Manager extends Component {
   }
 
   static propTypes = {
-    tag:      PropTypes.any,
-    children: PropTypes.node
+    component: PropTypes.any,
+    children:  PropTypes.node
   }
 
   _id = this.props.id || uuid()
@@ -54,14 +54,14 @@ class Manager extends Component {
   }
 
   render() {
-    const { tag, children, ...restProps } = this.props
+    const { component, children, ...restProps } = this.props
 
     if (typeof children === 'function') {
       return children(this.state.isOpen)
     }
 
-    return tag
-      ? createElement(tag, restProps, children)
+    return component
+      ? createElement(component, restProps, children)
       : children
   }
 }

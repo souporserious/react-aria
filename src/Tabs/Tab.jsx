@@ -3,10 +3,10 @@ import ReactDOM, { findDOMNode } from 'react-dom'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  isActive: PropTypes.bool,
-  tag: PropTypes.string,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
+  component: PropTypes.string,
+  id:        PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  isActive:  PropTypes.bool,
+  children:  PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
 class Tab extends Component {
@@ -17,7 +17,7 @@ class Tab extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div'
+    component: 'div'
   }
 
   state = {
@@ -31,8 +31,8 @@ class Tab extends Component {
     this._member = {
       id,
       text,
-      node: findDOMNode(this),
-      setActiveState: this._setActiveState,
+      node:              findDOMNode(this),
+      setActiveState:    this._setActiveState,
       toggleActiveState: this._toggleActiveState
     }
 
@@ -66,9 +66,9 @@ class Tab extends Component {
   }
 
   _handleKeyDown = (e) => {
-    const { id, tag, onKeyDown } = this.props
+    const { component, id, onKeyDown } = this.props
 
-    if (tag !== 'button' && ['Enter', ' '].indexOf(e.key) > -1) {
+    if (component !== 'button' && ['Enter', ' '].indexOf(e.key) > -1) {
       e.preventDefault()
       this.context.tabs.activateTab(id)
     }
@@ -90,12 +90,12 @@ class Tab extends Component {
 
   render() {
     const { accordion } = this.context.tabs
-    const { tag, id, disabled, children } = this.props
+    const { component, id, disabled, children } = this.props
     const isActive = (this.props.isActive !== undefined) ? this.props.isActive : this.state.isActive
     const componentProps = {
       id,
-      role: 'tab',
-      tabIndex: accordion ? 0 : (isActive ? 0 : -1),
+      role:            'tab',
+      tabIndex:        accordion ? 0 : (isActive ? 0 : -1),
       'aria-selected': isActive,
       'aria-controls': `${id}-panel`,
       'aria-disabled': disabled
@@ -115,7 +115,7 @@ class Tab extends Component {
       return children(props, isActive)
     }
 
-    return createElement(tag, props, children)
+    return createElement(component, props, children)
   }
 }
 

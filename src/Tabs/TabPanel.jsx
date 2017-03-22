@@ -3,10 +3,10 @@ import ReactDOM, { findDOMNode } from 'react-dom'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
+  component:    PropTypes.string,
   controlledBy: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  isActive: PropTypes.bool,
-  tag: PropTypes.string,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
+  isActive:     PropTypes.bool,
+  children:     PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
 class TabPanel extends Component {
@@ -17,7 +17,7 @@ class TabPanel extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div'
+    component: 'div'
   }
 
   state = {
@@ -54,7 +54,7 @@ class TabPanel extends Component {
   }
 
   render() {
-    const { tag, controlledBy, disabled, children } = this.props
+    const { component, controlledBy, disabled, children } = this.props
     const isActive = (this.props.isActive !== undefined) ? this.props.isActive : this.state.isActive
     const componentProps = {
       id: `${controlledBy}-panel`,
@@ -77,7 +77,7 @@ class TabPanel extends Component {
       return children(props, isActive)
     }
 
-    return createElement(tag, props, children)
+    return createElement(component, props, children)
   }
 }
 

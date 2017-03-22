@@ -5,13 +5,13 @@ import Overlay from '../Overlays/Overlay'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
-  children: PropTypes.node,
-  scopeFocus: PropTypes.bool,
-  initialFocus: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
+  component:           PropTypes.string,
+  children:            PropTypes.node,
+  scopeFocus:          PropTypes.bool,
+  initialFocus:        PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   closeOnOutsideClick: PropTypes.bool,
-  onOptionHighlight: PropTypes.func,
-  onOptionSelection: PropTypes.func
+  onOptionHighlight:   PropTypes.func,
+  onOptionSelection:   PropTypes.func
 }
 
 class OptionList extends Component {
@@ -22,9 +22,9 @@ class OptionList extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div',
-    role: 'listbox',
-    initialFocus: 0,
+    component:           'div',
+    role:                'listbox',
+    initialFocus:        0,
     closeOnOutsideClick: false
   }
 
@@ -46,9 +46,9 @@ class OptionList extends Component {
 
   render() {
     const { select } = this.context
-    const { tag, role, scopeFocus, initialFocus, onOptionSelection, closeOnOutsideClick, children } = this.props
+    const { component, role, scopeFocus, initialFocus, onOptionSelection, closeOnOutsideClick, children } = this.props
     const props = specialAssign({
-      tag,
+      component,
       role,
       id: select.uuid,
       closeOnOutsideClick

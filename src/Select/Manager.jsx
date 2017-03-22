@@ -4,8 +4,8 @@ import uuid from '../utils/uuid'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  children: PropTypes.node
+  component: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  children:  PropTypes.node
 }
 
 class Select extends Component {
@@ -16,7 +16,7 @@ class Select extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div'
+    component: 'div'
   }
 
   state = {
@@ -47,8 +47,8 @@ class Select extends Component {
   }
 
   render() {
-    const { tag, ...props } = this.props
-    return tag ? createElement(tag, props) : props.children
+    const { component, ...props } = this.props
+    return component ? createElement(component, props) : props.children
   }
 }
 

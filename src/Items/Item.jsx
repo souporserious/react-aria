@@ -4,15 +4,15 @@ import uuid from '../utils/uuid'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
-  id: PropTypes.string,
-  role: PropTypes.string,
-  index: PropTypes.number,
-  text: PropTypes.string,
-  value: PropTypes.any,
-  onFocus: PropTypes.func,
-  onSelect: PropTypes.func,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
+  component: PropTypes.string,
+  id:        PropTypes.string,
+  role:      PropTypes.string,
+  index:     PropTypes.number,
+  text:      PropTypes.string,
+  value:     PropTypes.any,
+  onFocus:   PropTypes.func,
+  onSelect:  PropTypes.func,
+  children:  PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 const noop = () => null
 
@@ -24,10 +24,10 @@ class Item extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div',
-    role: 'menuitem',
-    onFocus: noop,
-    onSelect: noop
+    component: 'div',
+    role:      'menuitem',
+    onFocus:   noop,
+    onSelect:  noop
   }
 
   _id = this.props.id || uuid()
@@ -37,7 +37,7 @@ class Item extends Component {
     const { index, text, value } = this.props
 
     this._member = {
-      id: this._id,
+      id:   this._id,
       node: findDOMNode(this),
       index,
       text,
@@ -89,7 +89,7 @@ class Item extends Component {
   }
 
   render() {
-    const { tag, role, children } = this.props
+    const { component, role, children } = this.props
     const props = specialAssign({
       role,
       id: this._id,
@@ -101,7 +101,7 @@ class Item extends Component {
       return children(props)
     }
 
-    return createElement(tag, props, children)
+    return createElement(component, props, children)
   }
 }
 

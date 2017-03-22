@@ -6,13 +6,13 @@ import FocusGroup from '../utils/FocusGroup'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  rootNode: PropTypes.any,
-  scopeFocus: PropTypes.bool,
-  initialFocus: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
-  onItemFocus: PropTypes.func,
+  component:       PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  rootNode:        PropTypes.any,
+  scopeFocus:      PropTypes.bool,
+  initialFocus:    PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
+  onItemFocus:     PropTypes.func,
   onItemSelection: PropTypes.func,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
+  children:        PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 const noop = () => null
 
@@ -24,9 +24,9 @@ class ItemList extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: false,
-    initialFocus: 0,
-    onItemFocus: noop,
+    component:       false,
+    initialFocus:    0,
+    onItemFocus:     noop,
     onItemSelection: noop
   }
 
@@ -86,14 +86,14 @@ class ItemList extends Component {
   }
 
   render() {
-    const { tag, children } = this.props
+    const { component, children } = this.props
     const props = specialAssign({}, this.props, checkedProps)
 
-    if (!tag) {
+    if (!component) {
       return children
     }
 
-    return createElement(tag, props, children)
+    return createElement(component, props, children)
   }
 }
 

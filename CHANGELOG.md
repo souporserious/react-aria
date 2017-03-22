@@ -1,6 +1,8 @@
 ## CHANGELOG
-### 0.9.1
+### 0.10.0
 Fix nested `Overlay` components causing the whole tree to close
+
+Change prop name `tag` -> `component`
 
 ### 0.9.0
 Move `Overlay` into `Overlays` namespace

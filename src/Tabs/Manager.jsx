@@ -4,11 +4,11 @@ import FocusGroup from '../utils/FocusGroup'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  component:   PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   activeTabId: PropTypes.string,
-  accordion: PropTypes.bool,
+  accordion:   PropTypes.bool,
   multiselect: PropTypes.bool,
-  onChange: PropTypes.func
+  onChange:    PropTypes.func
 }
 
 class Manager extends Component {
@@ -19,7 +19,7 @@ class Manager extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div'
+    component: 'div'
   }
 
   constructor(props) {
@@ -106,9 +106,9 @@ class Manager extends Component {
   }
 
   render() {
-    const { tag } = this.props
+    const { component, children } = this.props
     const props = specialAssign({}, this.props, checkedProps)
-    return tag ? createElement(tag, props) : props.children
+    return component ? createElement(component, props, children) : children
   }
 }
 

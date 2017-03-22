@@ -5,7 +5,7 @@ import noScroll from 'no-scroll'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag:                 PropTypes.string,
+  component:           PropTypes.string,
   role:                PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert', 'listbox']),
   scopeFocus:          PropTypes.bool,
   returnFocus:         PropTypes.bool,
@@ -25,7 +25,7 @@ class Overlay extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag:                 'div',
+    component:           'div',
     role:                'popover',
     returnFocus:         true,
     closeOnEscapeKey:    true,
@@ -116,7 +116,7 @@ class Overlay extends Component {
 
   render() {
     const { overlayManager } = this.context
-    const { tag, role, children } = this.props
+    const { component, role, children } = this.props
     const props = specialAssign({
       role
     }, this.props, checkedProps)
@@ -125,16 +125,14 @@ class Overlay extends Component {
       return children(props, overlayManager && overlayManager.isOpen)
     }
 
-    const component = createElement(tag, props, children)
-
     if (overlayManager) {
       if (overlayManager.isOpen) {
-        return component
+        return createElement(component, props, children)
       } else {
         return null
       }
     } else {
-      return component
+      return createElement(component, props, children)
     }
   }
 }

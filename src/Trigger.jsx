@@ -4,7 +4,7 @@ import upperCaseFirst from 'upper-case-first'
 import specialAssign from './utils/special-assign'
 
 const checkedProps = {
-  tag:         PropTypes.string,
+  component:   PropTypes.string,
   overlayRole: PropTypes.string,
   controls:    PropTypes.string,
   isOpen:      PropTypes.bool,
@@ -23,7 +23,7 @@ class Trigger extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag:         'button',
+    component:   'button',
     overlayRole: 'popover',
     keybindings: [' ', 'ArrowUp', 'ArrowDown'],
     triggerOn:   ['click'],
@@ -66,7 +66,7 @@ class Trigger extends Component {
   _handleEvent(name, e) {
     const onEvent = this.props[`on${upperCaseFirst(name)}`]
 
-    // don't allow button tag to trigger onClick
+    // don't allow button component to trigger onClick
     if (this._isKeyDown) return;
 
     this._trigger(e)
@@ -91,10 +91,10 @@ class Trigger extends Component {
 
   _getProps() {
     const { overlayManager } = this.context
-    const { tag, disabled, overlayRole, controls, triggerOn } = this.props
+    const { component, disabled, overlayRole, controls, triggerOn } = this.props
     const isOpen = overlayManager ? overlayManager.isOpen : this.props.isOpen
     const props = {
-      [tag === 'button' ? 'type' : 'role']: 'button',
+      [component === 'button' ? 'type' : 'role']: 'button',
       tabIndex:        disabled ? '' : 0,
       'aria-disabled': disabled,
       onKeyDown:       this._handleKeyDown,
@@ -131,14 +131,14 @@ class Trigger extends Component {
   }
 
   render() {
-    const { tag, children } = this.props
+    const { component, children } = this.props
     const props = this._getProps()
 
     if (typeof children === 'function') {
       return children(props)
     }
 
-    return createElement(tag, props, children)
+    return createElement(component, props, children)
   }
 }
 

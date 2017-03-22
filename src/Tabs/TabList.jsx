@@ -2,8 +2,8 @@ import React, { Component, PropTypes, createElement } from 'react'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
+  component: PropTypes.string,
+  children:  PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired
 }
 
 class TabList extends Component {
@@ -14,12 +14,12 @@ class TabList extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div'
+    component: 'div'
   }
 
   render() {
     const { accordion, multiselect } = this.context.tabs
-    const { tag, children } = this.props
+    const { component, children } = this.props
     const componentProps = {
       role: 'tablist'
     }
@@ -34,7 +34,7 @@ class TabList extends Component {
       return children(props)
     }
 
-    return createElement(tag, props, children)
+    return createElement(component, props, children)
   }
 }
 

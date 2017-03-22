@@ -4,8 +4,8 @@ import { Item } from '../Items'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  tag: PropTypes.string,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
+  component: PropTypes.string,
+  children:  PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 
 class Option extends Component {
@@ -16,15 +16,15 @@ class Option extends Component {
   static propTypes = checkedProps
 
   static defaultProps = {
-    tag: 'div'
+    component: 'div'
   }
 
   render() {
     const { select } = this.context
-    const { tag, children } = this.props
+    const { component, children } = this.props
     const { id: activeId } = select.activeDescendant || {}
     const itemProps = specialAssign({
-      role: 'option',
+      role:     'option',
       tabIndex: null, // null out default tabIndex for Item component
     }, this.props, checkedProps)
 
@@ -39,7 +39,7 @@ class Option extends Component {
         return children({ props, isHighlighted })
       }
 
-      return createElement(tag, props, children)
+      return createElement(component, props, children)
     })
   }
 }
