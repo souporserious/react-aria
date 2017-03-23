@@ -1,6 +1,11 @@
 ## CHANGELOG
+### 0.9.2
+Fix `OptionList` children prop type
+
+Add `children` prop type for the `Select.Manager` component
+
 ### 0.9.1
-Fix `component` PropType to be any for now
+Fix `component` prop type to be any for now
 
 ### 0.9.0
 Move `Overlay` into `Overlays` namespace

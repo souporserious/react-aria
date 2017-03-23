@@ -6,7 +6,7 @@ import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   component:           PropTypes.any,
-  children:            PropTypes.node,
+  children:            PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   initialFocus:        PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   closeOnOutsideClick: PropTypes.bool,
   onOptionHighlight:   PropTypes.func,

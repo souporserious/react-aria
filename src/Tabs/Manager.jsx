@@ -5,6 +5,7 @@ import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   component:   PropTypes.any,
+  children:    PropTypes.node,
   activeTabId: PropTypes.string,
   accordion:   PropTypes.bool,
   multiselect: PropTypes.bool,
