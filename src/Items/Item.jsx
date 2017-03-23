@@ -4,7 +4,7 @@ import uuid from '../utils/uuid'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  component: PropTypes.string,
+  component: PropTypes.any,
   id:        PropTypes.string,
   role:      PropTypes.string,
   index:     PropTypes.number,

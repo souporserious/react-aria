@@ -5,7 +5,7 @@ import Overlay from '../Overlays/Overlay'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  component:           PropTypes.string,
+  component:           PropTypes.any,
   children:            PropTypes.node,
   initialFocus:        PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   closeOnOutsideClick: PropTypes.bool,

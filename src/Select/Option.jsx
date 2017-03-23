@@ -4,7 +4,7 @@ import { Item } from '../Items'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  component: PropTypes.string,
+  component: PropTypes.any,
   children:  PropTypes.oneOfType([PropTypes.func, PropTypes.node])
 }
 

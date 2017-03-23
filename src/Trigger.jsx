@@ -4,7 +4,7 @@ import upperCaseFirst from 'upper-case-first'
 import specialAssign from './utils/special-assign'
 
 const checkedProps = {
-  component:   PropTypes.string,
+  component:   PropTypes.any,
   overlayRole: PropTypes.string,
   controls:    PropTypes.string,
   isOpen:      PropTypes.bool,

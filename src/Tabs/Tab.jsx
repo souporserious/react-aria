@@ -3,7 +3,7 @@ import ReactDOM, { findDOMNode } from 'react-dom'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  component: PropTypes.string,
+  component: PropTypes.any,
   id:        PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   isActive:  PropTypes.bool,
   children:  PropTypes.oneOfType([PropTypes.func, PropTypes.node])

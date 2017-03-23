@@ -5,7 +5,7 @@ import noScroll from 'no-scroll'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  component:           PropTypes.string,
+  component:           PropTypes.any,
   role:                PropTypes.oneOf(['menu', 'popover', 'modal', 'tooltip', 'alert', 'listbox']),
   scopeFocus:          PropTypes.bool,
   returnFocus:         PropTypes.bool,

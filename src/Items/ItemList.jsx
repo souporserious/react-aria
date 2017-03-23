@@ -6,7 +6,7 @@ import FocusGroup from '../utils/FocusGroup'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  component:       PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  component:       PropTypes.any,
   rootNode:        PropTypes.any,
   scopeFocus:      PropTypes.bool,
   initialFocus:    PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),

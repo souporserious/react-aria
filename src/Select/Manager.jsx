@@ -4,7 +4,7 @@ import uuid from '../utils/uuid'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  component: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  component: PropTypes.any,
   children:  PropTypes.node
 }
 

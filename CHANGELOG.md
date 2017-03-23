@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.9.1
+Fix `component` PropType to be any for now
+
 ### 0.9.0
 Move `Overlay` into `Overlays` namespace
 

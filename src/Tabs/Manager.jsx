@@ -4,7 +4,7 @@ import FocusGroup from '../utils/FocusGroup'
 import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
-  component:   PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  component:   PropTypes.any,
   activeTabId: PropTypes.string,
   accordion:   PropTypes.bool,
   multiselect: PropTypes.bool,
