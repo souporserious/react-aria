@@ -5,6 +5,7 @@ import specialAssign from '../utils/special-assign'
 
 const checkedProps = {
   component: PropTypes.any,
+  id: PropTypes.any,
   children:  PropTypes.node
 }
 
@@ -21,19 +22,19 @@ class Select extends Component {
 
   state = {
     rootNode: null,
-    activeDescendant: null
+    activeDescendant: {}
   }
 
-  _id = uuid()
+  _id = this.props.id || uuid()
 
   getChildContext() {
     return {
       select: {
         uuid: this._id,
         setRootNode: this._setRootNode,
-        rootNode: this.state.rootNode,
+        getRootNode: this._getRootNode,
         setActiveDescendant: this._setActiveDescendant,
-        activeDescendant: this.state.activeDescendant
+        getActiveDescendant: this._getActiveDescendant
       }
     }
   }
@@ -42,8 +43,16 @@ class Select extends Component {
     this.setState({ rootNode: node })
   }
 
-  _setActiveDescendant = (item) => {
-    this.setState({ activeDescendant: item })
+  _getRootNode = () => {
+    return this.state.rootNode
+  }
+
+  _setActiveDescendant = (option) => {
+    this.setState({ activeDescendant: option })
+  }
+
+  _getActiveDescendant = () => {
+    return this.state.activeDescendant
   }
 
   render() {

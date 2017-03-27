@@ -341,16 +341,12 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Overlays.Manager>
-          <div style={{ padding: 10, backgroundColor: '#ccc' }}>
-            <Trigger>
-              Select Menu
-            </Trigger>
-            <Overlay style={{ padding: 40 }}>
-              <SelectDemo/>
-            </Overlay>
-          </div>
-        </Overlays.Manager>
+        <h1>Item List</h1>
+        <ItemList onItemSelection={item => console.log(item)}>
+          <Item value="item-1">Item 1</Item>
+          <Item value="item-2">Item 2</Item>
+          <Item value="item-3">Item 3</Item>
+        </ItemList>
 
         <h1>Select Menu</h1>
         <SelectDemo/>

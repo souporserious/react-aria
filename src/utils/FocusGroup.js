@@ -1,7 +1,9 @@
 import mitt from 'mitt'
+import scrollIntoView from './scroll-into-view'
 
 class FocusGroup {
   constructor(userOptions) {
+    const emitter = mitt()
     const options = {
       rootNode: document,
       members: [],
@@ -9,7 +11,6 @@ class FocusGroup {
       wrap: true,
       ...userOptions
     }
-    const emitter = mitt()
 
     this.on = emitter.on
     this.emit = emitter.emit
@@ -22,10 +23,12 @@ class FocusGroup {
   }
 
   activate() {
+    document.addEventListener('click', this._handleClick, true)
     this._rootNode.addEventListener('keydown', this._handleKeydown, true)
   }
 
   deactivate() {
+    document.removeEventListener('click', this._handleClick, true)
     this._rootNode.removeEventListener('keydown', this._handleKeydown, true)
   }
 
@@ -47,7 +50,7 @@ class FocusGroup {
 
   removeMember(member) {
     const indexToRemove = isNaN(member)
-      ? this.getMemberIndex(member)
+      ? this.getMemberIndexFromNode(member)
       : member
 
     if (indexToRemove !== -1) {
@@ -59,7 +62,7 @@ class FocusGroup {
     return this._members
   }
 
-  getMemberIndex(member) {
+  getMemberIndexFromNode(member) {
     for (let i = 0; i < this._members.length; i++) {
       if (this._members[i].node === member) {
         return i
@@ -71,7 +74,7 @@ class FocusGroup {
   getActiveIndex() {
     return this._rootNode !== document
       ? this._activeIndex
-      : this.getMemberIndex(document.activeElement)
+      : this.getMemberIndexFromNode(document.activeElement)
   }
 
   getActiveMember() {
@@ -108,17 +111,21 @@ class FocusGroup {
     this.focus(this._members.length - 1)
   }
 
-  focus(index) {
+  focus(index, shouldScrollIntoView = true) {
     const member = this._members[index]
 
     if (!member) {
       return
     }
+
     if (member.node.focus) {
       member.node.focus()
-    }
-    else if (member.node.tagName.toLowerCase() === 'input') {
+    } else if (member.node.select) {
       member.node.select()
+    }
+
+    if (shouldScrollIntoView) {
+      scrollIntoView(member.node)
     }
 
     this._activeIndex = index
@@ -126,8 +133,17 @@ class FocusGroup {
     this.emit('focus', member, index)
   }
 
-  selectFocusedMember(e) {
-    this.emit('select', this.getActiveMember(), e)
+  select(member = this.getActiveMember()) {
+    this.emit('select', member)
+  }
+
+  _handleClick = (e) => {
+    this._members.some(member => {
+      if (e.target === member.node || e.target.contains(member.node)) {
+        this.select(member)
+        return true
+      }
+    })
   }
 
   _handleKeydown = (e) => {
@@ -152,7 +168,7 @@ class FocusGroup {
         this.last()
         break;
       case 13: // Enter
-        this.selectFocusedMember(e)
+        this.select()
         break;
       default:
         return;

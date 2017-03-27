@@ -10,7 +10,8 @@ const checkedProps = {
 
 class Option extends Component {
   static contextTypes = {
-    select: PropTypes.object
+    select: PropTypes.object,
+    itemList: PropTypes.object
   }
 
   static propTypes = checkedProps
@@ -19,19 +20,34 @@ class Option extends Component {
     component: 'div'
   }
 
+  _handleMouseEnter = (e) => {
+    const { focusGroup } = this.context.itemList
+    const index = focusGroup.getMemberIndexFromNode(findDOMNode(this))
+
+    // move focus on hover
+    if (index > -1) {
+      focusGroup.focus(index, false)
+    }
+
+    if (typeof this.props.onMouseEnter === 'function') {
+      this.props.onMouseEnter(e)
+    }
+  }
+
   render() {
     const { select } = this.context
     const { component, children } = this.props
-    const { id: activeId } = select.activeDescendant || {}
+    const activeDescendant = select.getActiveDescendant()
     const itemProps = specialAssign({
-      role:     'option',
-      tabIndex: null, // null out default tabIndex for Item component
+      role: 'option',
+      tabIndex: null,
+      onMouseEnter: this._handleMouseEnter
     }, this.props, checkedProps)
 
-    return createElement(Item, itemProps, _props => {
-      const isHighlighted = (_props.id === activeId)
+    return createElement(Item, itemProps, optionProps => {
+      const isHighlighted = (optionProps.id === activeDescendant.id)
       const props = {
-        ..._props,
+        ...optionProps,
         'aria-selected': isHighlighted
       }
 

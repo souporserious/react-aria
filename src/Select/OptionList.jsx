@@ -56,7 +56,7 @@ class OptionList extends Component {
       <ItemList
         ref={c => this._itemList = c}
         component={false}
-        rootNode={select.rootNode}
+        rootNode={select.getRootNode()}
         scopeFocus={false}
         initialFocus={initialFocus}
         onItemFocus={this._handleItemFocus}

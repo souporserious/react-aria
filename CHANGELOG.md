@@ -1,4 +1,9 @@
 ## CHANGELOG
+### 0.9.3
+Replaced `scrollIntoView` with a significantly smaller dependency
+
+Added `onClick` handling to `FocusGroup`
+
 ### 0.9.2
 Fix `OptionList` children prop type
 
