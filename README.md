@@ -19,7 +19,9 @@ A set of utility components to help compose ARIA components in React. Please fee
 ### Building a select menu
 
 ```jsx
-import { Trigger, Select: { Manager, OptionList, Option } } from 'react-aria'
+import { Trigger, Select } from 'react-aria'
+
+const { Manager, OptionList, Option } = Select
 
 class SelectMenu extends Component {
   state = {
@@ -65,7 +67,9 @@ class SelectMenu extends Component {
 ### Building a set of tabs
 
 ```jsx
-import { Tabs: { Manager, TabList, Tab, TabPanel } } from 'react-aria'
+import { Tabs } from 'react-aria'
+
+const { Manager, TabList, Tab, TabPanel } = Tabs
 
 class TabsDemo extends Component {
   state = {
