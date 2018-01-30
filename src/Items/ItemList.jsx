@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, createElement, cloneElement } from 'react'
+import React, { Component, createElement, cloneElement } from 'react'
+import PropTypes from 'prop-types'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import FocusGroup from '../utils/FocusGroup'
 import specialAssign from '../utils/special-assign'
