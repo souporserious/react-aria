@@ -1,2 +1,2 @@
-const uniqueNumber = require('unique-number')(true)
-export default () => uniqueNumber.generate()
+let uniqueNumber = 0
+export default () => uniqueNumber++
