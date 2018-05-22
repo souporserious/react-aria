@@ -1,6 +1,6 @@
 {
   "name": "react-aria",
-  "version": "0.9.2",
+  "version": "0.9.4",
   "description": "Utilities to help create React ARIA components.",
   "main": "lib/react-aria.js",
   "files": [
@@ -10,11 +10,12 @@
   "scripts": {
     "build:lib": "babel src --out-dir lib",
     "build": "npm run build:lib && NODE_ENV=production webpack --config webpack.prod.config.js",
-    "dev": "webpack-dev-server --inline --hot --progress --colors --host 0.0.0.0 --devtool eval",
+    "dev": "webpack-dev-server --inline --hot --progress --colors --host 0.0.0.0 --port 8081 --devtool eval",
     "postbuild": "NODE_ENV=production TARGET=minify webpack --config webpack.prod.config.js",
     "prebuild": "rm -rf dist && mkdir dist",
     "prepublish": "npm run build",
-    "deploy": "NODE_ENV=production TARGET=minify webpack && git-directory-deploy --directory example --branch gh-pages"
+    "deploy": "NODE_ENV=production TARGET=minify webpack && git-directory-deploy --directory example --branch gh-pages",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -52,7 +53,8 @@
     "mitt": "^1.0.1",
     "no-scroll": "^2.0.0",
     "unique-number": "^2.0.1",
-    "upper-case-first": "^1.1.2"
+    "upper-case-first": "^1.1.2",
+    "prop-types": "^15.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",

@@ -1,4 +1,7 @@
 ## CHANGELOG
+### 0.9.4
+Updated proptypes to be compatible with React >= 15.6.0
+
 ### 0.9.3
 Replaced `scrollIntoView` with a significantly smaller dependency
 
