@@ -1,3 +1,7 @@
+# Archived
+
+This project has been archived. Please use [react-aria](https://react-spectrum.adobe.com/react-aria/index.html) from Adobe.
+
 ## React ARIA
 
 [![npm version](https://badge.fury.io/js/react-aria.svg)](https://badge.fury.io/js/react-aria)
